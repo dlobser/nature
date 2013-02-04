@@ -1,0 +1,209 @@
+<html>
+<head>
+	<link rel="stylesheet" href="css/app.css" />
+<title>My first Three.js app</title>
+<style>canvas { width: 100%; height: 100% }</style>
+
+</head>
+
+<body>
+<p>
+My First webGL render:
+</p>
+Each object has a 'pickRand' variable.  Each time the counter % sphere.pickRand it picks a new random
+direction.  pickRand is also responsible for the frequency of its scale oscillations.
+
+
+<script src="https://raw.github.com/mrdoob/three.js/master/build/three.js"></script>
+<script src="SimplexNoise.js"></script>
+
+
+<script type="text/javascript" src="dat-gui/build/dat.gui.js"></script>
+
+
+<script> 
+
+/*
+var FizzyText = function() {
+  this.message = 'Nature of Asteroids';
+  this.speed = 0.8;
+
+};
+
+window.onload = function() {
+  var text = new FizzyText();
+  var gui = new dat.GUI();
+  gui.add(text, 'message');
+  gui.add(text, 'speed', -5, 5);
+};
+
+*/
+    
+var scene = new THREE.Scene();
+
+var camera = new THREE.PerspectiveCamera(35, window.innerWidth/window.innerHeight, 0.1, 1000);
+var renderer = new THREE.WebGLRenderer();
+
+var rotSpeed;
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+var geometry = new THREE.SphereGeometry(.5,11,11);
+//var material = new THREE.MeshBasicMaterial({color: 0x99ff00});
+
+scene.add( new THREE.AmbientLight( 0x225599 ) );
+
+// create a point light
+var pointLight =
+  new THREE.PointLight(0xFFFFFF);
+
+// set its position
+
+
+// add to the scene
+scene.add(pointLight);
+
+var map = THREE.ImageUtils.loadTexture( 'smile.jpg' );
+var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, side: THREE.DoubleSide } );
+
+camera.position.z = 40;
+
+group = new THREE.Object3D();
+
+var boxes = [];
+var cube = new THREE.Mesh(geometry, material); 
+scene.add(cube);
+
+var randX = 0;
+var randY = 0;
+
+var q =0;
+
+
+
+animate();
+
+for ( var i = 0; i < 100; i ++ ) {
+
+	var mesh = new THREE.Mesh( geometry, material );
+	mesh.position.x = Math.random() * 20 - 10;
+	mesh.position.y = Math.random() * 10 - 5;
+	mesh.position.z = Math.random() * 20 - 10;
+
+	mesh.rotation.x = Math.random() * 2 * Math.PI;
+	mesh.rotation.y = Math.random() * 2 * Math.PI;
+	
+	mesh.randX = 0;
+	mesh.randY = 0;
+	
+	mesh.pickRand = Math.floor(Math.random()*91)+1;
+	
+	mesh.id = i;
+
+	mesh.matrixAutoUpdate = true;
+	//mesh.updateMatrix();
+
+	scene.add( mesh );
+	boxes.push(mesh);
+
+}
+
+
+function animate() {
+
+	requestAnimationFrame( animate );
+	render();
+
+}
+/*
+var speeder = function(){
+	this.message = "gogogo";
+	this.setSpeed = 0;
+	this.camMove = function(){
+		camera.position.x = 50 * Math.cos( timer * 4 * setSpeed);
+		camera.position.z = 50 * Math.sin( timer *5);
+	}
+}
+
+window.onload = function() {
+var text = new speeder();
+var gui = new dat.GUI();
+gui.add(text, 'message');
+gui.add(text, 'setSpeed',-5,5);
+gui.close();
+}
+*/
+
+function render() {
+
+
+
+	//console.log(FizzyText.speed);
+	cube.rotation.x += 0.01;
+	cube.rotation.y += 0.01;
+	//cube.position.x += (Math.random()-0.5)/10;
+	//cube.position.y += (Math.random()-0.5)/10;
+	
+		var timer = 0.0001 * Date.now();
+		
+
+			camera.position.x = 50 * Math.cos( timer * 4);
+		camera.position.z = 50 * Math.sin( timer *5);
+
+	
+	
+					
+	camera.lookAt( cube.position );
+	
+	//console.log(cube.position.x);
+	
+
+	
+	q++;
+
+	
+	for ( var i = 0, il = boxes.length; i < il; i ++ ) {
+
+		var sphere = boxes.shift();
+		
+		
+		
+		if(q % sphere.pickRand == 0){
+		sphere.randX = (Math.random()-0.5)/10;
+		sphere.randY = (Math.random()-0.5)/10;
+		}
+
+		sphere.position.x += sphere.randX;//(Math.random()-0.5)/10;
+		sphere.position.y += sphere.randY;//(Math.random()-0.5)/10;
+		
+		var scaler = Math.abs((Math.sin(q/10 + sphere.pickRand)));
+		
+		sphere.scale.x = scaler;
+		sphere.scale.y = scaler;
+		sphere.scale.z = scaler;
+		
+		//sphere.position.x += SimplexNoise(timer)*100;
+		//sphere.position.y += SimplexNoise(timer);
+		
+		console.log(randX);
+		
+		boxes.push(sphere);
+		
+
+	}
+	
+	for ( var i = 0, il = boxes.length; i < il; i ++ ) {
+
+		var sphere = boxes[ i ];
+		//console.log(boxes.length + " ID: " + sphere.id + ", " + "xPos: " + sphere.position.x);
+	}
+	
+	renderer.render(scene, camera); 
+}
+
+
+    
+</script>
+</body>
+</html>

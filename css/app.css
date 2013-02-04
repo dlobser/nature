@@ -1,0 +1,19 @@
+body{
+	background-color: black;
+	color:#333;
+	overflow: hidden;
+	font-family: sans-serif;
+}
+#content { 
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	padding: 25px 25px 30px 25px;
+}
+#container{
+	background-color:black;
+}
+
+
+
+
