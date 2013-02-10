@@ -18,7 +18,10 @@
 		<script src="js/three/js/controls/OrbitControls.js"></script>
 
 		<script src="js/three/js/Detector.js"></script>
+		<script src="js/libs/ImprovedNoise.js"></script>
 		<script src="js/three/js/libs/stats.min.js"></script>
+		
+		<script src="js/three/js/loaders/OBJLoader.js"></script>
 		
 		<script type="text/javascript" src="http://dat-gui.googlecode.com/git/build/dat.gui.min.js"></script>
 
@@ -57,6 +60,8 @@
 			
 			var mover;
 			
+			var myNoise = new ImprovedNoise();
+			
 			var things = [];
 
 			init();
@@ -85,30 +90,78 @@
 				//mover = new Mover();
 		
 				//scene.add(mover.mesh);
+				
+				//make objects!-----------------------------------------------
+				
+				
+				
+				var texture = new THREE.Texture();
 
+				var loader = new THREE.ImageLoader();
+				loader.addEventListener( 'load', function ( event ) {
+
+					texture.image = event.content;
+					texture.needsUpdate = true;
+
+				} );
+				loader.load( 'textures/ash_uvgrid01.jpg' );
+
+				
+				var loader = new THREE.OBJLoader();
+				
+				loader.addEventListener( 'load', function ( event ) {
+
+					var object = event.content;
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = texture;
+
+						}
+
+					} );
+
+					object.position.y = 0;
+					object.scale.x = 100;
+					object.scale.y = 100;
+					object.scale.z = 100;
+					scene.add( object );
+
+				});
+				
+				loader.load( 'models/arrow.obj' );
+				
+				
+				
 				for ( var i = 0; i < 50; i ++ ) {
-					/*
+					
 					var mesh = new THREE.Mesh( geometry, material );
-					mesh.position.x = ( Math.random() - 0.5 ) * 1000;
-					mesh.position.y = ( Math.random() - 0.5 ) * 1000;
-					mesh.position.z = ( Math.random() - 0.5 ) * 1000;
+					mesh.position = new THREE.Vector3(   (Math.random())*100,   (Math.random())*100,   (Math.random())*100   );
+					mesh.velocity = new THREE.Vector3(   (Math.random()-.5)*1,   (Math.random()-.5)*1,   (Math.random()-.5)*1   );
 					mesh.updateMatrix();
 					mesh.matrixAutoUpdate = true;
-					*/
+					mesh.drop = false;
+					mesh.dropCount = 0;
+					mesh.previous = new THREE.Vector3(0,0,0);
+					
+					mesh.noiseOffset = (Math.random()*10000);
+					
 					
 					mover = new Mover();
 					
-					scene.add( mover.mesh );
-					things.push(mover.mesh);
+					scene.add( mesh );
+					things.push(mesh);
 					
 					
 
 				}
-				console.log(things.length);
 				
-				for(x in things){
-					setRandom(x);
-				}
+				
+				//for(x in things){
+				//	setRandom(x);
+				//}
 				
 				scene.add(things);
 
@@ -164,9 +217,9 @@
 
 			function animate() {
 				render();
-				//moveThings();
+				moveThings();
 				//console.log(things.length);
-				mover.step();
+				//mover.step();
 				for(x in things){
 					//console.log(x.mesh[rotation]);
 				}
@@ -176,13 +229,80 @@
 			}
 			
 			function moveThings(){
-				//this.location = new THREE.Vector3(0,0,0);
+			
+				var timer = 0.001 * Date.now();
+				
 				for ( var i = 0, il = things.length; i < il; i ++ ) {
 					var thing = things.shift();
-					thing.position.x += 0;						
+					thing.position.add(thing.velocity);
+					if (thing.position.x > 200 || thing.position.x < -200 ||
+					thing.position.y > 200 || thing.position.y < -1000 ||
+					thing.position.z > 200 || thing.position.z < -200){
+						thing.velocity.multiplyScalar(-1);
+					}
+					
+					var a = timer+thing.noiseOffset+10000;
+					var b = timer+thing.noiseOffset;
+					var c = timer+(thing.noiseOffset*3);
+					var speed = 4;
+					
+					thing.velocity.x = myNoise.noise(a,a,a)*speed;
+					thing.velocity.y = myNoise.noise(b,b,b)*speed;
+					thing.velocity.z = myNoise.noise(c,c,c)*speed;
+					
+						//wtf??? why does this work?  Stolen from a boids example
+					thing.rotation.y = Math.atan2( - thing.velocity.z, thing.velocity.x );
+					thing.rotation.z = Math.asin( thing.velocity.y / thing.velocity.length() ) - 3.1415/2;
+					
+					/*
+					if(thing.position.y>100){
+						var fall = new THREE.Vector3(0.00,-10,0);
+						thing.velocity.add(fall);
+						thing.drop = true;
+					}
+					if(thing.velocity.y < -1 ){
+						//var fallStop = new THREE.Vector3(1,.2,1);
+						thing.velocity.y *=.9;
+						//console.log(thing.velocity.y);
+					}
+					
+				
+					
+					
+					if(thing.drop){
+						thing.dropCount++;
+						var randDir = new THREE.Vector3(myNoise.noise(timer,timer,timer));
+						//var randDir = new THREE.Vector3(   (Math.random()-.5)*1,   (Math.random()-.5)*1,   (Math.random()-.5)*1   );
+						//thing.velocity.add(randDir);
+						thing.velocity.x = myNoise.noise(timer,timer,timer);
+						thing.velocity.y = myNoise.noise(timer+1000,1000+timer,1000+timer);
+						thing.velocity.z = myNoise.noise(10000+timer,10000+timer,10000+timer);
+					}
+					
+					if(!thing.drop){// || thing.dropCount > 10){
+						limit(thing.velocity,1);
+						thing.dropCount = 0;
+					}
+					
+					console.log(thing.drop);
+					
+					if(thing.dropCount > 100){
+						thing.drop = false;
+					}
+					//if(thing.velocity.x >5 || thing.velocity.y >5 || thing.velocity.z >5 || thing.velocity.x < -5 || thing.velocity.y <-5 || thing.velocity.z <-5){
+					//	thing.velocity.multiplyScalar(-.5);
+					//}
+					*/
+					
 					things.push(thing);
 				}
 			}
+			
+			function limit(vToCheck, max){
+				if(vToCheck.length() > max){
+					vToCheck.setLength(max);		
+			}
+}
 			
 			function render() {
 				//moveThings();
@@ -243,29 +363,9 @@
 			
 			function setRandom(vecName){
 				vecName = new THREE.Vector3(Math.random()*10000,Math.random()*10000,Math.random()*10000);
-				console.log(vecName);
+				//console.log(vecName);
 			}
-/*
-		
-			function Mover(){
-				//set up
-				this.location = new THREE.Vector3(0,0,0);
-				this.velocity = new THREE.Vector3(0,0,0);
-				this.acceleration = new THREE.Vector3(0.01,0.01,0.01);
-				
-				
-				//console.log(this.velocity);
-				this.step = function(){
-					this.velocity.addSelf(this.acceleration);
-					this.location.addSelf(this.velocity);
-					this.mesh.position = this.location;
-					//this.mesh1.position = this.location;
-					checkBounds(this);
-					limit(this.velocity ,10);
-					this.acceleration = new THREE.Vector3((Math.random()-0.5)/100,(Math.random()-0.5)/100,(Math.random()-0.5)/100);
-			};
-		}
-*/
+
 
 
 		</script>
