@@ -8,6 +8,7 @@
 	</head>
 
 	<body>
+		<h1>An experiment with vectors and arrows</h1>
 		<div id="container"></div>
 		<div id="info">
 			<a href="http://threejs.org" target="_blank">three.js</a> - orbit controls example
@@ -21,11 +22,14 @@
 		<script src="js/libs/ImprovedNoise.js"></script>
 		<script src="js/three/js/libs/stats.min.js"></script>
 		
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+		
 		<script src="js/three/js/loaders/OBJLoader.js"></script>
 		
 		<script type="text/javascript" src="http://dat-gui.googlecode.com/git/build/dat.gui.min.js"></script>
 
-		<script>
+		<script type="text/javascript">
 		
 			//dat.gui adds controls----------------------------
 		
@@ -34,16 +38,24 @@
 			window.onload = function() {
 				ctrl = new world();
 				var gui = new dat.GUI();
-				// gui.add(text, 'message');
-				gui.add(ctrl, 'speed', -1, 1);
-				gui.add(ctrl, 'size', .1, 5);
+				gui.add(ctrl, 'message');
+				gui.add(ctrl, 'speed', 1, 5);
+			
+				gui.add(ctrl, 'size', .1, 55);
+				//gui.add(ctrl, 'freq', 0,2);
 			};
 
 			var world = function()
 			{
-				this.speed = 0.1;
-				this.size = 1;
+				this.message = "hi";
+				this.speed = 1;
+				this.size = 10;
+				this.freq = 1;
 			};
+			
+			//console.log(ctrl.speed);
+			
+
 			
 		
 			
@@ -78,12 +90,12 @@
 				controls.addEventListener( 'change', render );
 
 				scene = new THREE.Scene();
-				scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
+				scene.fog = new THREE.FogExp2( 0x000000, 0.0002 );
 
 				// world
 
 				var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
-				var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
+				var material =  new THREE.MeshLambertMaterial( { color:0xffffff } );
 				
 					
 			
@@ -92,6 +104,47 @@
 				//scene.add(mover.mesh);
 				
 				//make objects!-----------------------------------------------
+				
+				var texture2 = new THREE.Texture();
+
+				var loader2 = new THREE.ImageLoader();
+				loader2.addEventListener( 'load', function ( event ) {
+
+					texture2.image = event.content;
+					texture2.needsUpdate = true;
+
+				} );
+				loader2.load( 'textures/red.jpg' );
+
+				
+				var loader2 = new THREE.OBJLoader();
+				
+				loader2.addEventListener( 'load', function ( event ) {
+
+					var object = event.content;
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = texture2;
+
+						}
+
+					} );
+					
+						object.position = new THREE.Vector3(  0,0,0  );
+		
+					object.scale.x = 100;
+					object.scale.y = 100;
+					object.scale.z = 100;
+					
+					scene.add( object );
+				});
+				loader2.load( 'models/heart_hi.obj' );
+					
+				
+				for ( var i = 0; i < 200; i ++ ) {
 				
 				
 				
@@ -104,7 +157,7 @@
 					texture.needsUpdate = true;
 
 				} );
-				loader.load( 'textures/ash_uvgrid01.jpg' );
+				loader.load( 'textures/arrow.jpg' );
 
 				
 				var loader = new THREE.OBJLoader();
@@ -123,11 +176,22 @@
 
 					} );
 
-					object.position.y = 0;
-					object.scale.x = 100;
-					object.scale.y = 100;
-					object.scale.z = 100;
+					object.position = new THREE.Vector3(   (Math.random())*100,   (Math.random())*100,   (Math.random())*100   );
+					object.velocity = new THREE.Vector3(   (Math.random()-.5)*1,   (Math.random()-.5)*1,   (Math.random()-.5)*1   );
+					object.scale.x = 10;
+					object.scale.y = 10;
+					object.scale.z = 10;
+					
+					object.updateMatrix();
+					object.matrixAutoUpdate = true;
+					object.drop = false;
+					object.dropCount = 0;
+					object.previous = new THREE.Vector3(0,0,0);
+					
+					object.noiseOffset = (Math.random()*10000);
+					
 					scene.add( object );
+					things.push(object);
 
 				});
 				
@@ -135,8 +199,8 @@
 				
 				
 				
-				for ( var i = 0; i < 50; i ++ ) {
-					
+				
+					/*
 					var mesh = new THREE.Mesh( geometry, material );
 					mesh.position = new THREE.Vector3(   (Math.random())*100,   (Math.random())*100,   (Math.random())*100   );
 					mesh.velocity = new THREE.Vector3(   (Math.random()-.5)*1,   (Math.random()-.5)*1,   (Math.random()-.5)*1   );
@@ -153,7 +217,7 @@
 					
 					scene.add( mesh );
 					things.push(mesh);
-					
+					*/
 					
 
 				}
@@ -171,7 +235,7 @@
 				light.position.set( 1, 1, 1 );
 				scene.add( light );
 
-				light = new THREE.DirectionalLight( 0x002288 );
+				light = new THREE.DirectionalLight( 0x0088cc,1,0 );
 				light.position.set( -1, -1, -1 );
 				scene.add( light );
 
@@ -181,10 +245,11 @@
 
 				// renderer
 
-				renderer = new THREE.CanvasRenderer( { antialias: false } );
+				renderer = new THREE.WebGLRenderer( { antialias: false } );
 				renderer.setClearColor( scene.fog.color, 1 );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				
+				//renderer = new THREE.CanvasRenderer( { antialias: false } );
 				//renderer = new THREE.WebGLRenderer();
 
 				container = document.getElementById( 'container' );
@@ -230,7 +295,11 @@
 			
 			function moveThings(){
 			
-				var timer = 0.001 * Date.now();
+				
+			
+				var timer = .0001 * Date.now();
+				
+				//console.log(ctrl.speed);
 				
 				for ( var i = 0, il = things.length; i < il; i ++ ) {
 					var thing = things.shift();
@@ -240,15 +309,22 @@
 					thing.position.z > 200 || thing.position.z < -200){
 						thing.velocity.multiplyScalar(-1);
 					}
-					
-					var a = timer+thing.noiseOffset+10000;
-					var b = timer+thing.noiseOffset;
-					var c = timer+(thing.noiseOffset*3);
-					var speed = 4;
+					var fq = 1;//ctrl.freq;
+					var a = timer+thing.noiseOffset+10000 * fq;
+					var b = timer+thing.noiseOffset* fq;
+					var c = timer+(thing.noiseOffset*3)* fq;
+					var speed = ctrl.speed;
 					
 					thing.velocity.x = myNoise.noise(a,a,a)*speed;
 					thing.velocity.y = myNoise.noise(b,b,b)*speed;
 					thing.velocity.z = myNoise.noise(c,c,c)*speed;
+					
+					thing.scale.x = ctrl.size;
+					thing.scale.y = ctrl.size;
+					thing.scale.z = ctrl.size;
+					
+					var center = new THREE.Vector3(0,0,0);
+					thing.position.multiplyScalar(.999,.999,.999);
 					
 						//wtf??? why does this work?  Stolen from a boids example
 					thing.rotation.y = Math.atan2( - thing.velocity.z, thing.velocity.x );
