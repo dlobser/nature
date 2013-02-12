@@ -8,12 +8,19 @@
 	</head>
 
 	<body>
-		<h1>An experiment with vectors and arrows</h1>
-		<div id="container"></div>
+		
+		<div id="container">
+		<p>
+		<h1>Seeds of Love</h1>Nature of Code - ITP - Spring 2013 - David Lobser
+		</p>
+		</div>
 		<div id="info">
 			<a href="http://threejs.org" target="_blank">three.js</a> - orbit controls example
 		</div>
-
+		
+		<div id="container2">
+		<h1b>A simple perlin noise flock with some additional motion provided by layered sin functions</h1b>
+		</div>
 		<script src="js/three/build/three.min.js"></script>
 
 		<script src="js/three/js/controls/OrbitControls.js"></script>
@@ -27,12 +34,13 @@
 		
 		<script src="js/three/js/loaders/OBJLoader.js"></script>
 		
-		<script type="text/javascript" src="http://dat-gui.googlecode.com/git/build/dat.gui.min.js"></script>
+		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
 
 		<script type="text/javascript">
 		
 			//dat.gui adds controls----------------------------
-		
+			//why won't you work dat.gui?  damn you
+		/*
 			var ctrl;
 
 			window.onload = function() {
@@ -54,7 +62,7 @@
 			};
 			
 			//console.log(ctrl.speed);
-			
+			*/
 
 			
 		
@@ -75,6 +83,8 @@
 			var myNoise = new ImprovedNoise();
 			
 			var things = [];
+			
+			var heart = [];
 
 			init();
 			animate();
@@ -84,13 +94,13 @@
 		
 
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
-				camera.position.z = 500;
+				camera.position.z = 600;
 
 				controls = new THREE.OrbitControls( camera );
 				controls.addEventListener( 'change', render );
 
 				scene = new THREE.Scene();
-				scene.fog = new THREE.FogExp2( 0x000000, 0.0002 );
+				scene.fog = new THREE.FogExp2( 0x002244, 0.004 );
 
 				// world
 
@@ -133,15 +143,16 @@
 
 					} );
 					
-						object.position = new THREE.Vector3(  0,0,0  );
+						object.position = new THREE.Vector3(  0,-25,0  );
 		
 					object.scale.x = 100;
 					object.scale.y = 100;
 					object.scale.z = 100;
 					
 					scene.add( object );
+					heart.push(object);
 				});
-				loader2.load( 'models/heart_hi.obj' );
+				loader2.load( 'models/heart_xhi.obj' );
 					
 				
 				for ( var i = 0; i < 200; i ++ ) {
@@ -245,7 +256,7 @@
 
 				// renderer
 
-				renderer = new THREE.WebGLRenderer( { antialias: false } );
+				renderer = new THREE.WebGLRenderer( { clearColor: 0xff0000, antialias: false } );
 				renderer.setClearColor( scene.fog.color, 1 );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				
@@ -299,7 +310,23 @@
 			
 				var timer = .0001 * Date.now();
 				
-				//console.log(ctrl.speed);
+				if(camera.position.z >250){
+					camera.position.z -=3;
+				}
+				
+				console.log(heart.length);
+				
+				//this syntax is horrendous - help please
+				for ( var i = 0, il = heart.length; i < il; i ++ ) {
+					var th = heart.shift();
+					th.scale.x = map_range(((Math.sin(timer*100)*80)+20)+(Math.sin(timer*25)*50)+(Math.sin(timer*525)*5),0,100,90,100);
+					th.scale.y = map_range(((Math.sin((timer*100)-1)*80)+20)+(Math.sin(timer*25)*50)+(Math.sin((timer*525)-.5)*5),0,100,90,100);
+					heart.push(th);
+				}
+				
+				function map_range(value, low1, high1, low2, high2) {
+					return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+				}
 				
 				for ( var i = 0, il = things.length; i < il; i ++ ) {
 					var thing = things.shift();
@@ -313,22 +340,24 @@
 					var a = timer+thing.noiseOffset+10000 * fq;
 					var b = timer+thing.noiseOffset* fq;
 					var c = timer+(thing.noiseOffset*3)* fq;
-					var speed = ctrl.speed;
+					var speed = 2;//ctrl.speed;
 					
 					thing.velocity.x = myNoise.noise(a,a,a)*speed;
 					thing.velocity.y = myNoise.noise(b,b,b)*speed;
 					thing.velocity.z = myNoise.noise(c,c,c)*speed;
 					
-					thing.scale.x = ctrl.size;
-					thing.scale.y = ctrl.size;
-					thing.scale.z = ctrl.size;
+					thing.scale.x = 15;//ctrl.size;
+					thing.scale.y = 15;//ctrl.size;
+					thing.scale.z = 15;//ctrl.size;
 					
 					var center = new THREE.Vector3(0,0,0);
 					thing.position.multiplyScalar(.999,.999,.999);
 					
+					var extraRot = map_range(((Math.sin(thing.noiseOffset/89+(timer*300))*80)+20)+(Math.sin(thing.noiseOffset+(timer*225))*50),0,100,-.1,.1);
+					
 						//wtf??? why does this work?  Stolen from a boids example
 					thing.rotation.y = Math.atan2( - thing.velocity.z, thing.velocity.x );
-					thing.rotation.z = Math.asin( thing.velocity.y / thing.velocity.length() ) - 3.1415/2;
+					thing.rotation.z = (Math.asin( thing.velocity.y / thing.velocity.length() ) - 3.1415/2)+extraRot;
 					
 					/*
 					if(thing.position.y>100){
