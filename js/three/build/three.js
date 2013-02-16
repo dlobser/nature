@@ -33438,7 +33438,7 @@ THREE.HemisphereLightHelper = function ( light, sphereSize, arrowLength, domeSiz
 	this.position = light.position;
 
 	//
-
+	
 	var intensity = THREE.Math.clamp( light.intensity, 0, 1 );
 
 	// sky color

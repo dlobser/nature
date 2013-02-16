@@ -1,43 +1,90 @@
-<html>
-<head>
-<link rel="stylesheet" href="css/app.css" />
-<title>My first Three.js app</title>
-<style>canvas { width: 100%; height: 100% }
-#newcanvas{z-index:1000;background:rgba(255,255,255,0);position:absolute;top:100px;left:50%;}
-</style>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Bootstrap, from Twitter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
-</head>
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">
 
-<body>
-<div id="container">
-<p>
-<h1>
-My First webGL render:
-</h1>
-</p>
-position Y is determined by a simplex noise function - position X uses a new random direction that is chosen every so often.
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
 
-</div>
-	<div id="newcanvas">
-	<h1>Hi</h1>
-</div>
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="../assets/ico/favicon.png">
+  </head>
+
+	<body>
+	
+		<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="http://natureofcode.com/">Nature of Code</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="sketches.html">Sketches</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="http://www.DLobser.com">Dlobser.com</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+	
+		<div id="container"></div>
+		<div id="info">
+			<a href="http://threejs.org" target="_blank">three.js</a> - orbit controls example
+		</div>
+
+		<script src="js/three/build/three.min.js"></script>
+		
+		<script src="js/libs/ImprovedNoise.js"></script>
+
+		<script src="js/three/js/controls/OrbitControls.js"></script>
+
+		<script src="js/three/js/Detector.js"></script>
+		<script src="js/three/js/libs/stats.min.js"></script>
+		
+		<script type="text/javascript" src="http://dat-gui.googlecode.com/git/build/dat.gui.min.js"></script>
 
 
-<script src="js/lib/flicker.js"></script>
 
-<script src="https://raw.github.com/mrdoob/three.js/master/build/three.js"></script>
-<script src="js/lib/simplexNoise.js"></script>
+		<script src="js/three/build/three.min.js"></script>
 
+		<script src="js/three/js/controls/OrbitControls.js"></script>
 
-<script type="text/javascript" src="http://dat-gui.googlecode.com/git/build/dat.gui.min.js"></script>
+		<script src="js/three/js/Detector.js"></script>
+		<script src="js/libs/ImprovedNoise.js"></script>
+		<script src="js/three/js/libs/stats.min.js"></script>
+		
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+		
+		<script src="js/three/js/loaders/OBJLoader.js"></script>
+		
+		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
 
-<script type="text/javascript" src="js/01_starField.js"></script>
-
-<h1>
-A good time is had by all
-</h1>
+		<script type="text/javascript" src="js/01_starField.js"></script>
 
 </body>
 </html>
