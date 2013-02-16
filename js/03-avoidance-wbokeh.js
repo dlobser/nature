@@ -46,8 +46,6 @@ function init() {
 	scene = new THREE.Scene();
 	scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
 
-	scene.matrixAutoUpdate = false;
-	
 	// world
 
 	addGeo();

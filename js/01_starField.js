@@ -7,6 +7,11 @@ var FizzyText = function() {
 };
 */
 
+// var gui = new dat.GUI({ autoPlace: false });
+
+// var customContainer = document.getElementById('my-gui-container');
+// customContainer.appendChild(gui.domElement);
+
 var text;
 
 window.onload = function() {
