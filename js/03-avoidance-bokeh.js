@@ -26,16 +26,29 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 var container, stats;
 var camera, controls, scene, renderer;
+
+var materials = [], objects = [],
+	singleMaterial, zmaterial = [],
+	parameters, i, j, k, h, color, x, y, z, s, n, nobjects,
+	material_depth, cubeMaterial;
+
 var cross;			
 var things = [];
 var branch = [];
 
+var height = window.innerHeight - 300;
+
 var avoidDistance = 100;
 var ballAmount = 30;
+
+var postprocessing = { enabled  : true };
+
 init();
 animate();
 
 function init() {
+
+	material_depth = new THREE.MeshDepthMaterial();
 
 	camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 1, 1000 );
 	camera.position.z = 250;
@@ -46,12 +59,28 @@ function init() {
 	scene = new THREE.Scene();
 	scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
 
+	scene.matrixAutoUpdate = false;
+	//hoohah
 	// world
 
 	addGeo();
 	
+	
+	
+		var effectController  = {
 
+					focus: 		1.0,
+					aperture:	0.025,
+					maxblur:	1.0
 
+				};
+	
+	postprocessing.bokeh_uniforms[ "focus" ].value = 2;
+	postprocessing.bokeh_uniforms[ "aperture" ].value = 1;
+	postprocessing.bokeh_uniforms[ "maxblur" ].value = 1;
+	
+
+	initPostprocessing();
 
 	// lights
 
@@ -89,6 +118,28 @@ function init() {
 	//
 
 	window.addEventListener( 'resize', onWindowResize, false );
+	
+	var effectController  = {
+
+					focus: 		1.0,
+					aperture:	0.025,
+					maxblur:	1.0
+
+				};
+
+				var matChanger = function( ) {
+
+					postprocessing.bokeh_uniforms[ "focus" ].value = effectController.focus;
+					postprocessing.bokeh_uniforms[ "aperture" ].value = effectController.aperture;
+					postprocessing.bokeh_uniforms[ "maxblur" ].value = effectController.maxblur;
+
+				};
+
+				var gui = new dat.GUI();
+				gui.add( effectController, "focus", 0.0, 3.0, 0.025 ).onChange( matChanger );
+				gui.add( effectController, "aperture", 0.001, 0.2, 0.001 ).onChange( matChanger );
+				gui.add( effectController, "maxblur", 0.0, 3.0, 0.025 ).onChange( matChanger );
+				gui.close();
 
 }
 
@@ -306,9 +357,71 @@ function render() {
 	//moveThings();
 	renderer.render( scene, camera );
 	//stats.update();
+	if ( postprocessing.enabled ) {
+
+					renderer.clear();
+
+					// Render scene into texture
+
+					scene.overrideMaterial = null;
+					renderer.render( scene, camera, postprocessing.rtTextureColor, true );
+
+					// Render depth into texture
+
+					scene.overrideMaterial = material_depth;
+					renderer.render( scene, camera, postprocessing.rtTextureDepth, true );
+
+					// Render bokeh composite
+
+					renderer.render( postprocessing.scene, postprocessing.camera );
+
+
+				} else {
+
+					renderer.clear();
+					renderer.render( scene, camera );
+
+				}
 	
 
 }
+
+function initPostprocessing() {
+
+	postprocessing.scene = new THREE.Scene();
+
+	postprocessing.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2,  window.innerHeight / 2, window.innerHeight / - 2, -10000, 10000 );
+	postprocessing.camera.position.z = 100;
+
+	postprocessing.scene.add( postprocessing.camera );
+
+	var pars = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat };
+	postprocessing.rtTextureDepth = new THREE.WebGLRenderTarget( window.innerWidth, height, pars );
+	postprocessing.rtTextureColor = new THREE.WebGLRenderTarget( window.innerWidth, height, pars );
+
+	var bokeh_shader = THREE.BokehShader;
+
+	postprocessing.bokeh_uniforms = THREE.UniformsUtils.clone( bokeh_shader.uniforms );
+
+	postprocessing.bokeh_uniforms[ "tColor" ].value = postprocessing.rtTextureColor;
+	postprocessing.bokeh_uniforms[ "tDepth" ].value = postprocessing.rtTextureDepth;
+	postprocessing.bokeh_uniforms[ "focus" ].value = 1.1;
+	postprocessing.bokeh_uniforms[ "aspect" ].value = window.innerWidth / height;
+
+	postprocessing.materialBokeh = new THREE.ShaderMaterial( {
+
+		uniforms: postprocessing.bokeh_uniforms,
+		vertexShader: bokeh_shader.vertexShader,
+		fragmentShader: bokeh_shader.fragmentShader
+
+	} );
+
+	postprocessing.quad = new THREE.Mesh( new THREE.PlaneGeometry( window.innerWidth, window.innerHeight ), postprocessing.materialBokeh );
+	postprocessing.quad.position.z = - 500;
+	postprocessing.scene.add( postprocessing.quad );
+
+}
+
 
 function Mover(){
 	//set up

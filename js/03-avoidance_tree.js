@@ -29,22 +29,29 @@ var camera, controls, scene, renderer;
 var cross;			
 var things = [];
 var branch = [];
+var gogo = 0;
 
 var avoidDistance = 100;
 var ballAmount = 30;
+
 init();
 animate();
+
 
 function init() {
 
 	camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 1, 1000 );
-	camera.position.z = 250;
+	camera.position.z = 180;
 
 	controls = new THREE.OrbitControls( camera );
 	controls.addEventListener( 'change', render );
 
 	scene = new THREE.Scene();
-	scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
+	
+	var myColor = ("0x" + Math.floor(Math.random()*16777215).toString(16));
+			var hexValue = parseInt(myColor , 16);
+			
+	scene.fog = new THREE.FogExp2( hexValue, 0.002 );
 
 	// world
 
@@ -69,7 +76,7 @@ function init() {
 
 	// renderer
 
-	renderer = new THREE.WebGLRenderer( { antialias: false } );
+	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setClearColor( scene.fog.color, 1 );
 	renderer.setSize( window.innerWidth, window.innerHeight-100 );
 	
@@ -93,16 +100,32 @@ function init() {
 }
 
 function addGeo(){
+
+	var myColor = ("0x" + Math.floor(Math.random()*16777215).toString(16));
+			var hexValue = parseInt(myColor , 16);
+			
+	scene.fog = new THREE.FogExp2( hexValue, 0.002 );
+
 	var geometry = new THREE.SphereGeometry( 10,8,5 );
-	var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
+	
 
 	for ( var i = 0; i < ballAmount; i ++ ) {
-
+	
+		var myColor = THREE.Vector3( ( Math.random() - 0.5 ) * 10, ( Math.random() - 0.5 ) * 10, ( Math.random() - 0.5 ) * 10);
+		
+		var myColor = ("0x" + Math.floor(Math.random()*16777215).toString(16));
+		console.log(myColor);
+	
+		var material =  new THREE.MeshLambertMaterial( { color:myColor, shading: THREE.FlatShading } );
+		
 		var mesh = new THREE.Mesh( geometry, material );
+		
 		var pos = new THREE.Vector3( ( Math.random() - 0.5 ) * 10, ( Math.random() - 0.5 ) * 10, ( Math.random() - 0.5 ) * 10);
 		var zeroVec = new THREE.Vector3(0,0,0);
+				
 		
 		mesh.go = true;
+		mesh.dist = 1;
 
 		mesh.position = pos;
 		mesh.velocity = zeroVec;
@@ -119,6 +142,32 @@ function addGeo(){
 	//things.others = things;
 }
 
+function makeTree(){
+
+	//var geometry = new THREE.SphereGeometry( 10,8,5 );
+	//var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
+
+
+	for(var i = 1 ; i < things.length ; i++){
+		
+		other = things[i-1];
+		thing = things[i];
+		
+		var diffVec = THREE.Vector3.prototype.subVectors(thing.position,other.position);
+		//console.log(thing.position);
+		//console.log(diffVec);
+		diffVec.normalize();
+		// diffVec.multiplyScalar(dist/50);
+		// thing.position.add(diffVec);			
+
+		//thing.rotation.add(diffVec);// += 1;
+		
+		//var rot = new THREE.Vector3(thing.rotation.x,thing.rotation.y,thing.rotation.z);
+	
+	}
+
+}
+
 function onWindowResize() {
 
 	camera.aspect = window.innerWidth / window.innerHeight;
@@ -132,13 +181,14 @@ function onWindowResize() {
 
 function animate() {
 	render();
+	moveBranch();
 	
 	//console.log(branch.length);
 	
 	//if(moveThings.go){
 	
-	var gogo = 0;
 	
+	//makeTree();
 	
 	if(gogo < things.length-1){
 		for ( var i = 0; i<things.length; i ++ ) {
@@ -155,10 +205,43 @@ function animate() {
 		//console.log(gogo);
 	}
 	
+	if(gogo >= things.length-1){
+		//makeTree();
+	}
+	
 	//}
 	//Mover();
 	requestAnimationFrame( animate );
 	controls.update();
+}
+
+document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+
+function onDocumentMouseDown( event ) {
+		for(var i = 0 ; i<10000; i++){
+		
+		var l = scene.children.length
+        ;
+
+    //remove everything
+    while (l--) {
+
+        if(scene.children[l] instanceof THREE.Camera) continue; //leave camera in the scene
+		
+		if(scene.children[l] instanceof THREE.Light) continue;
+
+        scene.remove(scene.children[l]);
+
+    }
+			//scene.remove(i);
+			//console.log("gone: " + i);
+		
+		}
+			things = [];
+			branch = [];
+			
+			addGeo();
+			gogo = 0;
 }
 
 function moveThings(){
@@ -170,14 +253,13 @@ function moveThings(){
 
 	for ( var i = 1, il = things.length; i < il; i ++ ) {
 		var thing = things[i];
+		
 		thing.position.add(thing.velocity);
 		thing.velocity.add(thing.acceleration);
 		
 		var count = 0;//things.length;
 		
 		for ( var j = 0; j < things.length ; j ++ ) {
-		
-			
 		
 			if ( j==i && j< things.length-1){
 				j++;	
@@ -199,10 +281,20 @@ function moveThings(){
 			
 				thing.acceleration = new THREE.Vector3( ( Math.random() - 0.5 ) * 2, ( Math.random() - 0.5 ) * 2, ( Math.random() - 0.5 ) * 2);	
 				//thing.rotation.x += .1;
+				
 				var diffVec = THREE.Vector3.prototype.subVectors(thing.position,other.position);
+				
 				diffVec.normalize();
 				diffVec.multiplyScalar(dist/50);
-				thing.position.add(diffVec);							
+				thing.position.add(diffVec);	
+				
+				thing.dist = dist;
+				
+				
+				
+				thing.rotation.y = Math.atan2( - thing.velocity.z, thing.velocity.x );
+				thing.rotation.z = (Math.asin( thing.velocity.y / thing.velocity.length() ) - 3.1415/2);
+				
 				
 			}
 			
@@ -226,6 +318,33 @@ function moveThings(){
 	}
 }	
 
+function moveBranch(){
+
+	for ( var j = 0; j < branch.length ; j ++ ) {
+	var br = branch[j];
+	
+	var pos = new THREE.Vector3((Math.random()-0.5)/2,(Math.random()-0.5)/2,(Math.random()-0.5)/2);
+	
+	br.position.add(pos);
+	br.rotation.x += .1;
+	br.rotation.y += .01;
+	//br.color.setHex( 0xFF0000 );
+	
+	function map_range(value, low1, high1, low2, high2) {
+				return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+	}
+	
+	var rotColor = map_range(br.rotation.x,0,Math.PI,0,16777215);
+	var hexValue = parseInt(rotColor , 16);
+	
+	br.material.color.setHex((hexValue/14000)+8000000);
+	
+	}
+		
+		
+
+}
+
 function makeBranch(){
 
 	var geometry = new THREE.SphereGeometry( 3,4,4 );
@@ -233,27 +352,44 @@ function makeBranch(){
 	
 	for ( var i = 0; i<things.length; i ++ ) {
 	
-		var thing = things[i];
-		
-		//console.log(thing.go);
-		
+		var thing = things[i];		
+		//console.log(thing.go);		
 		if(thing.go==true){
-		
-			var mesh = new THREE.Mesh( geometry, material );
+			
+			var myColor = ("0x" + Math.floor(Math.random()*16777215).toString(16));
+			var hexValue = parseInt(myColor , 16);
+			//var myColor = "0xffffff";
+			//console.log(myColor);
+			
+			var material2 =  new THREE.MeshLambertMaterial( { color:hexValue, shading: THREE.FlatShading } );
+			
+			console.log(material2.color);
+			
+			var mesh = new THREE.Mesh( geometry, material2 );
 			var pos = new THREE.Vector3(thing.position.x,thing.position.y,thing.position.z);
+			var rot = new THREE.Vector3(thing.rotation.x,thing.rotation.y,thing.rotation.z);
 			
 			mesh.position = pos;
+			mesh.scale.y = thing.dist*.1;
 			
-			mesh.updateMatrix();
-			mesh.matrixAutoUpdate = true;
+			var small = 1.2;
+			
+			mesh.scale.x = small;
+			mesh.scale.z = small;
+			mesh.rotation = rot;
+			
+			//mesh.updateMatrix();
+			//mesh.matrixAutoUpdate = true;
 			
 			branch.push(mesh);
 			scene.add(mesh);
-			
+			//scene.add(branch);
 			//console.log("adding");
 			
 			//console.log("branch: " + mesh.position.x);
 		}
+		
+		
 	}
 }	
 
@@ -308,6 +444,30 @@ function render() {
 	//stats.update();
 	
 
+}
+
+// Rotate an object around an arbitrary axis in object space
+var rotObjectMatrix;
+function rotateAroundObjectAxis(object, axis, radians) {
+    rotObjectMatrix = new THREE.Matrix4();
+    rotObjectMatrix.makeRotationAxis(axis.normalize(), radians);
+    object.matrix.multiplySelf(rotObjectMatrix);      // post-multiply
+    object.rotation.getRotationFromMatrix(object.matrix, object.scale);
+}
+
+var rotWorldMatrix;
+// Rotate an object around an arbitrary axis in world space       
+function rotateAroundWorldAxis(object, axis, radians) {
+    rotWorldMatrix = new THREE.Matrix4();
+    rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
+    rotWorldMatrix.multiplySelf(object.matrix);        // pre-multiply
+    object.matrix = rotWorldMatrix;
+
+    // new code for Three.js v50+
+    object.rotation.setEulerFromRotationMatrix(object.matrix);
+
+    // old code for Three.js v49:
+    // object.rotation.getRotationFromMatrix(object.matrix, object.scale);
 }
 
 function Mover(){
