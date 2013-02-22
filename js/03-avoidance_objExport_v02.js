@@ -108,7 +108,7 @@ function init() {
 function addGeo(){
 
 	var myColor = ("0x" + Math.floor(Math.random()*16777215).toString(16));
-			var hexValue = parseInt(myColor , 16);
+	var hexValue = parseInt(myColor , 16);
 			
 	scene.fog = new THREE.FogExp2( hexValue, 0.002 );
 
@@ -129,7 +129,6 @@ function addGeo(){
 		var pos = new THREE.Vector3( ( Math.random() - 0.5 ) * 10, (( Math.random() - 0.5 ) * 10), ( Math.random() - 0.5 ) * 10);
 		var zeroVec = new THREE.Vector3(0,0,0);
 				
-		
 		mesh.go = true;
 		mesh.dist = 1;
 		mesh.count = 0;
@@ -264,27 +263,23 @@ function onDocumentMouseDown( event ) {
 		
 		
 		//if(j<10){
-			document.writeln("g obj" + l + "</br>");
-			document.writeln(THREE.saveGeometryToObj(scene.children[l],j*20));
-			console.log(j);
+		document.writeln("g obj" + l + "</br>");
+		document.writeln(THREE.saveGeometryToObj(scene.children[l],j*20));
+		console.log(j);
 		//document.writeln("hi</br>");
 		//}
 		
 		j++;
 		
         scene.remove(scene.children[l]);
-
 	}
-			//scene.remove(i);
-			//console.log("gone: " + i);
-		
-	//}
-			things = [];
-			branch = [];
-			limb = [];
-			
-			addGeo();
-			gogo = 0;
+
+	things = [];
+	branch = [];
+	limb = [];
+	
+	addGeo();
+	gogo = 0;
 }
 
 function moveThings(){
@@ -295,6 +290,7 @@ function moveThings(){
 
 
 	for ( var i = 0, il = things.length; i < il; i ++ ) {
+	
 		var thing = things[i];
 		
 		thing.position.add(thing.velocity);
@@ -332,9 +328,7 @@ function moveThings(){
 				thing.position.add(diffVec);	
 				
 				thing.dist = dist;
-				
-				
-				
+							
 				thing.rotation.y = Math.atan2( - thing.velocity.z, thing.velocity.x );
 				thing.rotation.z = (Math.asin( thing.velocity.y / thing.velocity.length() ) - 3.1415/2);
 				
