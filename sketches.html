@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Bootstrap, from Twitter</title>
+    <title>Nature</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -12,7 +12,13 @@
     <style>
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+		
       }
+	 thisDiv
+	{
+		background-color: #f7f7f9 !important;
+		text-align:center;
+	} 
     </style>
     <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -30,6 +36,9 @@
   </head>
 
   <body>
+
+	
+
 
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
@@ -51,15 +60,48 @@
       </div>
     </div>
 
-    <div class="container">
-	
-	<li><a href="1-noise.html">1-noise</a></li>
-	<li><a href="2-vectors.html">2-vectors</a></li>
-    <li><a href="3-avoidance.html">3-avoidance</a></li>
-	<li><a href="3-avoidance_tree.html">3-avoidance spinning</a></li>
-	<li><a href="3-avoidance_lookat.html">3-avoidance branches</a></li>
-	<li><a href="3-avoidance_objExport.html">3-avoidance obj export</a> </br>This one exports to .obj format when you click - copy, paste and save </li>
+	<script src="js/three/build/three.min.js"></script>
+		
+		<script src="js/libs/ImprovedNoise.js"></script>
 
+		<script src="js/three/js/controls/OrbitControls.js"></script>
+
+		<script src="js/three/js/Detector.js"></script>
+		<script src="js/three/js/libs/stats.min.js"></script>
+		
+		<script type="text/javascript" src="http://dat-gui.googlecode.com/git/build/dat.gui.min.js"></script>
+
+	
+    <div class="container">
+	<div class="row">
+	<div class="span4">
+	   <div style = "
+		background-color: #002244 !important;
+		text-align:right;
+		padding: 10px;
+		border-radius: 15px
+		"
+
+    
+
+	
+			<li><a href="1-noise.html">1-noise</a></li>
+			<li><a href="2-vectors.html">2-vectors</a></li>
+			<li><a href="3-avoidance.html">3-avoidance</a></li>
+			<li><a href="3-avoidance_tree.html">3-avoidance spinning</a></li>
+			<li><a href="3-avoidance_lookat.html">3-avoidance branches</a></li>
+			<li><a href="3-avoidance_objExport.html">3-avoidance obj export</a> </br>This one exports to .obj format when you click - copy, paste and save </li>
+			<li><a href="4-spinning.html">4 - spinning</a> </br>click screen - x and y pos controls speed</br>q toggles cage - r exports geo</li>
+	
+		
+	</div>
+	</div>
+
+	<div class="span8", div id = "span8">
+
+		<script src="js/4-spinning_tiny.js"></script></br>click me
+	</div>
+	</div>
     </div> <!-- /container -->
 
     <!-- Le javascript
