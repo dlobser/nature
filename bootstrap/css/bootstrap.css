@@ -224,9 +224,9 @@ textarea {
 body {
   margin: 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  line-height: 20px;
-  color: #333333;
+  font-size: 17px;
+  line-height: 23px;
+  color: #554433;
   background-color: #000000;
 }
 
@@ -310,6 +310,7 @@ a:focus {
 
 .span8 {
   width: 620px;
+ bgcolor="#FF0000";
 }
 
 .span7 {
