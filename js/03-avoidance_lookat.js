@@ -234,7 +234,7 @@ function animate() {
 	moveBranch();
 }
 
-document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+//document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 
 function onDocumentMouseDown( event ) {
 		
@@ -578,7 +578,7 @@ function Mover(){
 };
 }
 
-
+/*
 THREE.saveGeometryToObj = function (geo,nums) {
 
 geo.updateMatrixWorld();
@@ -613,3 +613,4 @@ for (i = 0; i < geo.geometry.faces.length; i++) {
 return s;
 }
 
+*/

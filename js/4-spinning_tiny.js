@@ -11,7 +11,7 @@ var container = document.getElementById('span8');
 
 //renderer
 var renderer = new THREE.WebGLRenderer({antialias:true, clearColor: 0x000000, clearAlpha: 0 });
-renderer.setSize(720,405);
+renderer.setSize(620,340);
 container.appendChild(renderer.domElement);
 
 var geometry = new THREE.SphereGeometry(.4,6,2);
@@ -19,6 +19,8 @@ var cubegeometry = new THREE.CubeGeometry(1,1,1);
 var material = new THREE.MeshBasicMaterial({color: 0x774411});
 var material2 = new THREE.MeshBasicMaterial({color: 0xbb7733});
 var material3 = new THREE.MeshBasicMaterial({color: 0x1188ee});
+
+
 
 var ball = new THREE.Object3D();
 var balls = new THREE.Object3D();
@@ -38,8 +40,8 @@ var baller = [];
 var parentCube;
 var returnCube;
 var renderCube = true;
-var pos = new THREE.Vector3(24,0,0);
-var animated = false;
+var pos = new THREE.Vector3(4,0,0);
+var animated = true;
 
 camera.position.z = 60;
 
@@ -100,7 +102,7 @@ var zeroVec = new THREE.Vector3(0,0,0);
 		if ( i % 12 == 0 ){
 			q = 0;
 		}
-		console.log(pos.x);
+		//console.log(pos.x);
 		q = pos.x/.00001;
 	}
 	for(var i = 0 ; i < baller.length ; i++ ){
