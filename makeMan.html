@@ -70,81 +70,93 @@
 			
 			//console.log(partis.leye);
 			
-			function dude() {
+			function peep(){
+			
+				var parts = [];
+			
+				this.dude = function (mx,my,mz,al,aw,ll,lw,ls,ex,ey,es) {
 
+					var white = 0xffffff;
+					var black = 0x000000;
+					this.CTRL = new THREE.Object3D();
+								
+					var rlArm = new part(0,-.5,0,aw,al,aw,0,-al,0,"rlarm",white);
+					var ruArm = new part(0,-.5,0,aw,al,aw,(mx+(aw*.5))*.5,0,0,"ruarm",white);
+					
+					var lLeg = new part(0,-.5,0,lw,ll,lw,ls,-(my*.5),0,"lleg",white);
+					var rLeg = new part(0,-.5,0,lw,ll,lw,-ls,-(my*.5),0,"rleg",white);
+					
+					var leye = new part(0,0,0,ex,ey,ex,es,0,mz*.5,"leye",black);
+					var reye = new part(0,0,0,ex,ey,ex,-es,0,mz*.5,"reye",black);
+								
+					var llArm = new part(0,-.5,0,aw,al,aw,0,-al,0,"llarm",white);
+					var luArm = new part(0,-.5,0,aw,al,aw,(mx+(aw*.5))*-.5,0,0,"luarm",white);
 				
-				var white = 0xffffff;
-				var black = 0x000000;
-				this.CTRL = new THREE.Object3D();
+					var bod = new part(0,0,0,mx,my,mz,0,0,0,"bod",white);
+					
+					ruArm.wer.add(rlArm.wer);			
+					luArm.wer.add(llArm.wer);
+					
+					bod.wer.add(ruArm.wer);
+					bod.wer.add(luArm.wer);
+					
+					bod.wer.add(lLeg.wer);
+					bod.wer.add(rLeg.wer);
+					
+					bod.wer.add(leye.wer);
+					bod.wer.add(reye.wer);
+					
+					this.CTRL.add(bod.wer);
+					
+					this.CTRL.position.y = my+ll;
+				}	
+					
+				function part(px,py,pz,sx,sy,sz,p2x,p2y,p2z,namer,color){
+											
+					var geometry = new THREE.CubeGeometry( 1,1,1,1,1,1 );
+					var material =  new THREE.MeshLambertMaterial( { color:color, shading: THREE.FlatShading } );
 				
-				//var rlerArm = new part(0,-.5,0,10,50,10,0,-50,0);
-				var rlArm = new part(0,-.5,0,10,50,10,0,-50,0,white);
-				var ruArm = new part(0,-.5,0,10,50,10,55,0,0,white);
-				
-				var lLeg = new part(0,-.5,0,10,50,10,30,-50,0,white);
-				var rLeg = new part(0,-.5,0,10,50,10,-30,-50,0,white);
-				
-				var leye = new part(0,0,0,4,8,3,30,0,50,black);
-				var reye = new part(0,0,0,4,8,3,-30,0,50,black);
-				
-				
-				
-				//var llerArm = new part(0,-.5,0,10,50,10,0,-50,0);
-				var llArm = new part(0,-.5,0,10,50,10,0,-50,0,white);
-				var luArm = new part(0,-.5,0,10,50,10,-55,0,0,white);
-			
-				var bod = new part(0,0,0,100,100,100,0,0,0,white);
-				
-				
-				parts.push(ruArm.wer);
-				
-				//rlArm.wer.add(rlerArm.wer);
-				ruArm.wer.add(rlArm.wer);
-				
-				//llArm.wer.add(llerArm.wer);
-				luArm.wer.add(llArm.wer);
-				
-				bod.wer.add(ruArm.wer);
-				bod.wer.add(luArm.wer);
-				
-				bod.wer.add(lLeg.wer);
-				bod.wer.add(rLeg.wer);
-				
-				bod.wer.add(leye.wer);
-				bod.wer.add(reye.wer);
-				
-				this.CTRL.add(bod.wer);
-			}	
-				
-			function part(px,py,pz,sx,sy,sz,p2x,p2y,p2z,color){
+					var pos = new THREE.Vector3(px,py,pz);
+					var scl = new THREE.Vector3(sx,sy,sz);
+					var pos2 = new THREE.Vector3(p2x,p2y,p2z);
+					
+					this.mesh = new THREE.Mesh( geometry, material );
 										
-				var geometry = new THREE.CubeGeometry( 1,1,1,1,1,1 );
-				var material =  new THREE.MeshLambertMaterial( { color:color, shading: THREE.FlatShading } );
-			
-				var pos = new THREE.Vector3(px,py,pz);
-				var scl = new THREE.Vector3(sx,sy,sz);
-				var pos2 = new THREE.Vector3(p2x,p2y,p2z);
+					this.mesh.updateMatrix();
+					this.mesh.matrixAutoUpdate = true;					
+					this.mesh.position = pos;				
+					this.scalar = new THREE.Object3D();	
+
+					this.mesh.name = "mesh_"+namer;
+					this.scalar.name = "scale_"+namer;	
+					
+					this.scalar.matrixAutoUpdate = true;					
+					this.scalar.add(this.mesh);					
+					this.scalar.scale = scl;					
+					this.rotator = new THREE.Object3D();
+
+					this.rotator.name = "rotate_"+namer;					
+					
+					this.rotator.matrixAutoUpdate = true;					
+					this.rotator.add(this.scalar);					
+					this.wer = new THREE.Object3D();	
+					
+					this.wer.name = "position_"+namer;
+					
+					this.wer.matrixAutoUpdate = true;					
+					this.wer.add(this.rotator);					
+					this.wer.position = pos2;			
+				}
 				
-				var mesh = new THREE.Mesh( geometry, material );
-									
-				mesh.updateMatrix();
-				mesh.matrixAutoUpdate = true;					
-				mesh.position = pos;				
-				this.scalar = new THREE.Object3D();					
-				this.scalar.matrixAutoUpdate = true;					
-				this.scalar.add(mesh);					
-				this.scalar.scale = scl;					
-				this.rotator = new THREE.Object3D();					
-				this.rotator.matrixAutoUpdate = true;					
-				this.rotator.add(this.scalar);					
-				this.wer = new THREE.Object3D();					
-				this.wer.matrixAutoUpdate = true;					
-				this.wer.add(this.rotator);					
-				this.wer.position = pos2;
-				
-			
+				this.makeSet = function(node) {
+					var parts = [];
+					for(var i = 0, count = node.children.length; i < count; i++) {
+						parts.push(node);
+						makeSet(node.children[i]);			
+					}
+					//return parts;
+				}
 			}
-			
 				
 			
 			
@@ -166,7 +178,39 @@
 
 				//addGeo();
 				
-				 man = new dude();
+				 man = new peep();
+						//(mx,my,mz,al,aw,ll,lw,ls,ex,ey,es)
+						//(bod scale xyz, arm length/width, leg length/width/separation,eye x/y/separation, n
+				 man.dude(100,150,100,30,10,50,5,30,4,8,30);
+				 man.makeSet(man.CTRL);
+				 
+				 woman = new peep();
+				 woman.dude(100,90,100,30,10,50,5,30,4,8,30);
+				 
+				 var parts = [];
+				 
+				 function func(node) {
+					for(var i = 0, count = node.children.length; i < count; i++) {
+						man.parts.push(node);
+						func(node.children[i]);			
+					}
+				}
+				
+				func(man.CTRL);
+				
+				console.log(peep.parts);
+				
+				var dooder;
+				
+				for(thing in parts) {
+					if(parts[thing].name == "rotate_leye"){
+						console.log("name_" + parts[thing].name);
+						dooder = parts[thing];
+					}
+				} 
+				
+				dooder.position.y = 10;
+				
 				//man.part(0,-.5,0,20,100,20,0,0,0);
 				
 				var geometry = new THREE.CubeGeometry( 10,10,10,1,1,1 );
@@ -175,6 +219,7 @@
 				var mesh = new THREE.Mesh( geometry, material );
 				
 				scene.add(man.CTRL);
+				scene.add(woman.CTRL);
 
 
 				// lights
@@ -262,7 +307,8 @@
 				render();
 				
 				//parts[0].rotation = q;
-				
+				woman.CTRL.position.x = 200;
+				woman.CTRL.position.y = 0;
 				//man.CTRL.rotation.x = Math.sin(q+.1);
 				man.CTRL.position.y = Math.abs(Math.sin(q2)*40);
 				man.CTRL.scale.x = ctrl.size;
