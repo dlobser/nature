@@ -10,14 +10,19 @@
     <!-- Le styles -->
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
     <style>
+	container{
+		background-color = "white"!important
+	}
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
 		
       }
 	 thisDiv
 	{
-		background-color: #f7f7f9 !important;
-		text-align:center;
+		background-color: #162D2E !important;
+			padding: 10px;
+			letter-spacing : -.1em;
+			border-radius: 10px
 	} 
     </style>
     <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">
@@ -73,43 +78,92 @@
 
 	
     <div class="container">
-	<div class="row">
-	<div class="span4">
-	   <div style = "
-		background-color: #162D2E !important;
-		padding: 10px;
-		border-radius: 15px
-		">   
-			<h1>Nature</h1></br>
-	
-			<li><a href="1-noise.html">1-noise</a></li>
-			<li><a href="2-vectors.html">2-vectors</a></li>
-			<li><a href="3-avoidance.html">3-avoidance</a></li>
-			<li><a href="3-avoidance_tree.html">3-avoidance spinning</a></li>
-			<li><a href="3-avoidance_lookat.html">3-avoidance branches</a></li>
-			<li><a href="3-avoidance_objExport.html">3-avoidance obj export</a> <p style = "font-size:.8em; line-height:90%">This one exports to .obj format when you click - copy, paste and save </li>
-			<li><a href="4-manbirds.html">4-peeple boids</a></li>
-
-	</div>
-	</div>
-
-	<div class="span8", div id = "span8">
-		<script src="js/4-spinning_tiny.js"></script></br>
-	</div>
-	<div class="span4 offset0", div id = "span8">
-		   <div style = "
-			background-color: #162D2E !important;
-			padding: 10px;
-			border-radius: 15px
-			">
+		<div class="row">
+			<div class="span4">
+			<div style = "background-color: #162D2E !important;padding: 10px;letter-spacing : -.1em;border-radius: 10px">
+				<font face="Lucida Console">
+					<h1>Nature</h1>
 			
-			<h2>Experiments</h2></br>
-			<li><a href="4-spinning.html">Spinning</a><p style = "font-size:.8em; line-height:90%">click screen - x and y pos controls speed</br>q toggles cage - r exports geo</li>
-			<li><a href="4-makeman.html">peeple maker</a></li>
-
+					<li><a href="1-noise.html">1-noise</a></li>
+					<li><a href="2-vectors.html">2-vectors</a></li>
+					<li><a href="3-avoidance.html">3-avoidance</a></li>
+					<li><a href="3-avoidance_tree.html">3-avoidance spinning</a></li>
+					<li><a href="3-avoidance_lookat.html">3-avoidance branches</a></li>
+					<li><a href="3-avoidance_objExport.html">3-avoidance obj export</a> <p style = "font-size:.8em; line-height:90%">This one exports to .obj format when you click - copy, paste and save </li>
+					<li><a href="4-manbirds.html">4-peeple boids</a></li></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+					
+				</font>
+			</div>
 		</div>
 
+		<div class="span8", div id = "span8">
+			<script src="js/4-spinning_tiny.js"></script></br>
+			<div class="row">
+				<div class="span4", div id = "span8">
+				  <div style = "background-color: #162D2E !important;padding: 10px;letter-spacing : -.1em;border-radius: 10px">
+					<font face="Lucida Console">
+					<h2>Experiments</h2>
+					<li><a href="4-spinning.html">Spinning</a><p style = "font-size:.8em; line-height:90%">click screen to tweak</br>q toggles cage, r exports geo</li>
+					<li><a href="4-makeman.html">peeple maker</a></li>
+			
+					</font>
+					</div>
+				</div>
+				<div class="span4", div id = "span8">
+				   <div style = "background-color: #162D2E !important;padding: 10px;letter-spacing : -.1em;border-radius: 10px">
+					<font face="Lucida Console">
+					<h2>THREE Links</h2>
+					<li><a href="http://mrdoob.github.com/three.js/">THREEjs</a></li>
+					<li><a href="http://stemkoski.github.com/Three.js/">THREEjs examples</a></li>
+					<li><a href="http://learningwebgl.com/blog/">Learning WebGL</a></li>
+					<li><a href="http://www.freshdesignweb.com/html5-css3-3d-examples-demo.html">WebGL examples</a></li>
+					<li><a href="http://it-ebooks.info/book/918/">WebGL O'Reilly</a></li>
+					</font>
+					</div>
+				</div>
+
+			</div>
+			</br>
+			<div class="row">
+		
+				<div class="span4 offset4", div id = "span8">
+				   <div style = "background-color: #162D2E !important;padding: 10px;letter-spacing : -.1em;border-radius: 10px">
+					<font face="Lucida Console">
+					<h2>JS/web Links</h2>
+					<li><a href="http://twitter.github.com/bootstrap/">bootstrap</a></li>	
+					</font>
+					</div>
+				</div>
+			
+			</div>
+			</br>
+		</div>
+			</div>
+	
+		<div class="row">
+			<div class="span12", div id = "span12">
+			   <div style = "background-color: #162D2E !important;padding: 10px;letter-spacing : -.1em;border-radius: 10px">
+				<font face="Lucida Console">
+				<h2>TIL</h2>
+					<a href="http://blog.xkoder.com/2008/07/10/javascript-associative-arrays-demystified/">Associative Arrays</a></br>
+					<p style = "font-size:.8em; line-height:98%">
+					I was very proud of myself for cleverly building a recursive function that added a heirarchy's elements to an array (with no repeats mind you) and printed that array out.
+					I was then manually copying that print out to define a slew of object variables.  Scott Garner showed me how to replace my 40 odd lines of code with one.  Associative arrays let you automatically define
+					as many named variables as you want!  Shazam.
+					</p>
+					<a href="http://stackoverflow.com/questions/11367822/exporting-a-three-js-mesh-as-an-obj-or-stl">Updated OBJ exporter</a></br>
+					<p style = "font-size:.8em; line-height:98%">
+					I found a short snipped of code that exported a given object to the .obj format.  For my purposes it was lacking.  I added a few lines of code that exported based on world space instead of object and 
+					I found a way to export n objects instead of just one (hint: .obj files refer to line numbers when building faces).
+					</p>
+					
+				</font>
+				</div>
+		
+		
 	</div>
+	</div>
+
 	
 	
 	<div class="row">
