@@ -47,8 +47,7 @@ var partis = party();
 //console.log(partis.leye);
 
 function peep(){
-	
-	var geometry = new THREE.CubeGeometry( 1,1,1,1,1,1 );
+
 	this.parts = [];
 	this.id;
 	this.speed;
@@ -96,7 +95,7 @@ function peep(){
 		
 	function part(px,py,pz,sx,sy,sz,p2x,p2y,p2z,namer,color){
 								
-		
+		var geometry = new THREE.CubeGeometry( 1,1,1,1,1,1 );
 		var material =  new THREE.MeshLambertMaterial( { color:color, shading: THREE.FlatShading } );
 	
 		var pos = new THREE.Vector3(px,py,pz);
@@ -154,11 +153,7 @@ function peep(){
 	//use this function to print the contents of the parts array
 	this.printParts = function(){
 		for(thing in man.parts) {
-		
-			//named "associative arrays" - like a dict or hash table/hash map
-			this[ man.parts[thing].name ] = man.parts[thing];
-		
-			//console.log("this." + man.parts[thing].name + "=man.parts[" + thing + "]" + ";");
+			console.log("this." + man.parts[thing].name + "=man.parts[" + thing + "]" + ";");
 		}
 	}
 	
@@ -329,7 +324,7 @@ function addPeeps(){
 		
 		 man.dude(pos.x,pos.y,pos.z,	armLength, armWidth,	legLength,legWidth,pos.x/3,	eyeX,eyeY,pos.x/3);
 		 man.makeSet(man.CTRL,man.parts);
-		 man.printParts();
+		 man.makeParts();
 		 man.id = i;
 		 man.q = 0;
 		 man.speed = Math.random()*2 +1;
@@ -423,7 +418,8 @@ function animate() {
 	for(var i = 0 ; i < peepers.length ; i++){
 	
 		var p = peepers[i];
-			
+		
+		
 		p.position_ruarm.rotation.x=Math.sin(p.q+p.id)/4;
 		p.rotation_rlarm.rotation.x=Math.sin(p.q+p.id-1)/4;
 		p.position_ruarm.position.y=Math.sin((p.q*2+p.id)-3)*3;
@@ -438,7 +434,10 @@ function animate() {
 		var rotator = new THREE.Vector3(Math.sin(p.q+p.id)/4,  Math.sin((p.q+p.id)*2)/16,  Math.sin((p.q+p.id)*4)/64);
 		
 		p.rotation_bod.rotation = rotator;
+		//p.CTRL.rotation.y=p.q/10;
+	//	rotateAroundObjectAxis(p.rotation_bod.rotation.y,p.position_bod.rotation,p.q/10);
 		p.position_bod.position.y= ((Math.sin(1+(p.q*2)))*5)+5;
+		//p.CTRL.rotation.y = -.6;
 		p.q += p.speed * ctrl.speed/3;
 		
 	}
@@ -460,10 +459,40 @@ function animate() {
 		object.matrix = rotWorldMatrix;
 		object.rotation.setEulerFromRotationMatrix(object.matrix, object.order);
 	} 
+	//console.log(man.scale_leye.scale);
+	/*
+	man.rotation_leye.scale.z = 10;
+	man.rotation_leye.rotation.z += ctrl.speed;
+	man.position_leye.scale.z = 10 + (Math.sin(q));
+	console.log(man.scale_leye.position.y);
+	*/
 	
+	//parts[0].rotation = q;
+
+	//man.CTRL.rotation.x = Math.sin(q+.1)/10;
+	//man.CTRL.position.y = Math.abs(Math.sin(q2)*40);
+	//man.CTRL.scale.x = ctrl.size;
+	//man.CTRL.children[0].rotation.x=Math.sin(q)/4;
+	//man.CTRL.children[0].children[1].position.y=Math.sin((q*2)-2)*2;
+	//man.CTRL.children[0].children[1].rotation.x=Math.sin(q-.5);
+	//partis.leye.position.y=Math.sin((q*2)-2)*2;
+	//man.CTRL.children[0].children[1].rotation.z=Math.PI/2 + Math.sin(q/2);
+	//man.CTRL.children[0].children[1].scale.y = .5;
+	//man.CTRL.children[0].children[1].children[1].rotation.x=Math.sin(q-.75);
+	//man.CTRL.children[0].children[1].children[1].children[1].rotation.x=Math.sin(q-1);
+	
+	//man.CTRL.children[0].children[2].rotation.x=Math.sin(q2-3.5);
+	//man.CTRL.children[0].children[2].children[1].rotation.x=Math.sin(q2-3.75);
+	//man.CTRL.children[0].children[2].children[1].scale.y = .5;
+	//man.CTRL.children[0].children[2].children[1].children[1].rotation.x=Math.sin(q-1);
+	
+	//man.CTRL.children[0].children[3].rotation.x=Math.sin(q-3.8);
+	//man.CTRL.children[0].children[4].rotation.x=Math.sin(q-1.5);
+	
+	//console.log(man.CTRL.children.length);
 	
 	moveThings();
-	
+	//Mover();
 	requestAnimationFrame( animate );
 	controls.update();
 	
@@ -472,6 +501,9 @@ function animate() {
 function moveThings(){
 
 	this.go = false;
+	
+	//if
+	//things = peepers;
 
 	for ( var i = 1, il = things.length; i < il; i ++ ) {
 		var thing = things[i];
