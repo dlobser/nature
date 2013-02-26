@@ -85,7 +85,7 @@
 					texture2.needsUpdate = true;
 
 				} );
-				loader2.load( '../textures/red.jpg' );
+				loader2.load( 'textures/red.jpg' );
 
 				
 				var loader2 = new THREE.OBJLoader();
@@ -113,7 +113,7 @@
 					scene.add( object );
 					heart.push(object);
 				});
-				loader2.load( '../models/heart_xhi.obj' );
+				loader2.load( 'models/heart_xhi.obj' );
 					
 				
 				for ( var i = 0; i < 200; i ++ ) {
@@ -129,7 +129,7 @@
 					texture.needsUpdate = true;
 
 				} );
-				loader.load( '../textures/arrow.jpg' );
+				loader.load( 'textures/arrow.jpg' );
 
 				
 				var loader = new THREE.OBJLoader();
@@ -167,7 +167,7 @@
 
 				});
 				
-				loader.load( '../models/arrow.obj' );
+				loader.load( 'models/arrow.obj' );
 				
 				
 				
