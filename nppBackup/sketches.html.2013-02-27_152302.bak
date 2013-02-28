@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Nature</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+	<link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <style>
+	.container{
+		font-family: "Courier New", "Lucida Console", monospace;background-color:#122;
+		
+	}
+	.navbar-inner { height:0em; min-height:0em;}
+	.span8,.span4,.nobg,.span12{
+		background-color: #162D2E;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+		margin: 5px;
+		padding: 0px;
+		letter-spacing : -.1em;
+		border-radius: 10px;
+	}
+	#veryTop{
+		margin-top:-30px;
+	}
+	.span8{
+		background-color:transparent;
+		margin:0px;
+		border-radius:0px;	
+	}
+	.span4{
+		width:280!important;
+		padding:10px;
+	}
+	.span12{
+		padding-top:-2em;
+		padding:10px;
+		margin:0;
+		border-radius: 10px;
+	}
+	.row{
+	margin-left:0px;
+	}
+	#inside{
+	<!--margin-left:-20px;-->
+	}
+	h1,h2,h3 {
+		margin-top: 0;
+		line-height:.8em;
+	}
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+		
+      }
+	 thisDiv
+	{
+		background-color: #162D2E !important;
+			padding: 10px;
+			letter-spacing : -.1em;
+			border-radius: 10px
+	} 
+	.navbar .brand, .navbar .nav{
+		padding-top:2px;
+		background-color:transparent;
+		padding-left:20px;
+	}
+	.navbar .nav > li > a{
+		padding-top:2px;
+		padding-left:10px;
+	}
+	.smalls{
+		font-size:.8em; line-height:90%;
+		padding-left:20px;
+		padding-right:20px;
+	{
+    </style>
+
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="../assets/ico/favicon.png">
+  </head>
+
+  <body>
+
+	
+
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="http://natureofcode.com/">Nature of Code</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="sketches.html">Sketches</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="http://www.DLobser.com">Dlobser.com</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+	<div style="position: relative;">
+	  <canvas id="canvas" width="400" height="300" style="position: absolute; left: 0; top: 0; z-index: 2">>
+         This text is displayed if your browser 
+         does not support HTML5 Canvas.
+        </canvas>
+	</div>
+	<script src="js/test/canvastest.js"></script>
+
+	<script src="js/three/build/three.min.js"></script>
+		
+		<script src="js/libs/ImprovedNoise.js"></script>
+
+		<script src="js/three/js/controls/OrbitControls.js"></script>
+
+		<script src="js/three/js/Detector.js"></script>
+		<script src="js/three/js/libs/stats.min.js"></script>
+		
+		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
+
+	
+    <div class="container" id="veryTop" >
+		<div class="row">
+			<div class="span4">
+				
+					<h1>Nature</h1>
+			
+					<li><a href="1-noise.html">1-noise</a></li>
+					<li><a href="2-vectors.html">2-vectors</a></li>
+					<li><a href="3-avoidance.html">3-avoidance</a></li>
+					<li><a href="3-avoidance_tree.html">3-avoidance spinning</a></li>
+					<li><a href="3-avoidance_lookat.html">3-avoidance branches</a></li>
+					<li><a href="3-avoidance_objExport.html">3-avoidance obj export</a> <p class="smalls">This one exports to .obj format when you click - copy, paste and save</p> </li>
+					<li><a href="4-manbirds.html">4-peeple boids</a></li></br>
+					
+				
+		</div>
+
+		<div class="span8" id = "span8">
+			<script src="js/4-spinning_tiny.js"></script>
+			
+			
+			<div class="row" id="inside">
+			
+				<div class="span4" id="span8">
+			
+				  <!--<div style = "background-color: #162D2E !important;padding: 10px;letter-spacing : -.1em;border-radius: 10px">-->
+					
+					<h2>Experiments</h2>
+					<li><a href="4-spinning.html">Spinning</a><p class="smalls">click screen to tweak</br>q toggles cage, r exports geo</li>
+					<li><a href="4-makeman.html">peeple maker</a></li>
+					</br>
+		
+					<!--</div>-->
+				</div>
+				
+				<div class="span4">
+				   <div >
+					
+					<h3>THREE Links</h3>
+					<li><a href="http://mrdoob.github.com/three.js/">THREEjs</a></li>
+					<li><a href="http://stemkoski.github.com/Three.js/">THREEjs examples</a></li>
+					<li><a href="http://learningwebgl.com/blog/">Learning WebGL</a></li>
+					<li><a href="http://www.freshdesignweb.com/html5-css3-3d-examples-demo.html">WebGL examples</a></li>
+					<li><a href="http://it-ebooks.info/book/918/">WebGL O'Reilly</a></li>
+					<li><a href="http://chandlerprall.github.com/Physijs/">PhysJS - physics plugin</a>
+					
+				</div>
+				
+				</br>
+				
+				<div >
+					<div style = "background-color: #162D2E !important;padding: 10px;letter-spacing : -.1em;border-radius: 10px">			
+						<h3>JS/web Links</h3>
+						<li><a href="http://twitter.github.com/bootstrap/">bootstrap</a></li>				
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		</br>
+
+	</div>
+	</div>
+	
+		<div class="row">
+			<div class="span12", div id = "span12">
+				
+				<h2>TIL</h2>
+					<a href="http://blog.xkoder.com/2008/07/10/javascript-associative-arrays-demystified/">Associative Arrays</a></br>
+					<p class="smalls">
+					I was very proud of myself for cleverly building a recursive function that added a heirarchy's elements to an array (with no repeats mind you) and printed that array out.
+					I was then manually copying that print out to define a slew of object variables.  Scott Garner showed me how to replace my 40 odd lines of code with one.  Associative arrays let you automatically define
+					as many named variables as you want!  Shazam	
+					</p>
+					<a href="http://stackoverflow.com/questions/11367822/exporting-a-three-js-mesh-as-an-obj-or-stl">Updated OBJ exporter</a></br>
+					<p class="smalls">
+					I found a short snipped of code that exported a given object to the .obj format.  For my purposes it was lacking.  I added a few lines of code that exported based on world space instead of object and 
+					I found a way to export n objects instead of just one (hint: .obj files refer to line numbers when building faces).
+					</p>
+		
+					<a href="https://s3.amazonaws.com/vepkenez/lobster/Nature+Of+Lobster.html">Nature of Lobster</a>
+				   	<p class="smalls">
+					My friend Damon hooked me up with some buttons and the code to use them!  Look at the bottom of 4-spinning.js</p>
+					</br>
+								
+					 <ul>
+					   <li class="btn btn-primary three-ctl" data-function="bigger">bigger</li>
+					   <li class="btn btn-primary three-ctl" data-function="smaller">smaller</li>
+					   <li class="btn btn-primary three-ctl" data-function="addballs">add balls</li>
+					   <li class="btn btn-primary three-ctl" data-function="addbirds">add birds</li>
+
+					 </ul>
+				
+					
+		
+		
+		
+			</div>
+		</div>
+
+	
+	
+	<div class="row">
+		<div class="span4">
+		</div>
+		<div class="span4">
+		</div>
+		<div class="span4">
+		</div>
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../assets/js/jquery.js"></script>
+    <script src="../assets/js/bootstrap-transition.js"></script>
+    <script src="../assets/js/bootstrap-alert.js"></script>
+    <script src="../assets/js/bootstrap-modal.js"></script>
+    <script src="../assets/js/bootstrap-dropdown.js"></script>
+    <script src="../assets/js/bootstrap-scrollspy.js"></script>
+    <script src="../assets/js/bootstrap-tab.js"></script>
+    <script src="../assets/js/bootstrap-tooltip.js"></script>
+    <script src="../assets/js/bootstrap-popover.js"></script>
+    <script src="../assets/js/bootstrap-button.js"></script>
+    <script src="../assets/js/bootstrap-collapse.js"></script>
+    <script src="../assets/js/bootstrap-carousel.js"></script>
+    <script src="../assets/js/bootstrap-typeahead.js"></script>
+
+  </body>
+</html>

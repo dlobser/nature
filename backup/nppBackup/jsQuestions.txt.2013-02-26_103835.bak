@@ -1,0 +1,58 @@
+Javascript questions:
+
+//-------------------------------------------
+
+What is this syntax all about?  why make a prototype separate from the function and is constructor a reserved word made just for constructing things?
+
+THREE.Quaternion = function( x, y, z, w ) {
+
+	this.x = x || 0;
+	this.y = y || 0;
+	this.z = z || 0;
+	this.w = ( w !== undefined ) ? w : 1;
+
+};
+
+THREE.Quaternion.prototype = {
+
+	constructor: THREE.Quaternion,
+
+	set: function ( x, y, z, w ) {
+
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
+
+		return this;
+
+	},....etc
+	
+//-------------------------------------------
+
+What is this syntax?  I've never seen & used like that and I've never seen >>
+I assume it's converting integers into hex and then putting them in their proper place
+
+this.r = ( hex >> 16 & 255 ) / 255;
+this.g = ( hex >> 8 & 255 ) / 255;
+this.b = ( hex & 255 ) / 255;
+
+//-------------------------------------------
+
+What's the difference between
+
+funcName: function (a,b){}
+function funcname (a,b){}
+var funcname = new function (a,b) {}
+
+and, I think I'm missing one
+
+//-------------------------------------------
+
+What is the array syntax about after 'this' - please explain more about dicts and hashmaps
+
+//named "associative arrays" - like a dict or hash table/hash map
+this[ man.parts[thing].name ] = man.parts[thing];
+			
+//-------------------------------------------
+

@@ -1,0 +1,68 @@
+.container{
+		font-family: "Lucida Console", "Courier New", monospace;background-color:#122;
+		
+	}
+	.navbar-inner { height:0em; min-height:0em;}
+	.span8,.span4,.nobg,.span12{
+		background-color: #162D2E;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+		margin: 5px;
+		padding: 0px;
+		letter-spacing : -.1em;
+		border-radius: 10px;
+	}
+	#veryTop{
+		margin-top:-10px;
+	}
+	.span8{
+		background-color:transparent;
+		margin:0px;
+		border-radius:0px;	
+	}
+	.span4{
+		width:280!important;
+		padding:10px;
+	}
+	.span12{
+		padding-top:-2em;
+		padding:10px;
+		margin:0;
+		border-radius: 10px;
+	}
+	.row{
+	margin-left:0px;
+	}
+	#inside{
+	<!--margin-left:-20px;-->
+	}
+	h1,h2,h3 {
+		margin-top: 0;
+		line-height:.8em;
+	}
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+		
+      }
+	 thisDiv
+	{
+		background-color: #162D2E !important;
+			padding: 10px;
+			letter-spacing : -.1em;
+			border-radius: 10px
+	} 
+	.navbar .brand, .navbar .nav{
+		padding-top:10px;
+		background-color:transparent;
+		margin-left:5px;
+	}
+	.navbar .nav > li > a{
+		padding-top:2px;
+		padding-left:10px;
+	}
+	.smalls{
+		font-size:.8em; line-height:100%;
+		padding-left:20px;
+		padding-right:20px;
+	{

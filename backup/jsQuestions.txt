@@ -56,3 +56,4 @@ this[ man.parts[thing].name ] = man.parts[thing];
 			
 //-------------------------------------------
 
+Math question - what is decomposing a matrix?
