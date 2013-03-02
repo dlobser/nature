@@ -147,7 +147,6 @@ function peep(){
 	
 function init() {
 	
-	scene = new THREE.Scene();
 	addPeeps();
 	
 	//everything else in init() is threejs scene setup stuff and can be safely ignored
@@ -162,6 +161,7 @@ function init() {
 	controls = new THREE.OrbitControls( camera );
 	controls.addEventListener( 'change', render );
 
+	scene = new THREE.Scene();
 	scene.fog = new THREE.FogExp2( 0xffffff, 0.1 );
 	
 	light = new THREE.DirectionalLight( 0xffffff );
@@ -240,6 +240,7 @@ function addPeeps(){
 		
 		//if you comment this line out the peeps will be placed randomly 
 		//based on the 'pos' variable defined earlier
+		
 		var pos = new THREE.Vector3(px,py,0);
 
 		var scalar = new THREE.Vector3( .2,.2,.2);
