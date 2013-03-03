@@ -14,8 +14,7 @@ gui.add(ctrl, 'speed', 0, 1);
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 var container, stats;
-var camera, controls, scene, renderer;
-var cross;			
+var camera, controls, scene, renderer;		
 var things = [];
 var peepers = [];
 
