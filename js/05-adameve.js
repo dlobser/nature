@@ -7,7 +7,6 @@ var world = function(){this.speed = 0.25;this.size = 1;};
 
 ctrl = new world();
 var gui = new dat.GUI();
-// gui.add(text, 'message');
 gui.add(ctrl, 'speed', 0, 1);
 
 //dat.gui adds controls----------------------------
@@ -19,8 +18,7 @@ var camera, controls, scene, renderer;
 var cross;			
 var things = [];
 var peepers = [];
-//var man;
-//var woman;
+
 init();
 animate();
 
@@ -135,9 +133,13 @@ function addMan(){
 
 
 	var geom =  new THREE.SphereGeometry(.5,10,10);
+	
+	//you can replace the cubes with whatever geo you want
 	 //man = new peep({geo: new THREE.SphereGeometry(.5,10,10),color:0xbbbbbb});
 	 var peeparams = {color2:0x000000,color1:0xff8833,color3:0xdd5522,color4:0x332211,color5:0x000000};
 	 var man = new peep(peeparams);
+	 
+	 //this section will randomize values for you
 	//(mx,my,mz,al,aw,ll,lw,ls,ex,ey,es)
 	//(bod scale xyz, arm length/width, leg length/width/separation,eye x/y/separation, n
 	/*
@@ -198,9 +200,6 @@ function addMan(){
 	peepers.push(man);
 	scene.add(man.CTRL);
 
-	
-
-
 }
 
 function addWoman(){
@@ -245,7 +244,6 @@ function addWoman(){
 
 function addCat(){
 
-
 	var peeparams3 = {color2:0xffff00,color1:0x001133,color3:0xdd0022,color4:0xffcc00,color5:0xff00ff};
 	var cat = new peep(peeparams3);
 	
@@ -258,13 +256,7 @@ function addCat(){
 	var legLength = 30;
 	
 	cat.creature(pos.x,pos.y,pos.z,	armLength, armWidth,	legLength,legWidth,pos.x/3,	eyeX,eyeY,pos.x/3);
-	//cat.dude(pos.x,pos.y,pos.z,	armLength, armWidth,	legLength,legWidth,pos.x/3,	eyeX,eyeY,pos.x/6);
-	//cat.frontSquares(cat,20,20,20);
-	//cat.frontTail(cat,5,20);
-	//cat.hair(cat,26);
-	
-	//cat.pos_luarm.position.x += armWidth/2;
-	//cat.pos_ruarm.position.x -= armWidth/2;
+
 	cat.pos_bod.position.x = 200;
 	cat.pos_lear.scale.x = 10;
 	cat.pos_lear.scale.y = 1.5;
@@ -274,8 +266,6 @@ function addCat(){
 	cat.pos_rear.scale.y = 1.5;
 	cat.pos_rear.position.x = -12;
 	
-	//cat.pos_reye.position.y = 15;
-	//cat.pos_leye.position.y = 15;
 	cat.sc_tail.scale.y = 30;
 	cat.pos_tail.position.y-=4;
 	cat.id = 1;
@@ -311,9 +301,6 @@ function animate() {
 }
 
 function moveThings(){
-
-//peepers[0].pos_bod.position.x = 100;
-//peepers[1].pos_bod.position.x = -100;
 
 for(var i = 0 ; i < 2 ; i++){
 
@@ -357,7 +344,6 @@ for(var i = 0 ; i < 2 ; i++){
 	p.CTRL.scale.z = ((Math.abs(Math.sin(p.q+p.id+(Math.PI/2))/4))+4)/4;
 	p.CTRL.scale.x = ((Math.abs(Math.sin(p.q+p.id+(Math.PI/2))/4))+4)/4;
 	
-	//p.CTRL.position.y = -90;
 	
 }
 
@@ -367,49 +353,35 @@ for(var i = 0 ; i < 2 ; i++){
 
 function moveCreature(){
 
-//for(var i = 0 ; i < peepers.length ; i++){
+var p = peepers[2];
 
-	var p = peepers[2];
-	
-	p.pos_rfuarm.rotation.x=	Math.sin(p.q+p.id-.4)/2;
-	p.rt_rflarm.rotation.x=		Math.sin(p.q+p.id-1-.4)/2;
+p.pos_rfuarm.rotation.x=	Math.sin(p.q+p.id-.4)/2;
+p.rt_rflarm.rotation.x=		Math.sin(p.q+p.id-1-.4)/2;
 
-	p.pos_lfuarm.rotation.x=	Math.sin(p.q+p.id)/2;
-	p.rt_lflarm.rotation.x=		Math.sin(p.q+p.id-1)/2;
-	
-	p.pos_rbuarm.rotation.x=	(Math.sin(p.q+p.id+1)/2);
-	p.rt_rblarm.rotation.x=		(Math.sin(p.q+p.id)/2);
+p.pos_lfuarm.rotation.x=	Math.sin(p.q+p.id)/2;
+p.rt_lflarm.rotation.x=		Math.sin(p.q+p.id-1)/2;
 
-	p.pos_lbuarm.rotation.x=	(Math.sin(p.q+p.id+1.5)/2);
-	p.rt_lblarm.rotation.x=		(Math.sin(p.q+p.id+.5)/2);
+p.pos_rbuarm.rotation.x=	(Math.sin(p.q+p.id+1)/2);
+p.rt_rblarm.rotation.x=		(Math.sin(p.q+p.id)/2);
 
-	p.rt_tail.rotation.x = (Math.sin((p.q+p.id+.5)*2)/2)-1;
-	
-	p.rt_lear.rotation.x=	(Math.sin(p.q+p.id-1)/4);
-	p.rt_rear.rotation.x=	(Math.sin(p.q+p.id-1)/4);
-	
-	//p.pos_lflarm.rotation.x=Math.sin(p.q+p.id-1)/4;
-	//p.rt_rflarm.rotation.x=Math.sin(p.q+p.id-1)/4;
-	
-	p.CTRL.scale.y = ((Math.abs(Math.sin(p.q+p.id)/4))+1);
-	//p.CTRL.scale.z = ((Math.abs(Math.sin(p.q+p.id+(Math.PI/2))/4))+1);
-	//p.CTRL.scale.x = ((Math.abs(Math.sin(p.q+p.id+(Math.PI/2))/4))+1);
-	p.CTRL.rotation.y = -p.q/8;
-	var rotator = new THREE.Vector3(Math.sin(p.q+p.id)/4,  Math.sin((p.q+p.id)*2)/16,  Math.sin((p.q+p.id)*4)/64);
-	
-	p.rt_bod.rotation = rotator;
-	//p.pos_bod.position.y= ((Math.sin(1+(p.q*2)))*5)+5;
-	p.q += p.speed * ctrl.speed/3;
-	
-	//p.CTRL.position.y = -90;
-	
-//}
+p.pos_lbuarm.rotation.x=	(Math.sin(p.q+p.id+1.5)/2);
+p.rt_lblarm.rotation.x=		(Math.sin(p.q+p.id+.5)/2);
+
+p.rt_tail.rotation.x = (Math.sin((p.q+p.id+.5)*2)/2)-1;
+
+p.rt_lear.rotation.x=	(Math.sin(p.q+p.id-1)/4);
+p.rt_rear.rotation.x=	(Math.sin(p.q+p.id-1)/4);
+
+p.CTRL.scale.y = ((Math.abs(Math.sin(p.q+p.id)/4))+1);
+p.CTRL.rotation.y = -p.q/8;
+var rotator = new THREE.Vector3(Math.sin(p.q+p.id)/4,  Math.sin((p.q+p.id)*2)/16,  Math.sin((p.q+p.id)*4)/64);
+
+p.rt_bod.rotation = rotator;
+p.q += p.speed * ctrl.speed/3;
+
 }
 
 function render() {
-	//moveThings();
 	renderer.render( scene, camera );
-	//stats.update();
-	
 
 }
