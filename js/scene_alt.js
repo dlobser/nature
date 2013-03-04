@@ -3,9 +3,10 @@ sc1 = function(){
 	var container,
 	camera, 
 	controls, 
-	scene;		
+	scene,
+	renderer;		
 	this.things = [];
-	var that = this;
+
 	
 }
 
@@ -36,12 +37,14 @@ sc1.prototype.init = function() {
 	this.renderer = new THREE.CanvasRenderer( { antialias: false } );
 	//this.renderer.setClearColor( scene.fog.color, 1 );
 	this.renderer.setSize( window.innerWidth, window.innerHeight );
+	console.log(this.renderer);
 	
 
 	this.container = document.getElementById( 'container' );
 	this.container.appendChild( this.renderer.domElement );
 
 	//window.addEventListener( 'resize', onWindowResize, false );
+	//console.log(this.renderer, + " " + this.scene.children.length + " " + this.camera.toString());
 
 	
 }
@@ -69,7 +72,7 @@ sc1.prototype.addGeo = function(){
 
 	}
 	
-},
+}
 
 sc1.prototype.moveThings = function(){
 		
@@ -114,12 +117,10 @@ sc1.prototype.moveThings = function(){
 				diffVec.multiplyScalar(dist/10);
 				thing.position.add(diffVec);							
 				
-			}
-									
+			}					
 			
 			else{
 				count++;
-				
 			}
 			
 			if(count >= this.things.length-1){
@@ -127,30 +128,25 @@ sc1.prototype.moveThings = function(){
 				thing.velocity.multiplyScalar(0);
 				thing.done = true;
 			}
-		
 		}
-			
-		
-		
 	}
-	
-	
-},
+}
 
 sc1.prototype.animate = function(){
-
-	this.render();
+	
+	//this.render();
+	this.renderer.render( this.scene, this.camera );
 	this.moveThings();
 	var that = this;
 	requestAnimationFrame( function() { that.animate(); });
 	this.controls.update();
 	
-},
+}
 
 sc1.prototype.render = function() {
-
-	var that = this;
-	this.renderer.render( that.scene, that.camera );
+	//console.log("wtf");
+	//wtf does this throw errors even when it's not being used?
+	//this.renderer.render( this.scene, this.camera );
 
 }
 
