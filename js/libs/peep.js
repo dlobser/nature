@@ -23,6 +23,7 @@ function peep(params){
 	this.color4 = (this.params.color4 !== undefined) ? this.params.color4 : this.options.color4;
 	this.color5 = (this.params.color5 !== undefined) ? this.params.color5 : this.options.color5;
 	
+	this.things = [];
 	
 }
 
@@ -78,6 +79,8 @@ peep.prototype = {
 		this.rotator.name = "rt_"+namer;	
 
 		this[ this.rotator.name ] = this.rotator;
+		
+		this.things.push(this.rotator);
 		
 		this.rotator.matrixAutoUpdate = true;					
 		this.rotator.add(this.scalar);					
@@ -180,15 +183,15 @@ peep.prototype = {
 		
 	},
 	
-	parentSquares:function(num,sx,sy,sz){
+	parentSquares:function(num,sx,sy,sz,ss){
 		
 		this.big = this.part(0,.5,0,	sx,sy,sz,	0,0,0,   "big",this.color1);
 		var i = 1;
 		var that = this;
 		console.log(this.big);	
-		stringer(this.big,num);
+		stringer(this.big,num,sx,sy,sz,ss);
 		
-		function stringer(obj,num)
+		function stringer(obj,num,sx,sy,sz,ss)
 		{		
 			console.log("obj: " + obj.name + num);
 			var move = sy;
@@ -196,8 +199,11 @@ peep.prototype = {
 				
 				num--;
 				move++;
-				this.big = that.part(0,.5,0,	sx,sy,sz,	0,move,0,   "big"+num,that.color1);
-				obj.add(stringer(this.big,num));
+				this.big = that.part(0,.5,0,	sx,sy,sz,	0,sy,0,   "big"+num,that.color1);
+				this.big.idq = move;
+				obj.children[0].add(stringer(this.big,num,sx*ss,sy*ss,sz*ss,ss));
+				//console.log(obj.children[0]);
+				
 				return obj;
 			}
 

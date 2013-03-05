@@ -6,13 +6,50 @@ sc1 = function(){
 	scene,
 	renderer;	
 	this.things = [];
+	
+	var text;
+
+
+	var starfield = function()
+	{
+		this.speed = 0.00001;
+		this.speed2 = 1;
+		this.size = 43.9;
+		this.x = 0.0046;
+		this.y = 0.001;
+		this.z = 0.001;
+		this.x2 = 0.000;
+		this.y2 = 0.000;
+		this.z2 = 0.000;
+		this.sizerx = 5;
+		this.sizery = 5;
+		this.sizerz = 5;
+	};
+	
+    this.text = new starfield();
+	var gui = new dat.GUI();
+	// gui.add(text, 'message');
+	gui.add(this.text, 'speed', -.0001, .001);
+	gui.add(this.text, 'speed2', 0,10);
+	gui.add(this.text, 'size', 1, 100);
+	gui.add(this.text, 'x', 0,.01);
+	gui.add(this.text, 'y', 0,.01);
+	gui.add(this.text, 'z', 0,.01);
+		gui.add(this.text, 'x2', 0,.5);
+	gui.add(this.text, 'y2', 0,.5);
+	gui.add(this.text, 'z2', 0,.5);
+	gui.add(this.text, 'sizerx', 0,10);
+	gui.add(this.text, 'sizery', 0,10);
+	gui.add(this.text, 'sizerz', 0,10);
+
+
 
 	
 }
 
 sc1.prototype.init = function() {
 
-	this.camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 1, 1000 );
+	this.camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 1, 10000 );
 	this.camera.position.z = -200;
 	this.camera.position.y = 200;
 		this.camera.position.x = 200;
@@ -59,8 +96,7 @@ sc1.prototype.addGeo = function(){
 	
 	var parms={color1:0x003399,color2:0xbbffdd,color3:0x0099ff};
 	var cuber = new peep();
-	//cuber.groundSquares(cuber,40,100,40);
-	cuber.parentSquares(10,10,10,10);
+	cuber.parentSquares(2000,3,3,3,.999);
 	this.mesh = new THREE.Mesh( geometry, material );
 	this.scene.add(cuber.pos_big);
 	console.log(cuber);
@@ -68,48 +104,33 @@ sc1.prototype.addGeo = function(){
 	cuber.rt_big.rotation.y = 10;	
 	
 	
-	
-	//cuber.CTRL.children[0].children[0].children[0].children[0].position.y = 10;	
-	/*	
-	for ( var i = 0; i < 10; i ++ ) {
-		for ( var j = 0; j < 10; j ++ ) {
-		var mesh = new THREE.Mesh( geometry, material );
-		//var pos = new THREE.Vector3( ( Math.random() - 0.5 ) * 1000, ( Math.random() - 0.5 ) * 1, ( Math.random() - 0.5 ) * 1000);
-		var zeroVec = new THREE.Vector3(0,0,0);
-		var pos = new THREE.Vector3((i-5)*40,-15,(j-5)*40 );
-		
-		var parms={color1:0x003399,color2:0xbbffdd,color3:0x0099ff};
-		var cuber = new peep(parms);
-		
-		cuber.groundSquares(cuber,40,100,40);
-		cuber.CTRL.position = pos;
-		this.scene.add(cuber.CTRL);
-		cuber.q = i+j;
-		cuber.speed = (i+(j*2))*.000081;
-		
-		console.log(cuber.CTRL);
-		
-		this.things.push(cuber);
 	}
-	*/
-	}
-
+	var num = 0;
 sc1.prototype.moveThings = function(){
-		var thing = this.things[0];
-		console.log(thing.big);
-		traverse(thing.big);
-		//console.log(this.doom);
+
 		
-		function traverse (obj) {
+		var thing = this.things[0];
+		thing.things[3].rotation.x = 3;
+		thing.things[0].position.y = -20;
+		thing.things[0].scale.y = .5;
+		thing.things[0].scale.x = .5;
+		thing.things[0].scale.z = .5;
+		
+		var sizer = new THREE.Vector3(1,1,1);
+		
+		for (var i = 0 ; i< thing.things.length; i++){
+		
+			sizer.multiplyScalar(2);
 			
-			if(obj.children.length>1){
-				//console.log(obj.children[1]);
-				obj.children[1].rotation.y = obj.id;
-				obj.id += .01;
-				traverse(obj.children[1]);
-			}
+			thing.things[i].rotation.x = (Math.sin((i/this.text.size)+num)*(i*this.text.x))+(Math.sin(this.text.x2));
+			thing.things[i].rotation.z = (Math.sin((i/this.text.size)+num)*(i*this.text.y))+(Math.sin(this.text.y2));
+			thing.things[i].rotation.y = (Math.sin((i/this.text.size)+num)*(i*this.text.z))+(Math.sin(this.text.z2));
+		//	thing.things[i].children[0].scale.x = this.text.sizerx;
+		//	thing.things[i].children[0].scale.y = this.text.sizery;
+		//	thing.things[i].children[0].scale.z = this.text.sizerz;
 		}
-	
+		num-=i*this.text.speed*this.text.speed2;
+		
 }
 
 sc1.prototype.animate = function(){
