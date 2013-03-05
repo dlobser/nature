@@ -147,7 +147,7 @@ sc1.prototype.render = function() {
 	//console.log("wtf");
 	//wtf does this throw errors even when it's not being used?
 	var that = this;
-	//that.renderer.render( this.scene, this.camera );
+	that.renderer.render( this.scene, this.camera );
 
 }
 

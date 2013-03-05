@@ -43,57 +43,6 @@ peep.prototype = {
 	
 	//(mesh offset xyz, scale xyz, controller position xyz, name, color)
 	*/
-	
-	part:function(px,py,pz,	sx,sy,sz,	p2x,p2y,p2z,	namer,color){
-		
-		this.material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
-		this.material.color.setHex(color);
-		
-		var pos = new THREE.Vector3(px,py,pz);
-		var scl = new THREE.Vector3(sx,sy,sz);
-		var pos2 = new THREE.Vector3(p2x,p2y,p2z);
-		
-		this.mesh = new THREE.Mesh( this.geometry, this.material );
-							
-		this.mesh.updateMatrix();
-		this.mesh.matrixAutoUpdate = true;					
-		this.mesh.position = pos;	
-		this.mesh.castShadow = true;	
-		
-		this.scalar = new THREE.Object3D();	
-
-		this.mesh.name = "mesh_"+namer;
-		
-		this[ this.mesh.name ] = this.mesh;
-		
-		this.scalar.name = "sc_"+namer;	
-		
-		this[ this.scalar.name ] = this.scalar;
-		
-		this.scalar.matrixAutoUpdate = true;					
-		this.scalar.add(this.mesh);					
-		this.scalar.scale = scl;					
-		this.rotator = new THREE.Object3D();
-
-		this.rotator.name = "rt_"+namer;	
-
-		this[ this.rotator.name ] = this.rotator;
-		
-		this.rotator.matrixAutoUpdate = true;					
-		this.rotator.add(this.scalar);					
-		this.poser = new THREE.Object3D();	
-		
-		this.poser.name = "pos_"+namer;
-		
-		this.poser.matrixAutoUpdate = true;					
-		this.poser.add(this.rotator);					
-		this.poser.position = pos2;	
-
-		this[ this.poser.name ] = this.poser;	
-
-		return this.poser;
-	},
-	
 	creature:function(mx,my,mz,al,aw,ll,lw,ls,ex,ey,es) {
 		
 		
@@ -180,37 +129,6 @@ peep.prototype = {
 		
 	},
 	
-	parentSquares:function(num,sx,sy,sz){
-		
-		this.big = this.part(0,.5,0,	sx,sy,sz,	0,0,0,   "big",this.color1);
-		var i = 1;
-		var that = this;
-		console.log(this.big);	
-		stringer(this.big,num);
-		
-		function stringer(obj,num)
-		{		
-			console.log("obj: " + obj.name + num);
-			var move = sy;
-			if(num>0){
-				
-				num--;
-				move++;
-				this.big = that.part(0,.5,0,	sx,sy,sz,	0,move,0,   "big"+num,that.color1);
-				obj.add(stringer(this.big,num));
-				return obj;
-			}
-
-		}
-		
-		console.log(this.big);
-		//this.big.children[0].add(this.big);
-		console.log(this.CTRL);
-		return this.big;
-		
-		
-	},
-	
 	frontTail:function(obj,sx,sy){
 		
 		var weenie =	this.part(0,-.5,0,	sx,sy,sx,	0,(obj.sc_bod.scale.y/-2),(obj.sc_bod.scale.z/2)-sx/2,								"dk",obj.color1);
@@ -269,6 +187,55 @@ peep.prototype = {
 		this.CTRL.add(bod);
 		
 		this.pos_bod.position.y = (my/2)+(ll);
-	}
+	},	
 	
+	part:function(px,py,pz,	sx,sy,sz,	p2x,p2y,p2z,	namer,color){
+		
+		this.material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
+		this.material.color.setHex(color);
+		
+		var pos = new THREE.Vector3(px,py,pz);
+		var scl = new THREE.Vector3(sx,sy,sz);
+		var pos2 = new THREE.Vector3(p2x,p2y,p2z);
+		
+		this.mesh = new THREE.Mesh( this.geometry, this.material );
+							
+		this.mesh.updateMatrix();
+		this.mesh.matrixAutoUpdate = true;					
+		this.mesh.position = pos;	
+		this.mesh.castShadow = true;	
+		
+		this.scalar = new THREE.Object3D();	
+
+		this.mesh.name = "mesh_"+namer;
+		
+		this[ this.mesh.name ] = this.mesh;
+		
+		this.scalar.name = "sc_"+namer;	
+		
+		this[ this.scalar.name ] = this.scalar;
+		
+		this.scalar.matrixAutoUpdate = true;					
+		this.scalar.add(this.mesh);					
+		this.scalar.scale = scl;					
+		this.rotator = new THREE.Object3D();
+
+		this.rotator.name = "rt_"+namer;	
+
+		this[ this.rotator.name ] = this.rotator;
+		
+		this.rotator.matrixAutoUpdate = true;					
+		this.rotator.add(this.scalar);					
+		this.poser = new THREE.Object3D();	
+		
+		this.poser.name = "pos_"+namer;
+		
+		this.poser.matrixAutoUpdate = true;					
+		this.poser.add(this.rotator);					
+		this.poser.position = pos2;	
+
+		this[ this.poser.name ] = this.poser;	
+
+		return this.poser;
+	}
 }

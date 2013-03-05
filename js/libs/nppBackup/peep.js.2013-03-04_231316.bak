@@ -186,28 +186,26 @@ peep.prototype = {
 		var i = 1;
 		var that = this;
 		console.log(this.big);	
-		stringer(this.big,num);
+		stringer(this.big.children[0],num);
 		
 		function stringer(obj,num)
 		{		
 			console.log("obj: " + obj.name + num);
-			var move = sy;
 			if(num>0){
 				
 				num--;
-				move++;
-				this.big = that.part(0,.5,0,	sx,sy,sz,	0,move,0,   "big"+num,that.color1);
-				obj.add(stringer(this.big,num));
+				this.big = that.part(0,.5,0,	sx,sy,sz,	0,num*4,0,   "big"+num,this.color1);
+				
+				obj.add(stringer(this.big.children[0],num));
 				return obj;
 			}
 
 		}
 		
-		console.log(this.big);
+		console.log(this.big.children[0]);
 		//this.big.children[0].add(this.big);
+		return this.big.children[0];
 		console.log(this.CTRL);
-		return this.big;
-		
 		
 	},
 	

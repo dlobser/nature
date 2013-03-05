@@ -53,7 +53,12 @@ sc1.prototype.addGeo = function(){
 
 	var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
 	var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
-
+	
+	var parms={color1:0xffbb00,color2:0xbbffdd};
+	var cuber = new peep(params);
+	cuber.groundSquares(cuber,100,100,100);
+	this.scene.add(cuber.CTRL);
+		
 	for ( var i = 0; i < 100; i ++ ) {
 
 		var mesh = new THREE.Mesh( geometry, material );
@@ -146,8 +151,7 @@ sc1.prototype.animate = function(){
 sc1.prototype.render = function() {
 	//console.log("wtf");
 	//wtf does this throw errors even when it's not being used?
-	var that = this;
-	//that.renderer.render( this.scene, this.camera );
+	//this.renderer.render( this.scene, this.camera );
 
 }
 

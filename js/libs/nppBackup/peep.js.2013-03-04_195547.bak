@@ -182,32 +182,30 @@ peep.prototype = {
 	
 	parentSquares:function(num,sx,sy,sz){
 		
-		this.big = this.part(0,.5,0,	sx,sy,sz,	0,0,0,   "big",this.color1);
+		var big = this.part(0,.5,0,	sx,sy,sz,	0,0,0,   "big0",this.color1);
 		var i = 1;
 		var that = this;
-		console.log(this.big);	
-		stringer(this.big,num);
 		
-		function stringer(obj,num)
+		var stringer = function(obj,num)
 		{		
-			console.log("obj: " + obj.name + num);
-			var move = sy;
+			
+			//while(i<num)
+			//{
+			num--;
 			if(num>0){
+			
+				var bad = that.part(0,.5,0,	(sx+(sx/num)),sy,sz,	0,num*5,0,   "big"+num,obj.color1);
+				obj.rt_big.add(stringer(bad,num));
 				
-				num--;
-				move++;
-				this.big = that.part(0,.5,0,	sx,sy,sz,	0,move,0,   "big"+num,that.color1);
-				obj.add(stringer(this.big,num));
-				return obj;
 			}
-
+			else{
+			return;
+			}
+			//}
 		}
 		
-		console.log(this.big);
-		//this.big.children[0].add(this.big);
-		console.log(this.CTRL);
-		return this.big;
-		
+		stringer(big,num);
+		this.CTRL.add(big);
 		
 	},
 	

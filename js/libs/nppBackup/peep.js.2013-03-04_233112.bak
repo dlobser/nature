@@ -191,7 +191,7 @@ peep.prototype = {
 		function stringer(obj,num)
 		{		
 			console.log("obj: " + obj.name + num);
-			var move = sy;
+			var move = 0;
 			if(num>0){
 				
 				num--;

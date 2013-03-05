@@ -53,22 +53,31 @@ sc1.prototype.addGeo = function(){
 
 	var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
 	var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
-
+	
+	var parms={color1:0xffbb00,color2:0xbbffdd,color3:0x0099ff};
+	var cuber = new peep(parms);
+	cuber.groundSquares(cuber,100,100,100);
+	//this.scene.add(cuber.CTRL);
+		
 	for ( var i = 0; i < 100; i ++ ) {
 
 		var mesh = new THREE.Mesh( geometry, material );
-		var pos = new THREE.Vector3( ( Math.random() - 0.5 ) * 100, ( Math.random() - 0.5 ) * 100, ( Math.random() - 0.5 ) * 100);
+		//var pos = new THREE.Vector3( ( Math.random() - 0.5 ) * 1000, ( Math.random() - 0.5 ) * 1, ( Math.random() - 0.5 ) * 1000);
 		var zeroVec = new THREE.Vector3(0,0,0);
-
-		mesh.position = pos;
-		mesh.velocity = zeroVec;
-		mesh.acceleration = zeroVec;
+		var pos = new THREE.Vector3(i*100,0,0 );
 		
-		mesh.updateMatrix();
-		mesh.matrixAutoUpdate = true;
-			
-		this.scene.add( mesh );
-		this.things.push(mesh);
+		var parms={color1:0xffbb00,color2:0xbbffdd,color3:0x0099ff};
+		var cuber = new peep(parms);
+		
+		cuber.groundSquares(cuber,100,100,100);
+		cuber.CTRL.position = pos;
+		this.scene.add(cuber.CTRL);
+		cuber.q = i;
+		cuber.speed = Math.random()/100;
+		
+		console.log(cuber.CTRL);
+		
+		this.things.push(cuber);
 
 	}
 	
@@ -83,51 +92,15 @@ sc1.prototype.moveThings = function(){
 
 	for ( var i = 1, il = this.things.length; i < il; i ++ ) {
 		var thing = this.things[i];
-		thing.position.add(thing.velocity);
-		thing.velocity.add(thing.acceleration);
 		
-		var count = 0;//things.length;
 		
 		for ( var j = 0; j < this.things.length ; j ++ ) {
-		
+			var t = this.things[j];
 			
-		
-			if ( j==i && j< this.things.length-1){
-				j++;	
-			}
+			t.pos_big.position.y = Math.sin(t.q)*100;
 			
-			if (i==this.things.length-1 && j==this.things.length-1){
-			//	return;
-			}
+			t.q += t.speed;
 			
-			var other = this.things[j];
-			
-			//console.log(count);
-			
-			var zeroVec = new THREE.Vector3(0,0,0);
-			
-			var dist = thing.position.distanceTo(other.position);
-								
-			if ( dist < 50){
-			
-				//thing.acceleration = new THREE.Vector3( ( Math.random() - 0.5 ) * 2, ( Math.random() - 0.5 ) * 2, ( Math.random() - 0.5 ) * 2);	
-				//thing.rotation.x += .1;
-				var diffVec = THREE.Vector3.prototype.subVectors(thing.position,other.position);
-				diffVec.normalize();
-				diffVec.multiplyScalar(dist/10);
-				thing.position.add(diffVec);							
-				
-			}					
-			
-			else{
-				count++;
-			}
-			
-			if(count >= this.things.length-1){
-				thing.acceleration = zeroVec;
-				thing.velocity.multiplyScalar(0);
-				thing.done = true;
-			}
 		}
 	}
 }
@@ -146,8 +119,7 @@ sc1.prototype.animate = function(){
 sc1.prototype.render = function() {
 	//console.log("wtf");
 	//wtf does this throw errors even when it's not being used?
-	var that = this;
-	//that.renderer.render( this.scene, this.camera );
+	//this.renderer.render( this.scene, this.camera );
 
 }
 

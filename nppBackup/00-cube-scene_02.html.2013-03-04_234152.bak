@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link rel="stylesheet" href="css/app.css" />
+		<title>three.js webgl - orbit controls</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	</head>
+
+	<body>
+		<div id="container"></div>
+		<div id="info">
+			<a href="http://threejs.org" target="_blank">three.js</a> - orbit controls example
+		</div>
+
+		<script src="js/three/build/three.min.js"></script>
+
+		<script src="js/three/js/controls/OrbitControls.js"></script>
+
+		<script src="js/three/js/Detector.js"></script>
+		<script src="js/three/js/libs/stats.min.js"></script>
+		<script src="js/00-cubeScene_02.js"></script>
+		<script src="js/libs/peep.js"></script>
+		
+		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
+
+		<script>
+		
+		var scene = new sc1();
+	
+		scene.init();
+		scene.moveThings();
+		
+		scene.animate();
+		
+
+
+		</script>
+
+	</body>
+</html>

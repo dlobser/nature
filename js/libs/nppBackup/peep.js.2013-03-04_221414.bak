@@ -185,29 +185,26 @@ peep.prototype = {
 		this.big = this.part(0,.5,0,	sx,sy,sz,	0,0,0,   "big",this.color1);
 		var i = 1;
 		var that = this;
-		console.log(this.big);	
-		stringer(this.big,num);
+		stringer(this.pos_big,num);
 		
 		function stringer(obj,num)
 		{		
-			console.log("obj: " + obj.name + num);
-			var move = sy;
+			console.log("obj: " + obj);
 			if(num>0){
 				
 				num--;
-				move++;
-				this.big = that.part(0,.5,0,	sx,sy,sz,	0,move,0,   "big"+num,that.color1);
-				obj.add(stringer(this.big,num));
-				return obj;
+				var big = that.part(0,.5,0,	sx,sy,sz,	0,0,0,   "big"+num,this.color1);
+				
+				that.sc_big.add(stringer(big,num));
+				return that;
 			}
 
 		}
+		console.log(this.big);	
 		
-		console.log(this.big);
-		//this.big.children[0].add(this.big);
+		this.CTRL.add(this.big);
+		return this.CTRL;
 		console.log(this.CTRL);
-		return this.big;
-		
 		
 	},
 	
