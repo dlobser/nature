@@ -10,7 +10,7 @@ function peep(params){
 	if(params === undefined) this.params = this.options;
 	else this.params = params;
 	
-	console.log(this.params.color2);
+	//console.log(this.params.color2);
 	
 	this.geometry = this.params.geo ? this.params.geo : new THREE.CubeGeometry( 1,1,1,1,1,1 );
 	
@@ -23,7 +23,10 @@ function peep(params){
 	this.color4 = (this.params.color4 !== undefined) ? this.params.color4 : this.options.color4;
 	this.color5 = (this.params.color5 !== undefined) ? this.params.color5 : this.options.color5;
 	
-	this.things = [];
+	this.msh = [];
+	this.sc = [];
+	this.rt = [];
+	this.pos = [];
 	
 }
 
@@ -67,10 +70,14 @@ peep.prototype = {
 		
 		this[ this.mesh.name ] = this.mesh;
 		
+		this.msh.push(this.rotator);
+		
 		this.scalar.name = "sc_"+namer;	
 		
 		this[ this.scalar.name ] = this.scalar;
 		
+		this.sc.push(this.rotator);
+
 		this.scalar.matrixAutoUpdate = true;					
 		this.scalar.add(this.mesh);					
 		this.scalar.scale = scl;					
@@ -80,7 +87,7 @@ peep.prototype = {
 
 		this[ this.rotator.name ] = this.rotator;
 		
-		this.things.push(this.rotator);
+		this.rt.push(this.rotator);
 		
 		this.rotator.matrixAutoUpdate = true;					
 		this.rotator.add(this.scalar);					
@@ -93,6 +100,8 @@ peep.prototype = {
 		this.poser.position = pos2;	
 
 		this[ this.poser.name ] = this.poser;	
+		
+		this.pos.push(this.rotator);
 
 		return this.poser;
 	},
@@ -188,12 +197,12 @@ peep.prototype = {
 		this.big = this.part(0,.5,0,	sx,sy,sz,	0,0,0,   "big",this.color1);
 		var i = 1;
 		var that = this;
-		console.log(this.big);	
+		//console.log(this.big);	
 		stringer(this.big,num,sx,sy,sz,ss);
 		
 		function stringer(obj,num,sx,sy,sz,ss)
 		{		
-			console.log("obj: " + obj.name + num);
+			//console.log("obj: " + obj.name + num);
 			var move = sy;
 			if(num>0){
 				
@@ -209,9 +218,9 @@ peep.prototype = {
 
 		}
 		
-		console.log(this.big);
+		//console.log(this.big);
 		//this.big.children[0].add(this.big);
-		console.log(this.CTRL);
+		//console.log(this.CTRL);
 		return this.big;
 		
 		
@@ -226,7 +235,7 @@ peep.prototype = {
 	},
 	
 	hair:function(obj,sy){
-		console.log(this.color4);
+		//console.log(this.color4);
 		this.hair =	this.part(0,.5,0,	obj.sc_bod.scale.x,sy,obj.sc_bod.scale.z,	0,(obj.sc_bod.scale.y/2),0,								"hair",obj.color4);
 		
 		obj.rt_bod.add(this.hair);
