@@ -11613,7 +11613,7 @@ THREE.MeshNormalMaterial = function ( parameters ) {
 
 	THREE.Material.call( this, parameters );
 
-	this.shading = THREE.SmoothShading;
+	this.shading = THREE.FlatShading;
 
 	this.wireframe = false;
 	this.wireframeLinewidth = 1;
