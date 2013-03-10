@@ -67,8 +67,6 @@
 		
 		<script src="js/libs/boid.js"></script>
 		
-		<script src="js/libs/LobserCollection.js"></script>
-		
 		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
 
 		<script src="js/05-branchingNoBoid.js"></script>
