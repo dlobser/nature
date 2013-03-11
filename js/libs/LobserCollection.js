@@ -10,6 +10,9 @@ var fromPrototype = function(prototype, object) {
   return newObject;
 };
 
+function map_range(value, low1, high1, low2, high2) {
+	return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+}
 
 THREE.saveGeometryToObj = function (geo,nums) {
 
