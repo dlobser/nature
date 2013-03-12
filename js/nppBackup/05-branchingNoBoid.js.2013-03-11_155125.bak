@@ -1,6 +1,3 @@
-//This script emits a series of particles which branch based on various rules and then builds geometry
-//which follows the paths the particles leave
-
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 //-------------------------------------------
@@ -12,27 +9,24 @@ var starfield = function()
 	this.gravity = 10;
 	this.gravity2= 0.0;
 	this.trunk = 10;
-	this.trunkAmount = 10;
 	this.pos = -200;
 	this.fatness = 8;
 	this.shrink = .96;
 	this.size = 200;
 	this.rebuild = false;
-	this.message = "Branch Builder";
 };
 
-//-------------------------------------------
+
 text = new starfield();
 var gui = new dat.GUI();
-gui.add(text, 'message');
+// gui.add(text, 'message');
 gui.add(text, 'branches', 2, 9);
 gui.add(text, 'trunk', 0,60);
-gui.add(text, 'trunkAmount', 2,20);
 gui.add(text, 'gravity', -30,30);
 gui.add(text, 'gravity2', -1.01,1.01);
 gui.add(text, 'size', 100, 1000);
-gui.add(text, 'fatness', .1, 30);
-gui.add(text, 'shrink', .93,1.01);
+//gui.add(text, 'fatness', .1, 30);
+//gui.add(text, 'shrink', .1,5);
 gui.add(text, 'pos', -500, 0);
 gui.add(text, 'rebuild');
 //-------------------------------------------
@@ -42,30 +36,33 @@ gui.add(text, 'rebuild');
 
 var container, stats;
 var camera, controls, scene, renderer;
-var cross;
-			
+var cross;			
 var things = [];
 var branch = [];
 var limb = [];
 var limbSize = [];
 
+var makeCounter = 0;
+
+var spheres = [];
+var gogo = 0;
+var gogoarray = [];
+var made = false;
+var madeBranch = true;
+var doneAnimating = false;
 var zeroVec = new THREE.Vector3(0,0,0);
 var tree = new THREE.Object3D();
 var fruit = new THREE.Object3D();
 
-var branchSize = text.fatness;
+var branchSize = 5;
 
-//when okdone becomes true, totally done is a switch hit after the tree geo is made
-var totallyDone = false;
+totallyDone = false;
 
-//this is used to keep animating based on the size of an array
 var okDone = false;
 
-//changing this number will cause some strange results
-var avoidDistance = 100;
 
-//initial branches in the trunk
-var ballAmount = text.trunkAmount;
+var avoidDistance = 100;
+var ballAmount = 10;
 
 //-------------------------------------------
 init();
@@ -76,7 +73,7 @@ function init() {
 
 	camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 10000 );
 	camera.position.z = 1200;
-	camera.position.y = 400;	
+	camera.position.y = 400;
 	var camLook = new THREE.Vector3(0,500,0);
 
 	camera.lookAt(camLook);
@@ -94,7 +91,7 @@ function init() {
 	scene.fog = new THREE.FogExp2( hexValue, 0.0002 );
 	
 	//-------------------------------------------
-	addGeo(ballAmount,0,0,0,true);
+	addGeo(10,0,0,0,true);
 	//-------------------------------------------
 	
 	// lights
@@ -138,6 +135,7 @@ function init() {
 //instantiates the objects whose trails we'll follow
 function addGeo(amount,tx,ty,tz,yes,thing){
 
+	
 	//console.log(thing);
 	var myColor = ("0x" + Math.floor(Math.random()*16777215).toString(16));
 	var hexValue = parseInt(myColor , 16);
@@ -146,7 +144,8 @@ function addGeo(amount,tx,ty,tz,yes,thing){
 	var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
 	
 	var mesh = new THREE.Mesh( geometry, material );
-	
+		//	scene.add( mesh );
+
 	for ( var i = 0; i < amount; i ++ ) {
 	
 		var myColor = THREE.Vector3( ( Math.random() - 0.5 ) * 10, ( Math.random() - 0.5 ) * 10, ( Math.random() - 0.5 ) * 10);	
@@ -214,14 +213,52 @@ function addGeo(amount,tx,ty,tz,yes,thing){
 function animate() {
 	
 	render();
+/*
+	//this section checks to see if all the branches are done drawing
+	if(gogo < things.length-1){
+		for ( var i = 0; i<things.length; i ++ ) {
+			var thing = things[i];
+			
+			if(thing.go==false){
+				gogoarray[i] = 1;			
+			}
+			else{
+				gogoarray[i] = 0;			
+			}
+		}
+	}
+	
+	if(gogo < things.length){
+	
+		gogo = 0;
 
+		for ( var i = 0; i<things.length; i ++ ) {	
+			if(gogoarray[i] == 1){
+				gogo ++;
+			}
+		}
+		if(gogo < things.length && !doneAnimating ){
+			moveThings();
+			makeBranch();
+		}
+	}
+	
+	//when the branches are done drawing, create branch geo, but only once
+	if(gogo >= things.length-1 && madeBranch){
+		makeLimbGeo();
+		
+			//scene.add(tree);
+		//tree.position.y = -100;
+		doneAnimating = !doneAnimating;
+		madeBranch = !madeBranch;
+	}
+	*/
 	if(!okDone){
 		moveThings();
 		makeBranch(branchSize);
 		if (branchSize>.5)
-		branchSize *=text.shrink;
+		branchSize *=.97;
 	}
-	
 	else if(!totallyDone){
 		makeLimbGeo();
 		scene.add(tree);
@@ -230,7 +267,7 @@ function animate() {
 	
 	if(text.rebuild){
 		killEverything();
-		addGeo(text.trunkAmount,0,0,0,true);
+		addGeo(10,0,0,0,true);
 		text.rebuild = false;
 	}
 	
@@ -246,10 +283,6 @@ function moveThings(){
 
 	this.go = false;
 	
-	//if the distance between this thing and the other thing is less than the avoid distance do the flock Math
-	//otherwise add 1 to the thing.count.
-	//if thing.count is high enough add more branches until a hard coded number (text.size) is reached
-	
 	for ( var i = 0, il = things.length; i < il; i ++ ) {
 	
 		var thing = things[i];
@@ -259,7 +292,7 @@ function moveThings(){
 		thing.velocity.multiplyScalar(thing.damp);
 		thing.acceleration.multiplyScalar(thing.damp);
 		
-		thing.count = 0;
+		thing.count = 0;//things.length;
 		
 		for ( var j = 0; j < things.length ; j ++ ) {
 		
@@ -270,8 +303,10 @@ function moveThings(){
 			var other = things[j];
 			
 			var zeroVec = new THREE.Vector3(0,0,0);
-			var dist = thing.position.distanceTo(other.position);
 			
+			var dist = thing.position.distanceTo(other.position);
+			//console.log("thing" + thing.layer + "other" + other.layer);
+								
 			if ( dist < avoidDistance){
 			
 				var randly = new THREE.Vector3( ( Math.random() - 0.5 ) * 2, ( Math.random() - 0.5) * 2, ( Math.random() - 0.5 ) * 2);	
@@ -280,8 +315,8 @@ function moveThings(){
 				var gravity = new THREE.Vector3( 0,text.gravity,0);	
 				var gravity2 = new THREE.Vector3( 0,text.gravity2,0);	
 				
-				//older method for avoidance
 				// var diffVec = THREE.Vector3.prototype.subVectors(thing.position,other.position);
+				
 				// diffVec.normalize();
 				// diffVec.multiplyScalar(Math.max(dist/100,1));
 				
@@ -320,7 +355,7 @@ function moveThings(){
 				thing.counter ++;
 				
 			}
-			
+		
 			else{
 				thing.count++;
 			}
@@ -353,11 +388,14 @@ function makeLimbGeo(){
 	for ( var j = 0; j < things.length ; j ++ ) {
 	
 		if(limb[j].length > 1){
-
+		
+			//var size = limb[j].length/30;
 			var newSize = map_range(j,0,things.length,30,1);
 			var sized = Math.max(newSize,1);
 			var size = limb[j].scalar;
-
+			//var size = 1;
+			//console.log(limb[j].length);
+			
 			for ( var i = 2 ; i < limb[j].length ; i+=2){
 			
 				var thisVert = limb[j][i];
@@ -366,10 +404,7 @@ function makeLimbGeo(){
 				var dist = thisVert.distanceTo(nextVert);
 						
 				//var geometry = new THREE.SphereGeometry2( 3, 4, 5, 0, Math.PI*2, 0, Math.PI, dist,size*.9,size );
-				var geometry = new THREE.SphereGeometry2( 3, 5, 3, 0, Math.PI*2, 0, Math.PI, dist,limbSize[j][i],(limbSize[j][i]*text.shrink)*text.shrink);
-				
-				//from Garner: rotates the link 90 degrees so that later on the aim will work properly - a hack?  Perhaps - Is there a better way? Perhaps
-				geometry.applyMatrix( new THREE.Matrix4().setRotationFromEuler(new THREE.Vector3(Math.PI/2, 0, 0), 'XYZ'));
+				var geometry = new THREE.SphereGeometry2( 3, 4, 3, 0, Math.PI*2, 0, Math.PI, dist,limbSize[j][i],limbSize[j][i]);
 				
 				if(size > 1)
 				size *= text.shrink;
@@ -380,31 +415,42 @@ function makeLimbGeo(){
 				var parent = new THREE.Object3D();
 				
 				mesh.updateMatrix();
-				mesh.matrixAutoUpdate = false;
+				mesh.matrixAutoUpdate = true;
 				mesh.rotation.x = Math.PI/2;
-
+				
+				mesh.updateMatrixWorld();
 				mesh.updateMatrix();
 				
 				var eye = new THREE.Vector3(0,0,0);
 				var up = new THREE.Vector3(0,1,0);
-
+				
+				//parent.add(mesh);
+				//tree.add(parent);
+				
 				mesh.position = thisVert;
-				mesh.updateMatrix();
 				mesh.lookAt(nextVert);
-				mesh.updateMatrix();
-
+				
+				
 				
 				THREE.GeometryUtils.merge(geo, mesh);
 				
+				//parent.updateMatrix();
+				//parent.matrixAutoUpdate = true;
+				
+				//spheres.push(mesh);
 			}
-		}	
+
+		}
+				
 	}
-	mesh = new THREE.Mesh( geo,material );
-	tree.add(mesh);
-	scene.add( tree );
+		mesh = new THREE.Mesh( geo,material );
+	scene.add( mesh );
+	//parent.add(mesh);
+	//tree.add(parent);
+	//scene.add( tree );
 }
 
-//inserts position of balls into limbs array and limbSize array for creation later with makeLimbGeo()
+//inserts position of balls into limbs array for creation later with makeLimbGeo()
 function makeBranch(scalar){
 
 	var geometry = new THREE.CylinderGeometry( 3, 3, 3, 8 );
@@ -412,28 +458,29 @@ function makeBranch(scalar){
 
 	var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
 	
-	for ( var i = 0; i < things.length; i ++ ) {
+	for( ball in things) {
+	//	limb.push(new Array());
+	}
+	
+	for ( var i = makeCounter; i < things.length; i ++ ) {
 	
 		var thing = things[i];		
 		
-		var pos = new THREE.Vector3(thing.position.x,thing.position.y,thing.position.z);
-		var sized = scalar || 1;
-		
-		limb[i].push(pos);
-		limb[i].scalar = thing.scalar;
-		limbSize[i].push(sized);
-	
+		//if(thing.go==true){
+			var pos = new THREE.Vector3(thing.position.x,thing.position.y,thing.position.z);
+			var sized = scalar || 1;
+			limb[i].push(pos);
+			limb[i].scalar = thing.scalar;
+			limbSize[i].push(sized);
+		//}
 	}
 }
 
 function render() {
+	//moveThings();
 	renderer.render( scene, camera );
 	//stats.update();
 }
-
-//-------------------------------------------
-//flocking functionality taken from boids.js which is taken from shiffman flocking
-//-------------------------------------------
 
 function limit(vToCheck, max){
 	if(vToCheck.length() > max){
@@ -442,6 +489,22 @@ function limit(vToCheck, max){
 }
 
 function avoid(thisOne, target ) {
+	/*
+	var steer = new THREE.Vector3();
+
+	steer.copy( target.position );
+	steer.sub( thisOne.position );
+	
+	steer.normalize();
+	
+	var dist = thisOne.position.distanceTo(target.position);
+
+	if(dist < 50){
+		steer.multiplyScalar( dist*-.001);
+	}
+	return steer;
+	*/
+	
 	
 	var distance = thisOne.position.distanceTo(target.position );
 
@@ -452,6 +515,7 @@ function avoid(thisOne, target ) {
 		steer.subVectors( thisOne.position, target.position );
 		steer.multiplyScalar( distance * .1);
 
+		//_acceleration.add( steer );
 		return(steer);
 	}
 	else{
@@ -500,43 +564,32 @@ while (l--) {
 	
 	scene.remove(scene.children[l]);
 	
-}	
-
+	
+		
 things = [];
 branch = [];
 limb = [];
 limbSize = [];
 
-spheres = [];
+ makeCounter = 0;
 
-zeroVec = new THREE.Vector3(0,0,0);
-tree = new THREE.Object3D();
-fruit = new THREE.Object3D();
-branchSize = text.fatness;
+ spheres = [];
+ gogo = 0;
+ gogoarray = [];
+ made = false;
+ madeBranch = true;
+ doneAnimating = false;
+ zeroVec = new THREE.Vector3(0,0,0);
+ tree = new THREE.Object3D();
+  fruit = new THREE.Object3D();
+ branchSize = text.fatness;
 
 totallyDone = false;
-okDone = false;
 
-avoidDistance = 100;
-ballAmount = text.trunkAmount;
+ okDone = false;
 
 
+ avoidDistance = 100;
+ ballAmount = 10;
 }
-
-//-------------------------------------------
-//write to a file when you type 'a'
-//-------------------------------------------
-window.onkeyup = onKeyUp;
-window.onkeypress = onKeyPress;
-
-function onKeyUp(evt) {
-
-	if(evt.keyCode == 65){
-	
-		alert("saving!");
-		var blob = new Blob([(THREE.saveGeometryToObj(tree.children[0],10))], {type: "text/plain;charset=utf-8"});
-		saveAs(blob, "tree.obj");
-	}
 }
-
-document.addEventListener('keypress', onKeyPress, false);

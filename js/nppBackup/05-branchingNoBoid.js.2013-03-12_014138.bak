@@ -1,6 +1,3 @@
-//This script emits a series of particles which branch based on various rules and then builds geometry
-//which follows the paths the particles leave
-
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 //-------------------------------------------

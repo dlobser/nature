@@ -1,6 +1,3 @@
-//This script emits a series of particles which branch based on various rules and then builds geometry
-//which follows the paths the particles leave
-
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 //-------------------------------------------
@@ -442,6 +439,22 @@ function limit(vToCheck, max){
 }
 
 function avoid(thisOne, target ) {
+	/*
+	var steer = new THREE.Vector3();
+
+	steer.copy( target.position );
+	steer.sub( thisOne.position );
+	
+	steer.normalize();
+	
+	var dist = thisOne.position.distanceTo(target.position);
+
+	if(dist < 50){
+		steer.multiplyScalar( dist*-.001);
+	}
+	return steer;
+	*/
+	
 	
 	var distance = thisOne.position.distanceTo(target.position );
 
@@ -452,6 +465,7 @@ function avoid(thisOne, target ) {
 		steer.subVectors( thisOne.position, target.position );
 		steer.multiplyScalar( distance * .1);
 
+		//_acceleration.add( steer );
 		return(steer);
 	}
 	else{

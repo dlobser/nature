@@ -70,8 +70,6 @@ top: 50px !important;
 		
 		<script src="js/libs/boid.js"></script>
 		
-		<script src="js/libs/filesaver.js"></script>
-		
 		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
 		
 		<script src="js/libs/LobserCollection.js"></script>
