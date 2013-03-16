@@ -1,5 +1,5 @@
 /*!
- * Bootstrap v2.3.0
+ * Bootstrap v2.3.1
  *
  * Copyright 2012 Twitter, Inc
  * Licensed under the Apache License v2.0
@@ -224,14 +224,14 @@ textarea {
 body {
   margin: 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 17px;
-  line-height: 23px;
-  color: #d83;
-  background-color: #000000;
+  font-size: 14px;
+  line-height: 20px;
+  color: #333333;
+  background-color: #ffffff;
 }
 
 a {
-  color: #00aaee;
+  color: #0088cc;
   text-decoration: none;
 }
 
@@ -310,7 +310,6 @@ a:focus {
 
 .span8 {
   width: 620px;
- bgcolor="#FF0000";
 }
 
 .span7 {
