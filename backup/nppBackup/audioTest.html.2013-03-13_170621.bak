@@ -1,0 +1,12 @@
+<script>var context = new webkitAudioContext(),
+oscillator = context.createOscillator();
+
+oscillator.connect(context.destination); // Connect to speakers
+oscillator.start(0); // Start generating sound immediately
+Lovely. If you’re following along at home then you should be hearing the nice round tone of a sine wave. So, what about the other types of waves? Well, all we have to do is tell the oscillator what type of wave we want to use by specifying a number from 0-3.
+
+oscillator.type = 1; // Tell the oscillator to use a square wave
+
+
+oscillator.frequency.value = 900; // in hertz
+</script>

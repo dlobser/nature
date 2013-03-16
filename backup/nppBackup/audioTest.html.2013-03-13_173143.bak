@@ -1,0 +1,11 @@
+<script>var context = new webkitAudioContext(),
+oscillator = context.createOscillator();
+
+oscillator.connect(context.destination); // Connect to speakers
+oscillator.start(0); // Start generating sound immediately
+
+oscillator.type = 1; // Tell the oscillator to use a square wave
+
+
+oscillator.frequency.value = 900; // in hertz
+</script>
