@@ -342,7 +342,6 @@ function moveThings(){
 				}
 				
 				if(thing.layer == -1){
-				
 					thing.acceleration.y = 0;
 					thing.position.y = trunkDown;
 					
@@ -390,7 +389,7 @@ function moveThings(){
 function makeLimbGeo(){
 
 	var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
-	var geo = new THREE.SphereGeometry2( 3, 5, 5, 0, Math.PI*2, 0, Math.PI, dist,0,0);
+	var geo = new THREE.SphereGeometry2( 3, 6, 7, 0, Math.PI*2, 0, Math.PI, dist,0,0);
 	
 	for ( var j = 0; j < things.length ; j ++ ) {
 	
@@ -408,7 +407,7 @@ function makeLimbGeo(){
 				var dist = thisVert.distanceTo(nextVert);
 						
 				//var geometry = new THREE.SphereGeometry2( 3, 4, 5, 0, Math.PI*2, 0, Math.PI, dist,size*.9,size );
-				var geometry = new THREE.SphereGeometry2( 3, 5, 5, 0, Math.PI*2, 0, Math.PI, dist,(limbSize[j][i]*text.shrink)*text.shrink,limbSize[j][i]);
+				var geometry = new THREE.SphereGeometry2( 3, 5, 3, 0, Math.PI*2, 0, Math.PI, dist,(limbSize[j][i]*text.shrink)*text.shrink,limbSize[j][i]);
 				
 				//from Garner: rotates the link 90 degrees so that later on the aim will work properly - a hack?  Perhaps - Is there a better way? Perhaps
 				geometry.applyMatrix( new THREE.Matrix4().setRotationFromEuler(new THREE.Vector3(Math.PI/2, 0, 0), 'XYZ'));

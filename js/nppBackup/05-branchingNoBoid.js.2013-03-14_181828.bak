@@ -342,7 +342,6 @@ function moveThings(){
 				}
 				
 				if(thing.layer == -1){
-				
 					thing.acceleration.y = 0;
 					thing.position.y = trunkDown;
 					

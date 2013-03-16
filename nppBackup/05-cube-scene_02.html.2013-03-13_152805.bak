@@ -76,14 +76,14 @@
 		<script src="js/libs/peep.js"></script>
 		
 		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
-		</body>
-		</html>
+</body>
+</html>
 		<script>
-		
 		var scene = new sc1();
+	
 		scene.init();
+		//scene.moveThings();
 		scene.animate();
-		
 		</script>
 	</body>
 </html>

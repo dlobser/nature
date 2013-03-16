@@ -1,0 +1,42 @@
+1. conceptual goals list /100 words
+2. crit feedback
+3. steps to completion, be real
+4. presentation context + form
+http://www.phpied.com/webaudio-oscillator-in-js/
+http://stuartmemo.com/making-sine-square-sawtooth-and-triangle-waves/
+http://www.html5rocks.com/en/tutorials/webaudio/positional_audio/
+
+
+
+var context = new webkitAudioContext(),
+oscillator = context.createOscillator();
+oscillator.connect(context.destination); // Connect to speakers
+oscillator.start(0); // Start generating sound immediately
+oscillator.type = 1; // Tell the oscillator to use a square wave
+oscillator.frequency.value = 900; // in hertz
+
+
+
+<script>
+var cmajor = {};
+  cmajor.yo = function () {
+    var oscs = [], o, i, freqs = [261.63, 329.63, 392];
+    freqs.forEach(function(freq) {
+      o = audio_context.createOscillator();
+      o.frequency.value = freq;
+      o.connect(audio_context.destination);
+      o.noteOn(0);
+      oscs.push(o);
+    });
+    this.oscs = oscs;
+    fire('play', '\n - ' + freqs.join('Hz\n - '));
+  };
+  
+  cmajor.no = function () {
+    this.oscs.forEach(function(o) {
+      o.noteOff(0);
+    });
+    fire('stop');
+  };
+  
+  </script>

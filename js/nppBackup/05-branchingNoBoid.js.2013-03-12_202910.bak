@@ -1,5 +1,5 @@
-//This script emits a series of particles which branch based on various rules 
-//and then builds geometry on the paths the particles leave
+//This script emits a series of particles which branch based on various rules and then builds geometry
+//which follows the paths the particles leave
 
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
@@ -16,9 +16,9 @@ var starfield = function()
 	this.pos = -200;
 	this.fatness = 8;
 	this.shrink = .96;
-	this.size = 100;
+	this.size = 200;
 	this.rebuild = false;
-	this.message = "type a to save";
+	this.message = "Branch Builder";
 };
 
 //-------------------------------------------
@@ -30,12 +30,15 @@ gui.add(text, 'trunk', 0,60);
 gui.add(text, 'trunkAmount', 2,20);
 gui.add(text, 'gravity', -30,30);
 gui.add(text, 'gravity2', -1.01,1.01);
-gui.add(text, 'size', 20, 1000);
+gui.add(text, 'size', 100, 1000);
 gui.add(text, 'fatness', .1, 30);
 gui.add(text, 'shrink', .93,1.01);
 gui.add(text, 'pos', -500, 0);
 gui.add(text, 'rebuild');
 //-------------------------------------------
+
+
+
 
 var container, stats;
 var camera, controls, scene, renderer;
@@ -45,9 +48,6 @@ var things = [];
 var branch = [];
 var limb = [];
 var limbSize = [];
-
-var trunkDown = 0;
-var trunkPosDown = .1;
 
 var zeroVec = new THREE.Vector3(0,0,0);
 var tree = new THREE.Object3D();
@@ -166,7 +166,7 @@ function addGeo(amount,tx,ty,tz,thing){
 			var mesh = new THREE.Mesh( geometry, material );
 			var zeroVec = new THREE.Vector3(0,0,0 );
 			
-			var randVec = new THREE.Vector3((( Math.random() - 0.5 ) * .01) , (( Math.random() - 0.5 ) * 0),(( Math.random() - 0.5 ) * .01));
+			var randVec = new THREE.Vector3((( Math.random() - 0.5 ) * .01) , (( Math.random() - 0.5 ) * .01),(( Math.random() - 0.5 ) * .01));
 			var pos = new THREE.Vector3(tx + (( Math.random() - 0.5 ) * 1) ,ty + (( Math.random() - 0.5 ) * 1),tz +(( Math.random() - 0.5 ) * 1));
 			
 			if(root)
@@ -185,17 +185,14 @@ function addGeo(amount,tx,ty,tz,thing){
 			
 				mesh.velocity = zeroVec;
 				mesh.acceleration = upVec;
-				
+				mesh.damp = .9;
 				mesh.scalar = text.fatness;
 				
-				if(root){
+				if(root)
 					mesh.layer = -1;
-					mesh.damp = .8;
-				}
-				else{
+				else
 					mesh.layer = 0;
-					mesh.damp = .9;
-				}
+
 				mesh.bLength = 500;
 			}
 			
@@ -241,7 +238,7 @@ function animate() {
 		moveThings();
 		makeBranch(branchSize);
 		makeLimbGeo();
-		if (branchSize > 1)
+		if (branchSize>.5)
 		branchSize *=text.shrink;
 	}
 	
@@ -310,12 +307,16 @@ function moveThings(){
 				// diffVec.multiplyScalar(Math.max(dist/100,1));
 				
 				var diffVec = avoid(thing,other);
-				
-			
 				var suckVec = cheapCohere(thing,other);
 				
+				if(thing.layer == -1){
+					thing.velocity.multiplyScalar(.96);
+					
+					if (thing.acceleration.y > 0 ){
+						thing.velocity.y *= .01;
 				
-				
+					}
+				}
 				
 				if(thing.layer == 2){
 					thing.acceleration.add(gravity);
@@ -333,26 +334,13 @@ function moveThings(){
 					thing.acceleration.add(gravity2);
 				}
 
+				
 				thing.acceleration.add(diffVec);
 				thing.acceleration.add(suckVec);
 				
-				if (thing.acceleration.y < 0 && thing.position.y < 100 && thing.layer >= 0){
+				if (thing.acceleration.y < 0 && thing.position.y < 100){
 					thing.acceleration.y *= .1;
 				
-				}
-				
-				if(thing.layer == -1){
-				
-					thing.acceleration.y = 0;
-					thing.position.y = trunkDown;
-					
-					trunkDown -= trunkPosDown;
-					trunkPosDown *= .999;
-					
-					if (thing.velocity.y > 0 ){
-						thing.velocity.y *= .01;
-				
-					}
 				}
 				
 				limit(thing.acceleration, 1);
@@ -390,11 +378,11 @@ function moveThings(){
 function makeLimbGeo(){
 
 	var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
-	var geo = new THREE.SphereGeometry2( 3, 5, 5, 0, Math.PI*2, 0, Math.PI, dist,0,0);
+	var geo = new THREE.SphereGeometry2( 3, 4, 3, 0, Math.PI*2, 0, Math.PI, dist,0,0);
 	
 	for ( var j = 0; j < things.length ; j ++ ) {
 	
-		if(limb[j].length > 3 && limb[j].length % 2 == 0){
+		if(limb[j].length > 3){
 
 			var newSize = map_range(j,0,things.length,30,1);
 			var sized = Math.max(newSize,1);
@@ -408,7 +396,7 @@ function makeLimbGeo(){
 				var dist = thisVert.distanceTo(nextVert);
 						
 				//var geometry = new THREE.SphereGeometry2( 3, 4, 5, 0, Math.PI*2, 0, Math.PI, dist,size*.9,size );
-				var geometry = new THREE.SphereGeometry2( 3, 5, 5, 0, Math.PI*2, 0, Math.PI, dist,(limbSize[j][i]*text.shrink)*text.shrink,limbSize[j][i]);
+				var geometry = new THREE.SphereGeometry2( 3, 5, 3, 0, Math.PI*2, 0, Math.PI, dist,(limbSize[j][i]*text.shrink)*text.shrink,limbSize[j][i]);
 				
 				//from Garner: rotates the link 90 degrees so that later on the aim will work properly - a hack?  Perhaps - Is there a better way? Perhaps
 				geometry.applyMatrix( new THREE.Matrix4().setRotationFromEuler(new THREE.Vector3(Math.PI/2, 0, 0), 'XYZ'));
@@ -559,9 +547,6 @@ branchSize = text.fatness;
 totallyDone = false;
 okDone = false;
 
-trunkDown = 0;
-trunkPosDown = .1;
-
 avoidDistance = 100;
 ballAmount = text.trunkAmount;
 
@@ -577,24 +562,20 @@ window.onkeyup = onKeyUp;
 window.onkeypress = onKeyPress;
 
 console.log(tree.children.length);
-
+var output = "";
 
 function onKeyUp(evt) {
 
 	if(evt.keyCode == 65){
-		alert("saving!");
-		var j = 0;
-		var output = "";
-		
+	
 		for (var i = 0 ; i < tree.children.length ; i++){
 			
-			output += THREE.saveGeometryToObj2(tree.children[i],j);
-			j += tree.children[i].geometry.vertices.length
+			output += THREE.saveGeometryToObj2(tree.children[i],tree.children[i].geometry.vertices);
+			
 		}
-		//console.log(output);
-		output.replace("undefined","");
-		alert("saved!");
-		var blob = new Blob([output], {type: "text/plain;charset=ANSI"});
+		
+		alert("saving!");
+		var blob = new Blob(output, {type: "text/plain;charset=utf-8"});
 		saveAs(blob, "tree.obj");
 	}
 }
