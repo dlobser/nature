@@ -3,10 +3,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>IdleHands</title>
+    <title>Bootstrap, from Twitter</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A place to spend time">
-    <meta name="author" content="David Lobser">
+    <meta name="description" content="">
+    <meta name="author" content="">
 	
 	 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Monda">
 
@@ -96,12 +96,10 @@ body {
     <div class="container">
 		
 	<div class="row">
-		<img src="images/bannerTrees.png"  />
 		<div class="hero-unit">
 		<div style="text-align:center">
-
-	
-			<!--h1>Idle Hands</h1><br class="brr"><h2 style="line-height:-20px">are the Devil's tools</h2>-->
+		<br>
+			<h1>Idle Hands</h1><br class="brr"><h2 style="line-height:-20px">are the Devil's tools</h2>
 			</br>
 			<div class="span6">
 				<a href="02-vectors.html" target="_self">
@@ -172,7 +170,7 @@ body {
 						<a href="03-avoidance_tree.html">3-avoidance spinning</a><br>
 						<a href="03-avoidance_lookat.html">3-avoidance branches</a><br>
 						<a href="03-avoidance_objExport.html">3-avoidance obj export</a> <p class="smalls">This one exports to .obj format when you click - copy, paste and save
-							</br><a href="03-3dprint.html">a printed model</a></p>
+							</br><a href="03-3dprint.html">a printed model</a></p> <br>
 						<a href="04-manbirds.html">4-peeple boids</a><br>
 						<a href="05-cube-scene_02.html">5-twisting oscillations</a><br>
 						<a href="05-cube-scene.html">6-sine pistons</a><br>
@@ -192,7 +190,7 @@ body {
 						<a href="4-spinning.html">spinning</a><p class="smalls">click screen to tweak</br>q toggles cage, r exports geo<br></p>
 						<a href="04-makeman.html">peeple maker</a><br>
 						<a href="05-garlic.html">volumetric garlic</a><p class="smalls">culled from MRI data of vegetables <a href = "http://insideinsides.blogspot.com/">insideinside</a><br></p>
-						<a href="05-adameve.html">Adam & Eve</a><p class="smalls">possibly NSFW<br></p>
+						<a href="05-adameve.html">Adam & Eve</a><p class="smalls">possibly NSFW<br>
 						<a href="http://gerkles.pinklemona.de/">multi-tentacle</a><p class="smalls">multiplayer tentacles<br>
 						</br>
 			
@@ -212,10 +210,9 @@ body {
 						<a href="http://learningwebgl.com/blog/">Learning WebGL</a><br>
 						<a href="http://www.freshdesignweb.com/html5-css3-3d-examples-demo.html">WebGL examples</a><br>
 						<a href="http://it-ebooks.info/book/918/">WebGL O'Reilly</a><br>
-						<a href="https://github.com/tparisi">Tony Parisi GIT</a><p class="smalls">Author of the O'Reilly book</p>
+						<a href="https://github.com/tparisi">Tony Parisi GIT</a><p class="smalls">Author of the O'Reilly book</p><br>
 						<a href="http://chandlerprall.github.com/Physijs/">PhysJS - physics plugin</a><br>
 						<a href="http://www.clicktorelease.com/blog/vertex-displacement-noise-3d-webgl-glsl-three-js">GLSL with threeJS</a><br>
-						<a href="http://favbulous.com/post/895/8-crazy-animations-withwebgl-and-html5-canvas">8 Crazy Animations</a>
 						</br>
 				
 
@@ -231,13 +228,11 @@ body {
 						<a href="http://jsfiddle.net/WzeVg/3/">js fiddle</a><br>
 						<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/apply">when to use this.</a><br>
 						<a href="http://www.reddit.com/r/learnjavascript">learn js at reddit</a><br>
-						<a href=" http://www.createjs.com/#!/EaselJS">EaselJS</a>
-						<a href="http://stackoverflow.com/questions/2353818/how-do-i-get-started-with-node-js">Getting Started with Node</a>
-						<br>
+						</br>
 					<h3>Other Links</h3>
 						<a href="http://www.red3d.com/cwr/steer/">Steering Behavior</a><br>	
 						<a href="http://www-history.mcs.st-and.ac.uk/Curves/Curves.html">Classic Curves</a><br>	
-						<a href="http://n-e-r-v-o-u-s.com/">Nervous System Design</a>
+	
 
 
 				</div><!--/row-->

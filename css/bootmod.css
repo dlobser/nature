@@ -1,3 +1,9 @@
+
+
+li {
+text-align: left;
+}
+
 /*
 <script type="text/javascript">
 function changeText3(){
@@ -9,12 +15,16 @@ function changeText3(){
 <p id='para'>Welcome to the site <b id='boldStuff3'>dude</b> </p> 
 <input type='button' onclick='changeText3()' value='Change Text'/>
 */
-
+.brr
+{   content: "A" !important;
+    display: block !important;
+    margin-bottom: -.1em !important;
+}
 html,body {
   margin: 0;
   padding-top:0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 20px;
   color: #257;
   background-color: #ffffff;
@@ -51,7 +61,8 @@ width: 1024px;
 }
 .small-margin{
 	line-height:1.2em;
-	font-family:serif;
+	font-family:"Times New Roman",Georgia,Serif;
+	letter-spacing:0em;
 	font-size:1.2em;
 	margin-left:10%;
 }
@@ -61,7 +72,7 @@ width: 1024px;
 	}
 	.container{
 		font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;background-color:#9df;
-		letter-spacing:-.1em;
+		letter-spacing:-.05em;
 		
 		
 	}
@@ -168,7 +179,7 @@ border: 1px solid RGBA(0,0,0,0.0);
 		padding-left:10px;
 	}
 	.smalls{
-		font-size:.8em; line-height:100%;
+		font-size:.8em; line-height:130%;
 		padding-left:20px;
 		padding-right:20px;
 		
