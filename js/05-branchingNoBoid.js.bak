@@ -95,7 +95,7 @@ function init() {
 	var myColor = ("0x" + Math.floor(Math.random()*16777215).toString(16));
 			var hexValue = parseInt(myColor , 16);
 			
-	scene.fog = new THREE.FogExp2( 0xccddff, 0.0002 );
+	scene.fog = new THREE.FogExp2( hexValue, 0.0002 );
 	
 		scene.add( tree );
 

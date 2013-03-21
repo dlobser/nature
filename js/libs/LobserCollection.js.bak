@@ -59,7 +59,7 @@ var s = '';
 for (i = 0; i < geo.geometry.vertices.length; i++) {
 
 	var vector = new THREE.Vector3( geo.geometry.vertices[i].x, geo.geometry.vertices[i].y, geo.geometry.vertices[i].z );
-	vector.multiplyScalar(.0001);
+	vector.multiplyScalar(.001);
 	geo.matrixWorld.multiplyVector3( vector );
 	
 	//vector.applyProjection( matrix )

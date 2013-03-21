@@ -49,25 +49,6 @@ peep.prototype = {
 	*/
 	
 	part:function(px,py,pz,	sx,sy,sz,	p2x,p2y,p2z,	namer,color){
-	
-		/*construction of the heirarchy and best practice for parenting
-		  the 'pos' of one link should be parented to the 'rt' of its parent - becoming children[1]
-		  
-			pos-
-				|
-				|[0]           [1]
-				-rt------------pos-
-				  |				|
-				  |				|
-				  sc		   -rt-
-				   |			   |
-				   |			   |
-				  mesh			   -sc-
-									  |
-									  |
-									  -mesh
-	
-		*/
 		
 		this.material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
 		this.material.color.setHex(color);
@@ -254,6 +235,8 @@ peep.prototype = {
 		
 		stringer(this.big,num,sx,sy,sz,ss,divs);
 		
+	
+		
 		function stringer(obj,num,sx,sy,sz,ss,divs)
 		{		
 			
@@ -286,10 +269,16 @@ peep.prototype = {
 					
 				//obj.rotation.x = (.3);
 				}
+				
 				return obj;
 			}
+
 		}
+		
+		
 		return this.big;
+		
+		
 	},
 	
 	frontTail:function(obj,sx,sy){
