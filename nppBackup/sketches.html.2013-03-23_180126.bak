@@ -1,0 +1,375 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>IdleHands</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A place to spend time">
+    <meta name="author" content="David Lobser">
+	
+	<script type="text/javascript" src="js/libs/jquery.js"></script>
+	
+	 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Monda">
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+	<!-- Le styles <link href="css/bootmod.css" rel="stylesheet"> -->
+	<link href="css/bootmod.css" rel="stylesheet">
+
+    <style type="text/css">
+		body {
+        padding-top: 0px;
+        
+      }
+
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+
+      @media (max-width: 980px) {
+        /* Enable use of floated navbar text */
+        .navbar-text.pull-right {
+          float: none;
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+      }
+    </style>
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="bootstrap/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="bootstrap/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="bootstrap/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="bootstrap/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="bootstrap/ico/favicon.png">
+								   
+	<script>
+	
+	
+	
+	$(document).ready(function(){
+	
+	
+	
+		var originalColors = [];
+
+// Changes color on hover
+    $(function() {
+        $('.span3').hover(function(){
+            originalColors[$(this).index('.span3')] = $(this).css('background-color');
+            $(this).css('background-color', '#cdf');
+        },
+        function(){
+           $(this).css('background-color', originalColors[$(this).index('.span3')]);
+        });
+    });
+	
+	$('.pic').css({"border":"2px solid black","padding":"0px","width":"128px"});
+	
+	
+	    $(function() {
+        $('.pic').hover(function(){
+            originalColors[$(this).index('.pic')] = $(this).css('border');
+            $(this).css('border', '10px solid black');
+        },
+        function(){
+           $(this).css('border', originalColors[$(this).index('.pic')]);
+        });
+    });
+	
+	$('.small-margin').animate({"font-size":"1.2em"},'slow');
+	
+	$('.poofter').hover(function(){
+		$(this).animate({"font-size":"1.2em"},'fast','swing');
+		});
+		
+	$('.sizeSix').hover(function(){
+		$('#demo4').toggle();
+	});
+		
+	
+	});
+	
+	
+	</script>
+	
+	<script src="http://twitter.github.com/bootstrap/assets/js/bootstrap.js"></script>
+	
+	
+  </head>
+
+  <body>
+  
+  
+<!--
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+		  
+         <!-- <a class="brand" href="#">Idle Hands</a> -->
+		 <!--
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+				
+					<a href="index2.html">Idle Hands</a><br>
+				<a href="index2.html">Home</a><br>
+				<a href="about.html">About</a><br>
+				<a href="http://www.DLobser.com">Dlobser.com</a><br>
+            </ul>
+          </div><!--/.nav-collapse -->
+		  <!--
+        </div>
+      </div>
+    </div>
+	-->
+
+	<div class="container">
+		
+	</div>
+
+    <div class="container">
+		
+	<div class="row">
+		<img src="images/bannerTrees.png"  />
+		
+				<div class="row">
+
+				<div class="span12" style="background-color:none;padding:0px;margin-left:0px!important">
+				<div style ="text-align:center">
+					<a href="http://www.natureofcode.com"  class="poofter">Nature of Code</a>
+					<a href="index.html" class="poofter">Home</a>
+					<a href="about.html" class="poofter">About</a>
+					<a href="http://www.DLobser.com"  class="poofter">Dlobser.com</a>
+				</div>
+			</div>
+		</div>
+		
+		<div class="hero-unit">
+		<div style="text-align:center">
+		<br>
+		<br>
+		
+
+	
+			<!--h1>Idle Hands</h1><br class="brr"><h2 style="line-height:-20px">are the Devil's tools</h2>-->
+			</br>
+			
+			
+			<div class="span6">
+			
+			<ul id="pic">
+			
+		
+			
+					<li id="pic">
+						<a href="02-vectors.html" target="_self">
+						<img src="images/thumbs/thumb_0000.jpg"/></a>Love You
+					</li>
+					
+					<li id="pic">
+						<a href="04-makeman.html" target="_self">
+						<img src="images/thumbs/thumb_0001.jpg"/></a>Friends
+					</li>
+					
+					<li id="pic">
+						<a href="05-cube-scene_02.html" target="_self">
+						<img src="images/thumbs/thumb_0002.jpg"/></a>Filigree
+					</li>
+					
+					<li id="pic">
+						<a href="05-branching.html" target="_self">
+						<img src="images/thumbs/thumb_0003.jpg"/></a>Tree Growth
+					</li>
+					
+					<li id="pic">
+						<a href="05-adameve.html"target="_self">
+						<img src="images/thumbs/thumb_0004.jpg"/></a>Naked!
+					</li>
+					
+					<li id="pic">
+						<a href="03-avoidance_tree.html" target="_self">
+						<img src="images/thumbs/thumb_0005.jpg"/></a>Spinning
+					</li>
+					
+					<li id="pic">
+						<a href="04-spinning.html" target="_self">
+						<img src="images/thumbs/thumb_0006.jpg"/></a>Swirling
+					</li>
+					
+					<li id="pic">
+						<a href="05-cube-scene.html" target="_self">
+						<img src="images/thumbs/thumb_0007.jpg"/></a>Pumping
+					</li>
+			</ul>
+		
+			<br>
+			<br>
+			<br>
+			<br>
+			
+			</div>
+			<div class="span5">
+				<p class="small-margin">
+				<p class="small-margin">&emsp;&emsp;Although it has been notoriously difficult to pin down precisely what it is that makes life so distinctive and remarkable, 
+				there is general agreement that its informational aspect is one key property, perhaps the key property. 
+				</br></br><a href="http://arxiv.org/abs/1207.4803"> 
+				-The Algorithmic Origins of Life</a></p>
+				</br>
+				</p>
+			
+			</div>
+	
+
+	
+				<!--
+			<p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+			-->
+		</div>
+	</div>
+	
+			<br>
+					<br>
+					<br>
+		  
+      <div class="row" id="map">
+	  <div class="fill">
+	  <div class="span6"  id="sizeSix">
+			  <div style="text-align:center;padding:10px">
+			   <a class="btn2" data-toggle="collapse" data-target="#demo4" style="vertical-align:middle;">
+				<h3>Projects</h3>	</a></div>
+				<div id="demo4" class="collapse out">
+        <div class="span3">
+		
+				
+				<h3>Nature of Code</h3>	
+			
+						<a href="01-noise.html">1-noise</a><br>
+						<a href="02-vectors.html">2-vectors</a><br>
+						<a href="03-avoidance.html">3-avoidance</a><br>
+						<a href="03-avoidance_tree.html">3-avoidance spinning</a><br>
+						<a href="03-avoidance_lookat.html">3-avoidance branches</a><br>
+						<a href="03-avoidance_objExport.html">3-avoidance obj export</a> <p class="smalls">This one exports to .obj format when you click - copy, paste and save
+							</br><a href="03-3dprint.html">a printed model</a></p>
+						<a href="04-manbirds.html">4-peeple boids</a><br>
+						<a href="05-cube-scene_02.html">5-twisting oscillations</a><br>
+						<a href="05-cube-scene.html">6-sine pistons</a><br>
+						<a href="05-branching.html">7-branching</a><br>
+						<a href="08-branch-parent.html">8-heirarchical-branching</a><br>
+						</br>
+					
+				
+
+		</div><!--/row-->
+		
+		        <div class="span3" >
+        
+				
+				<h3>Development</h3>
+				
+					
+					
+						<a href="4-spinning.html">spinning</a><p class="smalls">click screen to tweak</br>q toggles cage, r exports geo<br></p>
+						<a href="04-makeman.html">peeple maker</a><br>
+						<a href="05-garlic.html">volumetric garlic</a><p class="smalls">culled from MRI data of vegetables <a href = "http://insideinsides.blogspot.com/">insideinside</a><br></p>
+						<a href="05-adameve.html">Adam & Eve</a><p class="smalls">possibly NSFW<br></p>
+						<a href="http://gerkles.pinklemona.de/">multi-tentacle</a><p class="smalls">multiplayer tentacles<br>
+						</br>
+			
+				</div>
+				</div>
+				</div><!--/row-->
+	
+			</div>
+			
+				
+			  <div class="span6"  id="sizeSix">
+			  <div style="text-align:center;padding:10px">
+			   <a class="btn2" data-toggle="collapse" data-target="#demo3" style="vertical-align:middle;">
+				<h3>Links</h3>	</a></div>
+				<div id="demo3" class="collapse out">
+			
+			  
+		
+			 <div class="span3">
+			
+			
+					
+				
+					<h3>THREE Links</h3>
+						<a href="http://mrdoob.github.com/three.js/">THREEjs</a><br>
+						<a href="http://stemkoski.github.com/Three.js/">THREEjs examples</a><br>
+						<a href="http://learningwebgl.com/blog/">Learning WebGL</a><br>
+						<a href="http://www.freshdesignweb.com/html5-css3-3d-examples-demo.html">WebGL examples</a><br>
+						<a href="http://it-ebooks.info/book/918/">WebGL O'Reilly</a><br>
+						<a href="https://github.com/tparisi">Tony Parisi GIT</a><p class="smalls">Author of the O'Reilly book</p>
+						<a href="http://chandlerprall.github.com/Physijs/">PhysJS - physics plugin</a><br>
+						<a href="http://www.clicktorelease.com/blog/vertex-displacement-noise-3d-webgl-glsl-three-js">GLSL with threeJS</a><br>
+						<a href="http://favbulous.com/post/895/8-crazy-animations-withwebgl-and-html5-canvas">8 Crazy Animations</a>
+						</br>
+				
+
+
+				</div><!--/row-->
+				 <div class="span3">
+        
+			
+					
+					<h3>JS/web Links</h3>
+						<a href="http://twitter.github.com/bootstrap/">bootstrap</a><br>	
+						<a href="http://yehudakatz.com/2011/08/12/understanding-prototypes-in-javascript/">prototypes in js</a><br>	
+						<a href="http://jsfiddle.net/WzeVg/3/">js fiddle</a><br>
+						<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/apply">when to use this.</a><br>
+						<a href="http://www.reddit.com/r/learnjavascript">learn js at reddit</a><br>
+						<a href=" http://www.createjs.com/#!/EaselJS">EaselJS</a>
+						<a href="http://stackoverflow.com/questions/2353818/how-do-i-get-started-with-node-js">Getting Started with Node</a>
+						<br>
+						<br>
+					<h3>Other Links</h3>
+						<a href="http://www.red3d.com/cwr/steer/">Steering Behavior</a><br>	
+						<a href="http://www-history.mcs.st-and.ac.uk/Curves/Curves.html">Classic Curves</a><br>	
+						<a href="http://n-e-r-v-o-u-s.com/">Nervous System Design</a>
+				</div>
+				   </div>
+
+				</div><!--/row-->
+				</div>
+
+
+	</div>
+		
+    </div><!--/.fluid-container-->
+</br>	</br>	</br>	</br>	</br>	</br>	</br>	</br>	</br>	</br></br>	</br>	</br>
+</br>	</br>	</br>	</br>	</br>	</br>	</br>	</br>	</br>	</br></br>	</br>	</br>
+</br>	</br>	</br>	</br>	</br>	</br>	</br>	</br>	</br>	</br></br>	</br>	</br>
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster
+    <script src="bootstrap/js/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap-transition.js"></script>
+    <script src="bootstrap/js/bootstrap-alert.js"></script>
+    <script src="bootstrap/js/bootstrap-modal.js"></script>
+    <script src="bootstrap/js/bootstrap-dropdown.js"></script>
+    <script src="bootstrap/js/bootstrap-scrollspy.js"></script>
+    <script src="bootstrap/js/bootstrap-tab.js"></script>
+    <script src="bootstrap/js/bootstrap-tooltip.js"></script>
+    <script src="bootstrap/js/bootstrap-popover.js"></script>
+    <script src="bootstrap/js/bootstrap-button.js"></script>
+    <script src="bootstrap/js/bootstrap-collapse.js"></script>
+    <script src="bootstrap/js/bootstrap-carousel.js"></script>
+    <script src="bootstrap/js/bootstrap-typeahead.js"></script>
+ -->
+  </body>
+</html>

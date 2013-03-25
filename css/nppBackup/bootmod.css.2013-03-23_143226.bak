@@ -1,0 +1,249 @@
+
+
+li {
+text-align: left;
+}
+
+/*
+<script type="text/javascript">
+function changeText3(){
+	var oldHTML = document.getElementById('para').innerHTML;
+	var newHTML = "<span style='color:#ffffff'>" + oldHTML + "</span>";
+	document.getElementById('para').innerHTML = newHTML;
+}
+</script>
+<p id='para'>Welcome to the site <b id='boldStuff3'>dude</b> </p> 
+<input type='button' onclick='changeText3()' value='Change Text'/>
+*/
+.brr
+{   content: "A" !important;
+    display: block !important;
+    margin-bottom: -.1em !important;
+}
+html,body {
+  margin: 0;
+  padding-top:0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  color: #257;
+  background-color: #ffffff;
+  height: 100%;
+}
+
+.nav-list > li > a {
+	padding-top: 1px;
+	padding-right: 15px;
+	padding-bottom: 3px;
+	padding-left: 15px;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+  
+    display: block;
+}
+
+.nav-list > li > a, .nav-list .nav-header {
+
+text-shadow: 0 0px 0 rgba(255, 255, 255, 0.5);
+}
+
+.fill { 
+    min-height: 100%;
+    height: 100%;
+}
+
+.row-fluid {
+width: 1024px;
+}
+.small-margin{
+	line-height:1.2em;
+	font-family:"Times New Roman",Georgia,Serif;
+	letter-spacing:0em;
+	font-size:1.2em;
+	margin-left:10%;
+}
+.container{
+		font-family: "Lucida Console", "Courier New", monospace;background-color:#2f6a66;
+		
+	}
+	.container{
+		font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;background-color:#fff;
+		letter-spacing:-.05em;
+		
+		
+	}
+	.hero-unit {
+	padding:0px;
+	background-color:RGBA(0,0,0,0.0);
+	letter-spacing:-.1em;
+	line-height:1em;
+	margin-left:20px;
+	}
+	.btn-primary {
+		color: rgb(0, 0, 0);
+		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+		background-color: white;
+		background-image: none;
+
+		
+	}
+	.btn{
+	padding: 5px 5px;
+	}
+
+.btn:hover,
+.btn:focus,
+.btn:active,
+.btn.active,
+.btn.disabled,
+.btn[disabled] {
+color: #333333;
+background-color: #ddd;
+*background-color: #fff;
+}
+.well {
+min-height: 20px;
+padding: 19px;
+margin-bottom: 20px;
+background-color: RGBA(0,0,0,0.0);
+border: 1px solid RGBA(0,0,0,0.0);
+}
+
+
+	ul#pic,
+	ul#pic li {
+		/* Setting a common base */
+		margin: 1px;
+		padding: 0;
+		margin-top:3px;
+	}
+
+	ul#pic li {
+		display: inline-block;
+		width: 128px;
+		min-height: 128px;
+		background: #adf;
+		text-align:center;
+
+		
+	}
+	
+	ul#pic li:hover
+	{ 
+
+	background: #123;
+	color:white;
+	}
+
+
+
+
+	.navbar-inner { height:0em; min-height:0em;}
+	.span8,.span4,.span3,.nobg,.span12,.span2,.span10{
+	
+		background-color: RGBA(0,0,0,0.0);
+	
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+		//margin: 5px;
+		padding: 10px;
+		//letter-spacing : -.1em;
+		
+		//padding: 10px;
+		//border-radius: 10px;
+		
+
+	}
+	.subtitle{
+		line-height:0px;
+		color:white;
+		padding:15px;
+		margin-top:10px;
+		text-align:center;
+	
+	}
+		.span3{
+		background-color:#8ce;
+		
+		border-radius:5px;	
+		min-height:100%!important;
+		height:100%!important;
+	}
+			#sizeSix{
+		background-color:#345;
+		
+		border-radius:5px;	
+		min-height:100%!important;
+		height:100%!important;
+	}
+	/*
+	#veryTop{
+		margin-top:-10px;
+	}
+
+	.span4{
+		width:280!important;
+		padding:10px;
+	}
+	.span12{
+		padding-top:-2em;
+		padding:10px;
+		margin:0;
+		border-radius: 10px;
+	}
+	*/
+	.row{
+	margin-left:0px;
+	}
+	#inside{
+	<!--margin-left:0px;-->
+	}
+	h1,h2,h3 {
+		margin-top: 0;
+		line-height:.8em;
+	}
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+		/*width: 1200px;*/
+      }
+	 thisDiv
+	{
+		background-color: #162D2E !important;
+			padding: 10px;
+			letter-spacing : -.1em;
+			border-radius: 10px
+	} 
+	.navbar .brand, .navbar .nav{
+		padding-top:10px;
+		background-color:transparent;
+		margin-left:10%;
+	}
+	.navbar .nav > li > a{
+		padding-top:2px;
+		padding-left:10px;
+	}
+	.smalls{
+		font-size:.8em; line-height:130%;
+		padding-left:20px;
+		padding-right:20px;
+		
+	}
+	
+	
+	[class*="span"] {
+float: left;
+margin-left: 10px!important;
+margin-top: 10px!important;
+margin-bottom: 10px!important;
+margin-right: 0px!important;
+}
+.row {
+margin-left: 0px!important;
+}
+	
+	

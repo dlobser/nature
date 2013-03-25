@@ -14,6 +14,15 @@ function map_range(value, low1, high1, low2, high2) {
 	return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
 
+function randly(off,mult){
+
+	var offs = off || -.5;
+	var mults = mult || 1;
+
+	return((Math.random()+offs)*mults);
+
+}
+
 THREE.saveGeometryToObj = function (geo,nums) {
 
 geo.updateMatrixWorld();
@@ -83,6 +92,131 @@ for (i = 0; i < geo.geometry.faces.length; i++) {
 
 return s;
 }
+
+THREE.SphereGeometry3 = function ( radius, widthSegments, heightSegments, height, topScale, botScale ) {
+
+	THREE.Geometry.call( this );
+
+	this.radius = radius || 50;
+	
+	this.topVerts = [];
+	this.botVerts=[];
+
+	this.widthSegments = Math.max( 3, Math.floor( widthSegments ) || 8 );
+	this.heightSegments = Math.max( 2, Math.floor( heightSegments ) || 6 );
+
+	/*
+	phiStart = phiStart !== undefined ? phiStart : 0;
+	phiLength = phiLength !== undefined ? phiLength : Math.PI * 2;
+
+	thetaStart = thetaStart !== undefined ? thetaStart : 0;
+	thetaLength = thetaLength !== undefined ? thetaLength : Math.PI;
+	*/
+	
+	phiStart = 0;
+	phiLength =  Math.PI * 2;
+
+	thetaStart = 0;
+	thetaLength =  Math.PI;
+
+	var x, y, vertices = [], uvs = [];
+
+	for ( y = 0; y <= this.heightSegments; y ++ ) {
+
+		var verticesRow = [];
+		var uvsRow = [];
+
+		for ( x = 0; x <= this.widthSegments; x ++ ) {
+
+			var u = x / this.widthSegments;
+			var v = y / this.heightSegments;
+			
+			var scalar;
+			
+			if (y >(this.heightSegments)/2){
+				scalar = topScale;
+			}
+			else{
+				scalar = botScale;
+			}
+
+			var vertex = new THREE.Vector3();
+			vertex.x = - this.radius * Math.cos( phiStart + u * phiLength ) * Math.sin( thetaStart + v * thetaLength )*scalar;
+			vertex.y = this.radius * Math.cos( thetaStart + v * thetaLength )*scalar;
+			vertex.z = this.radius * Math.sin( phiStart + u * phiLength ) * Math.sin( thetaStart + v * thetaLength )*scalar;
+			
+			if (y <= (this.heightSegments)/2){
+				vertex.y += height;
+			}
+			
+			if (y >(this.heightSegments)/2){
+				this.topVerts.push(vertex);
+			}
+			else{
+				this.botVerts.push(vertex);
+			}
+
+			this.vertices.push( vertex );
+
+			verticesRow.push( this.vertices.length - 1 );
+			uvsRow.push( new THREE.Vector2( u, 1 - v ) );
+
+		}
+
+		vertices.push( verticesRow );
+		uvs.push( uvsRow );
+
+	}
+
+	for ( y = 0; y < this.heightSegments; y ++ ) {
+
+		for ( x = 0; x < this.widthSegments; x ++ ) {
+
+			var v1 = vertices[ y ][ x + 1 ];
+			var v2 = vertices[ y ][ x ];
+			var v3 = vertices[ y + 1 ][ x ];
+			var v4 = vertices[ y + 1 ][ x + 1 ];
+
+			var n1 = this.vertices[ v1 ].clone().normalize();
+			var n2 = this.vertices[ v2 ].clone().normalize();
+			var n3 = this.vertices[ v3 ].clone().normalize();
+			var n4 = this.vertices[ v4 ].clone().normalize();
+
+			var uv1 = uvs[ y ][ x + 1 ].clone();
+			var uv2 = uvs[ y ][ x ].clone();
+			var uv3 = uvs[ y + 1 ][ x ].clone();
+			var uv4 = uvs[ y + 1 ][ x + 1 ].clone();
+
+			if ( Math.abs( this.vertices[ v1 ].y ) === this.radius ) {
+
+				this.faces.push( new THREE.Face3( v1, v3, v4, [ n1, n3, n4 ] ) );
+				this.faceVertexUvs[ 0 ].push( [ uv1, uv3, uv4 ] );
+
+			} else if ( Math.abs( this.vertices[ v3 ].y ) === this.radius ) {
+
+				this.faces.push( new THREE.Face3( v1, v2, v3, [ n1, n2, n3 ] ) );
+				this.faceVertexUvs[ 0 ].push( [ uv1, uv2, uv3 ] );
+
+			} else {
+
+				this.faces.push( new THREE.Face4( v1, v2, v3, v4, [ n1, n2, n3, n4 ] ) );
+				this.faceVertexUvs[ 0 ].push( [ uv1, uv2, uv3, uv4 ] );
+
+			}
+
+		}
+
+	}
+
+	this.computeCentroids();
+	this.computeFaceNormals();
+
+    this.boundingSphere = new THREE.Sphere( new THREE.Vector3(), radius );
+
+};
+
+THREE.SphereGeometry3.prototype = Object.create( THREE.Geometry.prototype );
+
 
 THREE.SphereGeometry2 = function ( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength, height, topScale, botScale ) {
 

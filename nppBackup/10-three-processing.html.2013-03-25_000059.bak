@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+
+<script src="js/libs/processing.js"></script>
+<script src="js/three/build/three.js"></script>
+<style>
+
+body{
+background-color:black
+}
+</style>
+</head>
+<body>
+<p>
+
+This script combines threejs and processingjs
+
+</p>
+</body>
+</html>

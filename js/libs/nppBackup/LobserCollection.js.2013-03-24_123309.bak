@@ -1,0 +1,622 @@
+var fromPrototype = function(prototype, object) {
+  var newObject = Object.create(prototype);
+ 
+  for (var prop in object) {
+    if (object.hasOwnProperty(prop)) {
+      newObject[prop] = object[prop];      
+    }
+  }
+ 
+  return newObject;
+};
+
+function map_range(value, low1, high1, low2, high2) {
+	return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+}
+
+THREE.saveGeometryToObj = function (geo,nums) {
+
+geo.updateMatrixWorld();
+
+var num = parseInt(nums);
+
+var s = '';
+for (i = 0; i < geo.geometry.vertices.length; i++) {
+
+	var vector = new THREE.Vector3( geo.geometry.vertices[i].x, geo.geometry.vertices[i].y, geo.geometry.vertices[i].z );
+	geo.matrixWorld.multiplyVector3( vector );
+	
+	//vector.applyProjection( matrix )
+	
+    s+= 'v '+(vector.x) + ' ' +
+    vector.y + ' '+
+    vector.z + '</br>';
+}
+
+for (i = 0; i < geo.geometry.faces.length; i++) {
+
+    s+= 'f '+ (geo.geometry.faces[i].a+1+num) + ' ' +
+    (geo.geometry.faces[i].b+1+num) + ' '+
+    (geo.geometry.faces[i].c+1+num);
+
+    if (geo.geometry.faces[i].d!==undefined) {
+        s+= ' '+ (geo.geometry.faces[i].d+1+num);
+    }
+    s+= '</br>';
+}
+
+return s;
+}
+
+
+THREE.saveGeometryToObj2 = function (geo,nums) {
+
+geo.updateMatrixWorld();
+
+var num = parseInt(nums);
+
+var s = '';
+for (i = 0; i < geo.geometry.vertices.length; i++) {
+
+	var vector = new THREE.Vector3( geo.geometry.vertices[i].x, geo.geometry.vertices[i].y, geo.geometry.vertices[i].z );
+	vector.multiplyScalar(.0001);
+	geo.matrixWorld.multiplyVector3( vector );
+	
+	//vector.applyProjection( matrix )
+	
+    s+= 'v '+(vector.x) + ' ' +
+    vector.y + ' '+
+    vector.z + '\n';
+}
+
+for (i = 0; i < geo.geometry.faces.length; i++) {
+
+    s+= 'f '+ (geo.geometry.faces[i].a+1+num) + ' ' +
+    (geo.geometry.faces[i].b+1+num) + ' '+
+    (geo.geometry.faces[i].c+1+num);
+
+    if (geo.geometry.faces[i].d!==undefined) {
+        s+= ' '+ (geo.geometry.faces[i].d+1+num);
+    }
+    s+= '\n';
+}
+
+return s;
+}
+
+THREE.SphereGeometry2 = function ( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength, height, topScale, botScale ) {
+
+	THREE.Geometry.call( this );
+
+	this.radius = radius || 50;
+
+	this.widthSegments = Math.max( 3, Math.floor( widthSegments ) || 8 );
+	this.heightSegments = Math.max( 2, Math.floor( heightSegments ) || 6 );
+
+	phiStart = phiStart !== undefined ? phiStart : 0;
+	phiLength = phiLength !== undefined ? phiLength : Math.PI * 2;
+
+	thetaStart = thetaStart !== undefined ? thetaStart : 0;
+	thetaLength = thetaLength !== undefined ? thetaLength : Math.PI;
+
+	var x, y, vertices = [], uvs = [];
+
+	for ( y = 0; y <= this.heightSegments; y ++ ) {
+
+		var verticesRow = [];
+		var uvsRow = [];
+
+		for ( x = 0; x <= this.widthSegments; x ++ ) {
+
+			var u = x / this.widthSegments;
+			var v = y / this.heightSegments;
+			
+			var scalar;
+			
+			if (y >(this.heightSegments)/2){
+				scalar = topScale;
+			}
+			else{
+				scalar = botScale;
+			}
+
+			var vertex = new THREE.Vector3();
+			vertex.x = - this.radius * Math.cos( phiStart + u * phiLength ) * Math.sin( thetaStart + v * thetaLength )*scalar;
+			vertex.y = this.radius * Math.cos( thetaStart + v * thetaLength )*scalar;
+			vertex.z = this.radius * Math.sin( phiStart + u * phiLength ) * Math.sin( thetaStart + v * thetaLength )*scalar;
+			
+			if (y <= (this.heightSegments)/2){
+				vertex.y += height;
+			}
+
+			this.vertices.push( vertex );
+
+			verticesRow.push( this.vertices.length - 1 );
+			uvsRow.push( new THREE.Vector2( u, 1 - v ) );
+
+		}
+
+		vertices.push( verticesRow );
+		uvs.push( uvsRow );
+
+	}
+
+	for ( y = 0; y < this.heightSegments; y ++ ) {
+
+		for ( x = 0; x < this.widthSegments; x ++ ) {
+
+			var v1 = vertices[ y ][ x + 1 ];
+			var v2 = vertices[ y ][ x ];
+			var v3 = vertices[ y + 1 ][ x ];
+			var v4 = vertices[ y + 1 ][ x + 1 ];
+
+			var n1 = this.vertices[ v1 ].clone().normalize();
+			var n2 = this.vertices[ v2 ].clone().normalize();
+			var n3 = this.vertices[ v3 ].clone().normalize();
+			var n4 = this.vertices[ v4 ].clone().normalize();
+
+			var uv1 = uvs[ y ][ x + 1 ].clone();
+			var uv2 = uvs[ y ][ x ].clone();
+			var uv3 = uvs[ y + 1 ][ x ].clone();
+			var uv4 = uvs[ y + 1 ][ x + 1 ].clone();
+
+			if ( Math.abs( this.vertices[ v1 ].y ) === this.radius ) {
+
+				this.faces.push( new THREE.Face3( v1, v3, v4, [ n1, n3, n4 ] ) );
+				this.faceVertexUvs[ 0 ].push( [ uv1, uv3, uv4 ] );
+
+			} else if ( Math.abs( this.vertices[ v3 ].y ) === this.radius ) {
+
+				this.faces.push( new THREE.Face3( v1, v2, v3, [ n1, n2, n3 ] ) );
+				this.faceVertexUvs[ 0 ].push( [ uv1, uv2, uv3 ] );
+
+			} else {
+
+				this.faces.push( new THREE.Face4( v1, v2, v3, v4, [ n1, n2, n3, n4 ] ) );
+				this.faceVertexUvs[ 0 ].push( [ uv1, uv2, uv3, uv4 ] );
+
+			}
+
+		}
+
+	}
+
+	this.computeCentroids();
+	this.computeFaceNormals();
+
+    this.boundingSphere = new THREE.Sphere( new THREE.Vector3(), radius );
+
+};
+
+THREE.SphereGeometry2.prototype = Object.create( THREE.Geometry.prototype );
+
+
+
+/**
+ * @author mrdoob / http://mrdoob.com/
+ */
+
+THREE.OBJLoader = function () {
+
+	THREE.EventDispatcher.call( this );
+
+};
+
+THREE.OBJLoader.prototype = {
+
+	constructor: THREE.OBJLoader,
+
+	load: function ( url, callback ) {
+
+		var scope = this;
+		var request = new XMLHttpRequest();
+
+		request.addEventListener( 'load', function ( event ) {
+
+			var hierarchy = scope.parse( event.target.responseText );
+
+			scope.dispatchEvent( { type: 'load', content: hierarchy } );
+
+			if ( callback ) callback( hierarchy );
+
+		}, false );
+
+		request.addEventListener( 'progress', function ( event ) {
+
+			scope.dispatchEvent( { type: 'progress', loaded: event.loaded, total: event.total } );
+
+		}, false );
+
+		request.addEventListener( 'error', function () {
+
+			scope.dispatchEvent( { type: 'error', message: 'Couldn\'t load URL [' + url + ']' } );
+
+		}, false );
+
+		request.open( 'GET', url, true );
+		request.send( null );
+
+	},
+
+	parse: function ( data ) {
+
+		// fixes
+
+		data = data.replace( /\ \\\r\n/g, '' ); // rhino adds ' \\r\n' some times.
+
+		//
+
+		function vector( x, y, z ) {
+
+			return new THREE.Vector3( x, y, z );
+
+		}
+
+		function uv( u, v ) {
+
+			return new THREE.Vector2( u, v );
+
+		}
+
+		function face3( a, b, c, normals ) {
+
+			return new THREE.Face3( a, b, c, normals );
+
+		}
+
+		function face4( a, b, c, d, normals ) {
+
+			return new THREE.Face4( a, b, c, d, normals );
+
+		}
+
+		function meshN( meshName, materialName ) {
+
+			if ( geometry.vertices.length > 0 ) {
+
+				geometry.mergeVertices();
+				geometry.computeCentroids();
+				geometry.computeFaceNormals();
+				geometry.computeBoundingSphere();
+
+				object.add( mesh );
+
+				geometry = new THREE.Geometry();
+				mesh = new THREE.Mesh( geometry, material );
+
+				verticesCount = 0;
+
+			}
+
+			if ( meshName !== undefined ) mesh.name = meshName;
+			if ( materialName !== undefined ) {
+
+				material = new THREE.MeshLambertMaterial();
+				material.name = materialName;
+
+				mesh.material = material;
+
+			}
+
+		}
+
+		var group = new THREE.Object3D();
+		var object = group;
+
+		var geometry = new THREE.Geometry();
+		var material = new THREE.MeshLambertMaterial();
+		var mesh = new THREE.Mesh( geometry, material );
+
+		var vertices = [];
+		var verticesCount = 0;
+		var normals = [];
+		var uvs = [];
+
+		// v float float float
+
+		var vertex_pattern = /v( +[\d|\.|\+|\-|e]+)( [\d|\.|\+|\-|e]+)( [\d|\.|\+|\-|e]+)/;
+
+		// vn float float float
+
+		var normal_pattern = /vn( +[\d|\.|\+|\-|e]+)( [\d|\.|\+|\-|e]+)( [\d|\.|\+|\-|e]+)/;
+
+		// vt float float
+
+		var uv_pattern = /vt( +[\d|\.|\+|\-|e]+)( [\d|\.|\+|\-|e]+)/;
+
+		// f vertex vertex vertex ...
+
+		var face_pattern1 = /f( +[\d]+)( [\d]+)( [\d]+)( [\d]+)?/;
+
+		// f vertex/uv vertex/uv vertex/uv ...
+
+		var face_pattern2 = /f( +([\d]+)\/([\d]+))( ([\d]+)\/([\d]+))( ([\d]+)\/([\d]+))( ([\d]+)\/([\d]+))?/;
+
+		// f vertex/uv/normal vertex/uv/normal vertex/uv/normal ...
+
+		var face_pattern3 = /f( +([\d]+)\/([\d]+)\/([\d]+))( ([\d]+)\/([\d]+)\/([\d]+))( ([\d]+)\/([\d]+)\/([\d]+))( ([\d]+)\/([\d]+)\/([\d]+))?/;
+
+		// f vertex//normal vertex//normal vertex//normal ...
+
+		var face_pattern4 = /f( +([\d]+)\/\/([\d]+))( ([\d]+)\/\/([\d]+))( ([\d]+)\/\/([\d]+))( ([\d]+)\/\/([\d]+))?/;
+
+		//
+
+		var lines = data.split( "\n" );
+
+		for ( var i = 0; i < lines.length; i ++ ) {
+
+			var line = lines[ i ];
+			line = line.trim();
+
+			var result;
+
+			if ( line.length === 0 || line.charAt( 0 ) === '#' ) {
+
+				continue;
+
+			} else if ( ( result = vertex_pattern.exec( line ) ) !== null ) {
+
+				// ["v 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
+
+				vertices.push( vector(
+					parseFloat( result[ 1 ] ),
+					parseFloat( result[ 2 ] ),
+					parseFloat( result[ 3 ] )
+				) );
+
+			} else if ( ( result = normal_pattern.exec( line ) ) !== null ) {
+
+				// ["vn 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
+
+				normals.push( vector(
+					parseFloat( result[ 1 ] ),
+					parseFloat( result[ 2 ] ),
+					parseFloat( result[ 3 ] )
+				) );
+
+			} else if ( ( result = uv_pattern.exec( line ) ) !== null ) {
+
+				// ["vt 0.1 0.2", "0.1", "0.2"]
+
+				uvs.push( uv(
+					parseFloat( result[ 1 ] ),
+					parseFloat( result[ 2 ] )
+				) );
+
+			} else if ( ( result = face_pattern1.exec( line ) ) !== null ) {
+
+				// ["f 1 2 3", "1", "2", "3", undefined]
+
+				if ( result[ 4 ] === undefined ) {
+
+					geometry.vertices.push(
+						vertices[ parseInt( result[ 1 ] ) - 1 ],
+						vertices[ parseInt( result[ 2 ] ) - 1 ],
+						vertices[ parseInt( result[ 3 ] ) - 1 ]
+					);
+
+					geometry.faces.push( face3(
+						verticesCount ++,
+						verticesCount ++,
+						verticesCount ++
+					) );
+
+				} else {
+
+					geometry.vertices.push(
+						vertices[ parseInt( result[ 1 ] ) - 1 ],
+						vertices[ parseInt( result[ 2 ] ) - 1 ],
+						vertices[ parseInt( result[ 3 ] ) - 1 ],
+						vertices[ parseInt( result[ 4 ] ) - 1 ]
+					);
+
+					geometry.faces.push( face4(
+						verticesCount ++,
+						verticesCount ++,
+						verticesCount ++,
+						verticesCount ++
+					) );
+
+				}
+
+			} else if ( ( result = face_pattern2.exec( line ) ) !== null ) {
+
+				// ["f 1/1 2/2 3/3", " 1/1", "1", "1", " 2/2", "2", "2", " 3/3", "3", "3", undefined, undefined, undefined]
+
+				if ( result[ 10 ] === undefined ) {
+
+					geometry.vertices.push(
+						vertices[ parseInt( result[ 2 ] ) - 1 ],
+						vertices[ parseInt( result[ 5 ] ) - 1 ],
+						vertices[ parseInt( result[ 8 ] ) - 1 ]
+					);
+
+					geometry.faces.push( face3(
+						verticesCount ++,
+						verticesCount ++,
+						verticesCount ++
+					) );
+
+					geometry.faceVertexUvs[ 0 ].push( [
+						uvs[ parseInt( result[ 3 ] ) - 1 ],
+						uvs[ parseInt( result[ 6 ] ) - 1 ],
+						uvs[ parseInt( result[ 9 ] ) - 1 ]
+					] );
+
+				} else {
+
+					geometry.vertices.push(
+						vertices[ parseInt( result[ 2 ] ) - 1 ],
+						vertices[ parseInt( result[ 5 ] ) - 1 ],
+						vertices[ parseInt( result[ 8 ] ) - 1 ],
+						vertices[ parseInt( result[ 11 ] ) - 1 ]
+					);
+
+					geometry.faces.push( face4(
+						verticesCount ++,
+						verticesCount ++,
+						verticesCount ++,
+						verticesCount ++
+					) );
+
+					geometry.faceVertexUvs[ 0 ].push( [
+						uvs[ parseInt( result[ 3 ] ) - 1 ],
+						uvs[ parseInt( result[ 6 ] ) - 1 ],
+						uvs[ parseInt( result[ 9 ] ) - 1 ],
+						uvs[ parseInt( result[ 12 ] ) - 1 ]
+					] );
+
+				}
+
+			} else if ( ( result = face_pattern3.exec( line ) ) !== null ) {
+
+				// ["f 1/1/1 2/2/2 3/3/3", " 1/1/1", "1", "1", "1", " 2/2/2", "2", "2", "2", " 3/3/3", "3", "3", "3", undefined, undefined, undefined, undefined]
+
+				if ( result[ 13 ] === undefined ) {
+
+					geometry.vertices.push(
+						vertices[ parseInt( result[ 2 ] ) - 1 ],
+						vertices[ parseInt( result[ 6 ] ) - 1 ],
+						vertices[ parseInt( result[ 10 ] ) - 1 ]
+					);
+
+					geometry.faces.push( face3(
+						verticesCount ++,
+						verticesCount ++,
+						verticesCount ++,
+						[
+							normals[ parseInt( result[ 4 ] ) - 1 ],
+							normals[ parseInt( result[ 8 ] ) - 1 ],
+							normals[ parseInt( result[ 12 ] ) - 1 ]
+						]
+					) );
+
+					geometry.faceVertexUvs[ 0 ].push( [
+						uvs[ parseInt( result[ 3 ] ) - 1 ],
+						uvs[ parseInt( result[ 7 ] ) - 1 ],
+						uvs[ parseInt( result[ 11 ] ) - 1 ]
+					] );
+
+				} else {
+
+					geometry.vertices.push(
+						vertices[ parseInt( result[ 2 ] ) - 1 ],
+						vertices[ parseInt( result[ 6 ] ) - 1 ],
+						vertices[ parseInt( result[ 10 ] ) - 1 ],
+						vertices[ parseInt( result[ 14 ] ) - 1 ]
+					);
+
+					geometry.faces.push( face4(
+						verticesCount ++,
+						verticesCount ++,
+						verticesCount ++,
+						verticesCount ++,
+						[
+							normals[ parseInt( result[ 4 ] ) - 1 ],
+							normals[ parseInt( result[ 8 ] ) - 1 ],
+							normals[ parseInt( result[ 12 ] ) - 1 ],
+							normals[ parseInt( result[ 16 ] ) - 1 ]
+						]
+					) );
+
+					geometry.faceVertexUvs[ 0 ].push( [
+						uvs[ parseInt( result[ 3 ] ) - 1 ],
+						uvs[ parseInt( result[ 7 ] ) - 1 ],
+						uvs[ parseInt( result[ 11 ] ) - 1 ],
+						uvs[ parseInt( result[ 15 ] ) - 1 ]
+					] );
+
+				}
+
+			} else if ( ( result = face_pattern4.exec( line ) ) !== null ) {
+
+				// ["f 1//1 2//2 3//3", " 1//1", "1", "1", " 2//2", "2", "2", " 3//3", "3", "3", undefined, undefined, undefined]
+
+				if ( result[ 10 ] === undefined ) {
+
+					geometry.vertices.push(
+						vertices[ parseInt( result[ 2 ] ) - 1 ],
+						vertices[ parseInt( result[ 5 ] ) - 1 ],
+						vertices[ parseInt( result[ 8 ] ) - 1 ]
+					);
+
+					geometry.faces.push( face3(
+						verticesCount ++,
+						verticesCount ++,
+						verticesCount ++,
+						[
+							normals[ parseInt( result[ 3 ] ) - 1 ],
+							normals[ parseInt( result[ 6 ] ) - 1 ],
+							normals[ parseInt( result[ 9 ] ) - 1 ]
+						]
+					) );
+
+				} else {
+
+					geometry.vertices.push(
+						vertices[ parseInt( result[ 2 ] ) - 1 ],
+						vertices[ parseInt( result[ 5 ] ) - 1 ],
+						vertices[ parseInt( result[ 8 ] ) - 1 ],
+						vertices[ parseInt( result[ 11 ] ) - 1 ]
+					);
+
+					geometry.faces.push( face4(
+						verticesCount ++,
+						verticesCount ++,
+						verticesCount ++,
+						verticesCount ++,
+						[
+							normals[ parseInt( result[ 3 ] ) - 1 ],
+							normals[ parseInt( result[ 6 ] ) - 1 ],
+							normals[ parseInt( result[ 9 ] ) - 1 ],
+							normals[ parseInt( result[ 12 ] ) - 1 ]
+						]
+					) );
+
+				}
+
+			} else if ( /^o /.test( line ) ) {
+
+				// object
+
+				object = new THREE.Object3D();
+				object.name = line.substring( 2 ).trim();
+				group.add( object );
+
+			} else if ( /^g /.test( line ) ) {
+
+				// group
+
+				meshN( line.substring( 2 ).trim(), undefined );
+
+			} else if ( /^usemtl /.test( line ) ) {
+
+				// material
+
+				meshN( undefined, line.substring( 7 ).trim() );
+
+			} else if ( /^mtllib /.test( line ) ) {
+
+				// mtl file
+
+			} else if ( /^s /.test( line ) ) {
+
+				// smooth shading
+
+			} else {
+
+				// console.log( "THREE.OBJLoader: Unhandled line " + line );
+
+			}
+
+		}
+
+		// add the last group
+		meshN( undefined, undefined );
+
+		return group;
+
+	}
+
+}

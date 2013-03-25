@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Nature</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+		background-color:black;
+      }
+	  .dg.main {
+		top: 50px !important;
+		}
+		
+		img{
+			max-height:400px;
+			max-width:350px;
+		}
+
+    </style>
+    <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="../assets/ico/favicon.png">
+  </head>
+
+	<body>
+	<!--
+		<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="http://natureofcode.com/">Nature of Code</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="sketches.html">Sketches</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="http://www.DLobser.com">Dlobser.com</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+	    <div class="container" style="margin-left:200px">
+	<div class="row">
+		<div class="span6">
+
+
+
+
+
+		<h2 style="text-align:center;font-family:sans-serif;color:white;margin-top:-50px;font-weight:50">A Synthetic Taxonomy</h2>
+
+
+		<p style="text-align:center;color:white">
+		<img src="https://www.andersondesigngroupstore.com/images/adgcontent/content/Scratchboard-Trees3.jpg"><br>as we set about on our earnest task<br>
+		<img src="http://1.bp.blogspot.com/_k1HsPh3JxiU/SkFjxxgWZ-I/AAAAAAAACTM/edOL4bjM3_A/s400/tree-summer.gif"><br>to destroy the natural world<br>
+		<img src="http://img3.etsystatic.com/006/0/7412777/il_fullxfull.395211931_f6v0.jpg"><br><br>
+		<br>
+		<!--<img src="http://www.olgakaczmar.com/scratchboardTreeSmall.jpg">
+	
+		<img src="http://image.shutterstock.com/display_pic_with_logo/349087/349087,1325096858,1/stock-photo-black-tree-silhouette-isolated-on-white-background-91661693.jpg">
+		-->
+		</p>
+		
+		</div>
+		
+		<div class="span4" id="moohaha" style="text-align:left;color:white">the connection to our biological selves will become increasingly tenuous and it will be important to establish a new, synthetic nature</div>
+		</div>
+	
+		
+		
+		<script src="js/three/build/three.min.js"></script>
+		
+		<script src="js/libs/ImprovedNoise.js"></script>
+
+		<script src="js/three/js/controls/OrbitControls.js"></script>
+
+		<script src="js/three/js/Detector.js"></script>
+		<script src="js/three/js/libs/stats.min.js"></script>
+		
+		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
+
+		<script src="js/three/build/three.min.js"></script>
+
+		<script src="js/three/js/controls/OrbitControls.js"></script>
+		<script src="js/libs/LobserCollection.js"></script>
+		<script src="js/three/js/Detector.js"></script>
+		<script src="js/three/js/libs/stats.min.js"></script>
+		<script src="js/08-branch-parent-03.js"></script>
+		<script src="js/libs/peep.js"></script>
+		
+		
+		
+		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
+		</body>
+		</html>
+		<script>
+		
+		var scene = new sc1();
+		scene.init();
+		scene.animate();
+		
+		</script>
+		</div>
+		<div class="span12" style="text-align:left;color:white;margin-left:1000px;margin-top:-120px">If we don't do it ourselves, it shall be done for us</div>
+	
+	</body>
+</html>

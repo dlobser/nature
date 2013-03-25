@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+
+<script src="js/libs/processing.js"></script>
+<script src="js/three/build/three.js"></script>
+<style>
+
+body{
+background-color:black;
+color:grey;
+text-align:center;
+font-size:16;
+font-family:sans-serif;
+}
+
+#move {
+   text-align:center;
+}
+
+canvas {
+   display: inline;
+}
+
+</style>
+</head>
+<body>
+<p>
+
+This script combines threejs and processingjs
+
+</p>
+</body>
+<script>
+
+var points = [];
+
+var sc = 100;
+var cc = 1;
+
+draw();
+
+function draw(){
+
+	//reinit points so it doesn't fil up
+	points= [];
+	
+	var geo = new THREE.SphereGeometry(300,cc,cc);
+	
+	sc+=1;
+	
+	if(cc<16)
+		cc+=.02;
+		
+	var mesh = new THREE.Mesh( geo );
+	
+	mesh.rotation.y = sc/100;
+	mesh.rotation.x = sc/130;
+	mesh.rotation.z = sc/150;
+	
+	//freeze transforms on the object to grab worldspace positions of the vertices
+	mesh.updateMatrixWorld();
+	
+	for(var i = 0 ; i < mesh.geometry.vertices.length ; i++){
+
+		var vector = mesh.geometry.vertices[i].clone();
+		mesh.matrixWorld.multiplyVector3( vector );
+		
+		points.push(vector);
+	}
+	requestAnimationFrame( draw );
+}
+
+</script>
+
+<script type="text/processing" data-processing-target="processing-canvas">
+
+void setup() {
+
+  size(1024, 768);
+  background(0);
+  noStroke();
+  
+  for(int i = 0 ; i<points.length; i++){
+	//println(points[i].x);
+  }
+}
+
+void draw(){
+	
+	fill(0,10);
+	rect(0,0,width,height);
+	fill(255);
+	
+	for(var i = 0; i<points.length ; i++){
+		ellipse(points[i].x+512,points[i].y+390,6+(points[i].z/100),6+(points[i].z/100));
+	}
+}
+
+</script>
+
+<div id="move">
+<canvas id="processing-canvas"> </canvas>
+</div>
+
+</html>
