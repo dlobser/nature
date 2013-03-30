@@ -23,7 +23,6 @@ function peep(params){
 	this.color4 = (this.params.color4 !== undefined) ? this.params.color4 : this.options.color4;
 	this.color5 = (this.params.color5 !== undefined) ? this.params.color5 : this.options.color5;
 	
-	console.log(this.id);
 	this.msh = [];
 	this.sc = [];
 	this.rt = [];
@@ -49,9 +48,6 @@ peep.prototype = {
 	//(mesh offset xyz, scale xyz, controller position xyz, name, color)
 	*/
 	
-	set:function(id){
-		this.id = id;
-	},
 	
 	part:function(px,py,pz,	sx,sy,sz,	p2x,p2y,p2z,	namer,color){
 	
@@ -279,8 +275,7 @@ peep.prototype = {
 				obj.children[0].add(stringer(this.big,num,sx*ss,sy*ss,sz*ss,ss,divs));
 				//console.log(obj);
 				//obj.rotation.x = (.3);
-				if(obj.name=="pos_big0")
-				console.log(obj.name);
+				console.log(divs);
 				
 				console.log(this.id);
 				if(num%divs==0 && num >0){

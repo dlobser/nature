@@ -313,7 +313,6 @@
 					<h3>THREE Links</h3>
 						<a href="http://mrdoob.github.com/three.js/">THREEjs</a><br>
 						<a href="http://stemkoski.github.com/Three.js/">THREEjs examples</a><br>
-						<a href="http://idflood.github.com/ThreeNodes.js/public/index.html#example/geometry_and_material1.json">THREE node based editor</a>
 						<a href="http://learningwebgl.com/blog/">Learning WebGL</a><br>
 						<a href="http://www.freshdesignweb.com/html5-css3-3d-examples-demo.html">WebGL examples</a><br>
 						<a href="http://it-ebooks.info/book/918/">WebGL O'Reilly</a><br>
@@ -321,7 +320,6 @@
 						<a href="http://chandlerprall.github.com/Physijs/">PhysJS - physics plugin</a><br>
 						<a href="http://www.clicktorelease.com/blog/vertex-displacement-noise-3d-webgl-glsl-three-js">GLSL with threeJS</a><br>
 						<a href="http://favbulous.com/post/895/8-crazy-animations-withwebgl-and-html5-canvas">8 Crazy Animations</a>
-						
 						</br>
 				
 
@@ -338,9 +336,6 @@
 						<a href=" http://www.createjs.com/#!/EaselJS">EaselJS</a>
 						<a href="http://stackoverflow.com/questions/2353818/how-do-i-get-started-with-node-js">Getting Started with Node</a>
 						<a href="http://paulbourke.net/geometry/polygonise/">marching cubes</a>
-						<a href="http://expressjs.com/2x/guide.html">Express Startup Guide</a>
-						<a href="http://itpwebclass.herokuapp.com/">ITP DWD syllabus</a>
-						<a href="http://shapeshed.com/creating-a-basic-site-with-node-and-express/">Basic Site with Node/Express</a>
 						<br>
 						<br>
 					<h3>Art Science</h3>

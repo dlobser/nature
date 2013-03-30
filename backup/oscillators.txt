@@ -1,0 +1,203 @@
+ <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+  <html>
+  <head>
+  <!-- header info used to contain extra information about
+       this document, not displayed on the page -->
+  </head>
+
+  <body>
+    <div>
+      <h1 style="font-size:100px"> IT"zzz periodic!</h1><br>
+      <p style="font-size:40px">warning!  This is loud! And you can't stop it!</p>
+
+    </div>
+    <div id="wrapper">
+      
+    </div>
+  <button type="button">This button does nothing</button>
+ <b id='boldStuff'></b>
+
+  </body>
+  </html>
+  
+  
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.sameDiv{
+  width:50px; 
+  height:50px; 
+  border:solid 1px red;
+  padding:0px;
+  float:left;
+  background-image: url('http://education.jlab.org/itselemental/tableofelements.png')
+}
+
+
+br{
+
+}
+
+#wrapper{
+ width:950px; 
+}
+
+var ar = [];
+
+var go = 1;
+
+var val = 0;
+
+var w = 18;
+var h = 7;
+
+for(var i = 0; i<h; i++){
+  
+  for(var j = 0; j<w; j++){
+    $('<div />')
+    .addClass('sameDiv')
+    .attr('id',(j+i*h))
+    .css("background-position", j*-47+"px "+i*-60+"px")
+    .appendTo('#wrapper');
+    ar[(j+(i*w))]=1;
+  }
+}
+//.html("i is:"+i+" j is: "+j + "id is:"+ (j+(i*w)))
+//500+"px "+i*60+"px").appendTo('#wrapper');
+//ar[5]=0;
+
+//.css({"background-position": j*-47+"px "+i*-60+"px", "border":"solid 1px red"})
+
+$(function() {
+  $('.sameDiv').click( function(){
+     // $(this).css('background-color', '#F00');
+     var id = this.id;
+     $(this).css("background-position","200px")
+    // $(this).css("border","dashed black 5px")
+       
+   },
+   function(){
+    //  $(this).css('background-color', '#000');
+       var id = this.id;
+       
+     if(ar[id]){
+       play(((id)*30)+25);
+   }
+     else
+       stop(((id)*30)+20);
+     
+       ar[id]=0;
+   });
+});
+
+$('button').click(function(){
+  changeText();
+   go++;
+  
+});
+
+
+
+
+
+
+;(function( $, window ) {
+ 
+  var _defaults = {
+    x      : 2, // number of tiles in x axis
+    y      : 2, // number of tiles in y axis
+    random : true, // animate tiles in random order
+    speed  : 2000 // time to clear all tiles
+  };
+ 
+  $.fn.sliced = function( options ) {
+ 
+    var o = $.extend( {}, _defaults, options );
+ 
+    return this.each(function() {
+      var $container = $(this); // cache selector for best performance
+      // Code here
+    });
+ 
+  };
+ 
+}( jQuery, window ));
+
+
+
+
+///audio
+
+// globals
+  var audio_context, oscillator;
+ 
+  // hello audio world
+  (function init(g){
+    try {
+      audio_context = new (g.AudioContext || g.webkitAudioContext);
+      oscillator = audio_context.createOscillator();
+    } catch (e) {
+      alert('No web audio oscillator support in this browser');
+    }
+  }(window));
+
+
+
+function changeText(){
+ document.getElementById('boldStuff').innerHTML = ar;
+}
+
+ function play(freq) {
+    oscillator = audio_context.createOscillator();
+    oscillator.frequency.value = freq;
+    oscillator.connect(audio_context.destination);
+    oscillator.noteOn(0);
+    fire('play', oscillator.frequency.value);
+  }
+
+function stop(freq) {
+    oscillator.frequency.value = freq;
+    fire('stop', oscillator.frequency.value);
+  }
+

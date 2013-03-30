@@ -109,10 +109,9 @@ sc1.prototype.addGeo = function(){
 	
 	for ( var i = 0 ; i < 1 ; i++){
 		var cuber = new peep();
-		console.log(cuber.rt);
+		console.log(cuber.branches);
 		//check out peep.js to see what this function does - 
 		//(recurions, scale xyz, scale of each increment)
-		cuber.set(5);
 		cuber.branchSquares(120,3,0,3,.99);
 		this.mesh = new THREE.Mesh( geometry, material );
 		this.scene.add(cuber.pos_big);

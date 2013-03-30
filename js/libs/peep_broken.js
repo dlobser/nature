@@ -4,7 +4,10 @@ function peep(params){
 
 	this.params;
 	this.CTRL = new THREE.Object3D();
-	this.options = {geo:new THREE.CubeGeometry( 1,1,1,1,1,1 ),color1:0xffffff,color2:0x00ffff,color3:0xffffff,color4:0xffffff,color5:0xffffff};
+	
+	this.materialer =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
+	
+	this.options = {geo:new THREE.CubeGeometry( 1,1,1,1,1,1 ),color1:0xffffff,color2:0x00ffff,color3:0xffffff,color4:0xffffff,color5:0xffffff,material:this.materialer};
 	
 	
 	if(params === undefined) this.params = this.options;
@@ -14,8 +17,12 @@ function peep(params){
 	
 	this.geometry = this.params.geo ? this.params.geo : new THREE.CubeGeometry( 1,1,1,1,1,1 );
 	
-	this.rotColor = Math.random() * 16777215;
-	this.hexValue = parseInt(this.rotColor , 16);
+	this.rotColor = 16777215;//Math.random() * 16777215;
+	this.hexValue = parseInt(this.rotColor , 10);
+	
+	
+	
+	this.material = (this.params.material !== undefined) ? this.params.material : this.materialer;
 	
 	this.color1 = (this.params.color1 !== undefined) ? this.params.color1 : this.hexValue;
 	this.color2 = (this.params.color2 !== undefined) ? this.params.color2 : this.options.color2;
@@ -23,7 +30,6 @@ function peep(params){
 	this.color4 = (this.params.color4 !== undefined) ? this.params.color4 : this.options.color4;
 	this.color5 = (this.params.color5 !== undefined) ? this.params.color5 : this.options.color5;
 	
-	console.log(this.id);
 	this.msh = [];
 	this.sc = [];
 	this.rt = [];
@@ -49,33 +55,30 @@ peep.prototype = {
 	//(mesh offset xyz, scale xyz, controller position xyz, name, color)
 	*/
 	
-	set:function(id){
-		this.id = id;
-	},
-	
 	part:function(px,py,pz,	sx,sy,sz,	p2x,p2y,p2z,	namer,color){
 	
 		/*construction of the heirarchy and best practice for parenting
 		  the 'pos' of one link should be parented to the 'rt' of its parent - becoming children[1]
-		  
-			pos-
-				|
-				|[0]           [1]
-				-rt------------pos-
-				  |				|
-				  |				|
-				  sc		   -rt-
-				   |			   |
-				   |			   |
-				  mesh			   -sc-
-									  |
-									  |
-									  -mesh
+
+		pos
+		|
+		|
+		|[0]           [1]
+	    rt-------------pos
+		|				|
+		|				|
+	   sc		   	   rt
+		|			    |
+		|			    |
+	  mesh		       sc
+						|
+						|
+					  mesh
 	
 		*/
 		
-		this.material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
-		this.material.color.setHex(color);
+		//this.material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
+		//this.material.color.setHex(color);
 		
 		var pos = new THREE.Vector3(px,py,pz);
 		var scl = new THREE.Vector3(sx,sy,sz);
@@ -125,7 +128,7 @@ peep.prototype = {
 
 		this[ this.poser.name ] = this.poser;	
 		
-		this.pos.push(this.rotator);
+		this.pos.push(this.poser);
 
 		return this.poser;
 	},
@@ -276,19 +279,43 @@ peep.prototype = {
 				//children[1] is the root of the next square
 				//obj itself is 'pos'
 				//divs = Math.round(divs*.95);
+				obj.children[0].children[0].children[0].rotation.x = Math.random()*Math.PI;
 				obj.children[0].add(stringer(this.big,num,sx*ss,sy*ss,sz*ss,ss,divs));
 				//console.log(obj);
 				//obj.rotation.x = (.3);
-				if(obj.name=="pos_big0")
-				console.log(obj.name);
+				console.log(divs);
 				
-				console.log(this.id);
+				
+				
+				ss*=.97;
+				
 				if(num%divs==0 && num >0){
 					
-					obj.children[0].add(stringer(this.big,Math.round(num/2),sx*ss,sy*ss,sz*ss,ss,divs));
+					obj.children[0].add(stringer(this.big,Math.round(num/2),sx*ss,sy*ss*1.5,sz*ss,ss,divs));
 					obj.children[0].children[2].rotation.x = (.5);
-					obj.children[0].add(stringer(this.big,Math.round(num/2),sx*ss,sy*ss,sz*ss,ss,divs));
+					obj.children[0].add(stringer(this.big,Math.round(num/2),sx*ss,sy*ss*1.5,sz*ss,ss,divs));
 					obj.children[0].children[3].rotation.x = (-.5);
+					
+				//obj.rotation.x = (.3);
+				}
+				
+				if(num==5 ){
+					
+					obj.children[0].add(stringer(this.big,3,sx*ss,sy*ss*10,sz*ss,ss,divs));
+					obj.children[0].add(stringer(this.big,3,sx*ss,sy*ss*10,sz*ss,ss,divs));
+					console.log(obj.children[0]);
+					//obj.children[0].children[2].rotation = new THREE.Vector3(Math.random()*Math.PI/2,Math.random()*Math.PI/2,Math.random()*Math.PI/4);
+					obj.children[0].children[2].children[0].children[0].scale.y=10;
+					obj.children[0].children[2].children[0].children[1].children[0].position.y=3;
+					obj.children[0].children[2].children[0].children[1].children[0].scale.x=1;
+					obj.children[0].children[2].children[0].children[1].children[0].scale.z=5;
+					obj.children[0].children[2].rotation.x = (Math.random()-.5)*Math.PI;
+					
+					obj.children[0].children[3].children[0].children[0].scale.y=10;
+					obj.children[0].children[3].children[0].children[1].children[0].position.y=3;
+					obj.children[0].children[3].children[0].children[1].children[0].scale.x=1;
+					obj.children[0].children[3].children[0].children[1].children[0].scale.z=5;
+					obj.children[0].children[3].rotation.x = (Math.random()-.5)*Math.PI;
 					
 				//obj.rotation.x = (.3);
 				}

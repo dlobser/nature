@@ -9,6 +9,7 @@ sc1 = function(){
 	renderer;	
 	this.things = [];
 	
+	var cuber;
 	var text;
 
 	//setup dat.gui
@@ -108,15 +109,18 @@ sc1.prototype.addGeo = function(){
 	var parms={color1:0x003399,color2:0xbbffdd,color3:0x0099ff};
 	
 	for ( var i = 0 ; i < 1 ; i++){
-		var cuber = new peep();
-		console.log(cuber.rt);
+		this.cuber = new peep();
+	
 		//check out peep.js to see what this function does - 
 		//(recurions, scale xyz, scale of each increment)
-		cuber.set(5);
-		cuber.branchSquares(120,3,0,3,.99);
+		//cuber.branchSquares(cuber,120,3,0,3,.99);
+		this.cuber.makeBranch();
+		//console.log("branches: " + this.cuber.branches);
+		
 		this.mesh = new THREE.Mesh( geometry, material );
-		this.scene.add(cuber.pos_big);
-		this.things.push(cuber);
+		this.scene.add(this.cuber.pos_big);
+		this.things.push(this.cuber);
+		
 	}
 	console.log(this.things);
 	
@@ -124,39 +128,43 @@ sc1.prototype.addGeo = function(){
 
 sc1.prototype.moveThings = function(){
 
-	for ( var j = 0 ; j <   this.things.length  ; j++){
+	for ( var j = 0 ; j < this.cuber.branches.length  ; j++){
 	
-		var thing = this.things[j];
-		//console.log(thing);
-		//thing array has two cubers, I'm just rotating the first one around for symmetry
-		if(j==0){
-			//thing.rt[0].rotation.x = Math.PI;
-			//thing.children[0].position.y = -100;
-		}
+		for ( var w = 0 ; w < this.cuber.branches[i].length  ; w++){
 		
-		thing.rt[0].position.y = -75;
-		thing.rt[0].children[0].scale.y = this.text.length;
-	
-		var sizer = new THREE.Vector3(1,1,1);
-		
-		//peep creates an array called rot with a list of all the required joints
-		//the alternate method would involve tracing through the heirarchy by finding links to children[]
-		
-		for (var i = 1 ; i< thing.rt.length; i++){
-			sizer.multiplyScalar(2);
-			thing.rt[i].rotation.x = (Math.sin((i/this.text.size)+num)*(i*this.text.x))+(Math.sin(this.text.x2)*(i/thing.rt.length))+(Math.sin(this.text.x1));
-			thing.rt[i].rotation.z = (Math.sin((i/this.text.size)+num)*(i*this.text.y))+(Math.sin(this.text.y2)*(i/thing.rt.length))+(Math.sin(this.text.y1));
-			thing.rt[i].rotation.y = (Math.sin((i/this.text.size)+num)*(i*this.text.z))+(Math.sin(this.text.z2)*(i/thing.rt.length))+(Math.sin(this.text.z1));
-			thing.rt[i].position.y = this.text.length;
-			thing.rt[i].children[0].scale.y = this.text.length;
+			var thing = this.cuber.branches[i];
+			//console.log(thing);
+			//thing array has two cubers, I'm just rotating the first one around for symmetry
+			if(j==0){
+				//thing.rt[0].rotation.x = Math.PI;
+				//thing.children[0].position.y = -100;
+			}
 			
-			//when enabled, these options would allow for the scaling of each joint in isolation without respect to the heirarchy
+			thing.rt[0].position.y = -75;
+			thing.rt[0].children[0].scale.y = this.text.length;
+		
+			var sizer = new THREE.Vector3(1,1,1);
 			
-		//	thing.rot[i].children[0].scale.x = this.text.sizerx;
-		//	thing.rot[i].children[0].scale.y = this.text.sizery;
-		//	thing.rot[i].children[0].scale.z = this.text.sizerz;
+			//peep creates an array called rot with a list of all the required joints
+			//the alternate method would involve tracing through the heirarchy by finding links to children[]
+			
+			for (var i = 1 ; i< thing.rt.length; i++){
+				sizer.multiplyScalar(2);
+				thing.rt[i].rotation.x = (Math.sin((i/this.text.size)+num)*(i*this.text.x))+(Math.sin(this.text.x2)*(i/thing.rt.length))+(Math.sin(this.text.x1));
+				thing.rt[i].rotation.z = (Math.sin((i/this.text.size)+num)*(i*this.text.y))+(Math.sin(this.text.y2)*(i/thing.rt.length))+(Math.sin(this.text.y1));
+				thing.rt[i].rotation.y = (Math.sin((i/this.text.size)+num)*(i*this.text.z))+(Math.sin(this.text.z2)*(i/thing.rt.length))+(Math.sin(this.text.z1));
+				thing.rt[i].position.y = this.text.length;
+				thing.rt[i].children[0].scale.y = this.text.length;
+				
+				//when enabled, these options would allow for the scaling of each joint in isolation without respect to the heirarchy
+				
+			//	thing.rot[i].children[0].scale.x = this.text.sizerx;
+			//	thing.rot[i].children[0].scale.y = this.text.sizery;
+			//	thing.rot[i].children[0].scale.z = this.text.sizerz;
+			}
+			num-=i*this.text.speed*this.text.speed2;
+			
 		}
-		num-=i*this.text.speed*this.text.speed2;
 	}	
 }
 

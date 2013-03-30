@@ -279,7 +279,6 @@ peep.prototype = {
 				obj.children[0].add(stringer(this.big,num,sx*ss,sy*ss,sz*ss,ss,divs));
 				//console.log(obj);
 				//obj.rotation.x = (.3);
-				if(obj.name=="pos_big0")
 				console.log(obj.name);
 				
 				console.log(this.id);
