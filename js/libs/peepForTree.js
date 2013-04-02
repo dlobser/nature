@@ -4,42 +4,25 @@ function peep(params){
 
 	this.params;
 	this.CTRL = new THREE.Object3D();
-	//( radiusTop, radiusBottom, height, radiusSegments, heightSegments, openEnded )
-	
-	//attempting to use geoDivs to set the divs on my geo does NOT work - fix later
-	this.options = {
-		geoDivs:3,
-		geo:new THREE.CylinderGeometry( 1,1,1,6,1),
-		geo2:new THREE.SphereGeometry(1,6,6),
-		color1:0xffffff,
-		color2:0x00ffff,
-		color3:0xffffff,
-		color4:0xffffff,
-		color5:0xffffff
-	};
+	this.options = {geo:new THREE.CubeGeometry( 1,1,1,1,1,1 ),color1:0xffffff,color2:0x00ffff,color3:0xffffff,color4:0xffffff,color5:0xffffff};
 	
 	
 	if(params === undefined) this.params = this.options;
 	else this.params = params;
 	
 	//console.log(this.params.color2);
-	//console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-	//console.log(params);
-	this.geometry = (this.params.geo !== undefined) ? this.params.geo : this.options.geo;
-	this.geometry2 = (this.params.geo2 !== undefined) ? this.params.geo2 : this.options.geo2;
+	
+	this.geometry = this.params.geo ? this.params.geo : new THREE.CubeGeometry( 1,1,1,1,1,1 );
 	
 	this.rotColor = Math.random() * 16777215;
 	this.hexValue = parseInt(this.rotColor , 16);
 	
-	
-	this.geoDivs = (this.params.geoDivs !== undefined) ? this.params.geoDivs : this.options.geoDivs;
 	this.color1 = (this.params.color1 !== undefined) ? this.params.color1 : this.hexValue;
 	this.color2 = (this.params.color2 !== undefined) ? this.params.color2 : this.options.color2;
 	this.color3 = (this.params.color3 !== undefined) ? this.params.color3 : this.options.color3;
 	this.color4 = (this.params.color4 !== undefined) ? this.params.color4 : this.options.color4;
 	this.color5 = (this.params.color5 !== undefined) ? this.params.color5 : this.options.color5;
 	
-	this.branches = [];
 	this.msh = [];
 	this.sc = [];
 	this.rt = [];
@@ -65,41 +48,16 @@ peep.prototype = {
 	//(mesh offset xyz, scale xyz, controller position xyz, name, color)
 	*/
 	
-	set:function(id){
-		this.id = id;
-	},
-	
 	part:function(px,py,pz,	sx,sy,sz,	p2x,p2y,p2z,	namer,color){
-	
-		/*construction of the heirarchy and best practice for parenting
-		  the 'pos' of one link should be parented to the 'rt' of its parent - becoming children[1]
-		  
-			pos-
-				|
-				|[0]           [1]
-				-rt------------pos-
-				  |				|
-				  |				|
-				  sc		   -rt-
-				   |			   |
-				   |			   |
-				  mesh			   -sc-
-									  |
-									  |
-									  -mesh
-	
-		*/
 		
-		this.material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.SmoothShading } );
+		this.material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
 		this.material.color.setHex(color);
 		
 		var pos = new THREE.Vector3(px,py,pz);
 		var scl = new THREE.Vector3(sx,sy,sz);
 		var pos2 = new THREE.Vector3(p2x,p2y,p2z);
 		
-		
 		this.mesh = new THREE.Mesh( this.geometry, this.material );
-		this.mesh2 = new THREE.Mesh( this.geometry2, this.material );
 							
 		this.mesh.updateMatrix();
 		this.mesh.matrixAutoUpdate = true;					
@@ -112,18 +70,17 @@ peep.prototype = {
 		
 		this[ this.mesh.name ] = this.mesh;
 		
-		this.msh.push(this.mesh);
+		this.msh.push(this.rotator);
 		
 		this.scalar.name = "sc_"+namer;	
 		
 		this[ this.scalar.name ] = this.scalar;
 		
-		this.sc.push(this.scalar);
+		this.sc.push(this.rotator);
 
 		this.scalar.matrixAutoUpdate = true;					
 		this.scalar.add(this.mesh);					
-		this.scalar.scale = scl;	
-		
+		this.scalar.scale = scl;					
 		this.rotator = new THREE.Object3D();
 
 		this.rotator.name = "rt_"+namer;	
@@ -132,35 +89,20 @@ peep.prototype = {
 		
 		this.rt.push(this.rotator);
 		
-		this.rotator.matrixAutoUpdate = true;
-		
-		this.rotator.add(this.scalar);	
-
-
-
-		
+		this.rotator.matrixAutoUpdate = true;					
+		this.rotator.add(this.scalar);					
 		this.poser = new THREE.Object3D();	
 		
 		this.poser.name = "pos_"+namer;
 		
 		this.poser.matrixAutoUpdate = true;					
-		this.poser.add(this.rotator);	
-		
-		
-		this.mesh2.scale.x = sx;
-		this.mesh2.scale.y = sx;
-		this.mesh2.scale.z = sx;
-		
-		this.mesh2.rotation.y = Math.PI/6;
-		
-		this.poser.add(this.mesh2);					
-		
-		
+		this.poser.add(this.rotator);					
 		this.poser.position = pos2;	
 
 		this[ this.poser.name ] = this.poser;	
 		
-		this.pos.push(this.poser);
+		this.pos.push(this.rotator);
+
 		return this.poser;
 	},
 	
@@ -284,188 +226,59 @@ peep.prototype = {
 		
 	},
 	
-	branchSquares:function(params){
-	
-	
-		var fruitSize = new THREE.Vector3(5,5,5);
-		var num = (params.num!==undefined) ? params.num : 10;
-		var sx = (params.scale!==undefined) ? params.scale.x : 2;
-		var sy = (params.scale!==undefined) ? params.scale.y : 10;
-		var sz = (params.scale!==undefined) ? params.scale.z : 2;
-		var ss = (params.ss!==undefined) ? params.ss : 1;
-		
-		var leaves = (params.leaves!==undefined) ? params.leaves : 3;
-		var divs = (params.divs!==undefined) ? params.divs : 8;
-		var rads = (params.rads!==undefined) ? params.rads : 2;
-		var fruit = (params.fruit!==undefined) ? params.fruit : false;
-		var fruitScale = (params.fruitScale!==undefined) ? params.fruitScale : fruitSize;
-		this.leaves = leaves;
-		
-		var leafss = [];
-		var angles = [];
-		var term = [];
-
-		for ( var i = 0 ; i < 6 ; i++){
-			leafss[i] = (params["leaf" + i + "ss"]!==undefined) ? params["leaf" + i + "ss"] : ss;
-		}
-
-		
-		for ( var i = 0 ; i < 6 ; i++){
-			angles[i] = (params["angle" + i]!==undefined) ? params["angle" + i] : Math.PI/5;
-			
-		}
-		
-		//term is terminal - which branch needs a cap basically
-		//this seems not very smart at the moment
-		//in the params if you specify a term, fruits or branches will spring forth - 
-		//term1:1, term2:2 is the same as term2:1, term1:2
-		for ( var i = 0 ; i < 6 ; i++){
-			term[i] = (params["term" + i]!==undefined) ? params["term" + i] : -100;
-			console.log(term[i]);
-		}
+	branchSquares:function(num,sx,sy,sz,ss){
 		
 		this.big = this.part(0,.5,0,	sx,sy,sz,	0,0,0,   "big",this.color1);
+		var i = 1;
 		var that = this;
+		var divs = 20;
 		
-		var geo = new THREE.SphereGeometry(1,6,6);
-		var mat =  new THREE.MeshLambertMaterial( { shading: THREE.SmoothShading } );
+		stringer(this.big,num,sx,sy,sz,ss,divs);
 		
-		stringer(this.big, num, 0,0,0,Math.floor(num/2),sx,sy,sz,ss,divs);
+	
 		
-		//len becomes num in the branching part
-		function stringer(obj,num,id,idq,leaf,len,sx,sy,sz,ss,divs)
+		function stringer(obj,num,sx,sy,sz,ss,divs)
 		{		
 			
-			//if it's the first item, make a new array for it and push it onto the array of branches
-			if(id==0){
-				obj.branch = [];
-				obj.branch.name = leaf;
-				obj.branch.push(obj.children[0]);
-				that.branches.push(obj.branch);
-			}
+			var move = sy;
 			
-
-			num--;
-	
-			//makes a boolean to check if we're at the end, why end isn't 0 I don't know
-			if(num==1)
-				var end = true;
-			else
-				var end = false;
-			
-			if( num > 0 ){
-			
-				id++;
+			if(num>0){
 				
-				this.big = that.part(0,.5,0,	sx,sy,sz,	0,sy,0,   "big"+id, that.color1);
-
-				//add items to the last array in the branches array
-				that.branches[that.branches.length-1].push(this.big);
+				num--;
+				move++;
 				
-				this.big.idq = idq;
+				this.big = that.part(0,.5,0,	sx,sy,sz,	0,sy,0,   "big"+num,that.color1);
+				this.big.idq = move;
+				//console.log(obj);
+				//obj.children[0] is "rt" for rotate
+				//children[1] is the root of the next square
+				//obj itself is 'pos'
+				//divs = Math.round(divs*.95);
+				obj.children[0].add(stringer(this.big,num,sx*ss,sy*ss,sz*ss,ss,divs));
+				//console.log(obj);
+				//obj.rotation.x = (.3);
+				console.log(divs);
 				
 				
-				
-				obj.children[0].add(stringer(this.big,num,id,num,leaf,len,sx*ss,sy*ss,sz*ss,ss,divs));
-				obj.children[0].num=num;
-				
-				for ( var i = 0 ; i < term.length ; i++){
-					if(end && leaf == leaves-term[i]){
-						if (fruit)
-							makeFruit();
-						else
-							makeSplit(1,2,2);
-						
-					}
-				}
-				/*
-				if(end && leaf == leaves-term[2]){
-					if (fruit)
-						makeFruit();
-					else
-						makeSplit(1,2,2);
-				}
-				
-				if(end && leaf == leaves-term[3]){
-					if (fruit)
-						makeFruit();
-					else
-						makeSplit(1,2,2);
-				}
-*/
-				if( num % divs == 0 && leaf < leaves){
-				
-					var leafSS = leafss[leaf] || 1;
-					var angle = angles[leaf] || Math.PI/5;
+				if(num%divs==0 && num >0){
 					
-					makeSplit(2,1,1,leafSS,angle);
-				}
-				
-				if(num==1){
-				//	makeSplit(0);
-				}
-
-				//console.log(leaf);
-				function makeSplit(child,numDiv,lenDiv,newSS,angle){
-				
-				for (var i = 0 ; i < rads ; i ++){
-				
-						var joint = new THREE.Object3D();
-						joint.matrixAutoUpdate = true;	
-						joint.updateMatrix();						
-						joint.name = "joint";
-						obj.children[0].add(joint);
-						//console.log(obj.children[i+child]);
-						obj.children[0].children[i+child].rotation.y = i*((Math.PI*2)/rads);
-						obj.children[0].children[i+child].add(stringer(this.big,	Math.floor(len/numDiv),0,	num,leaf+1,Math.floor(len/lenDiv), 	sx,sy,sz,newSS,	divs));
-						obj.children[0].children[i+child].children[0].rotation.x = angle;
-						obj.children[0].children[i+child].children[0].position.y = sy;
-						var szr = new THREE.Vector3(sx,sy,sz);
-						obj.children[0].children[i+child].children[0].children[0].children[0].scale = szr;
-						
-					}
-				}
-				
-				function makeFruit(child,numDiv,lenDiv){
-				
-				for (var i = 0 ; i < rads ; i ++){
-						var mesh = new THREE.Mesh(geo,mat);
-						mesh.position = obj.children[0].position;
-						mesh.matrixAutoUpdate = true;	
-						mesh.updateMatrix();	
-						var scalar = fruitScale;
-						mesh.scale = scalar;
-						obj.children[0].add(mesh);
-					}
-				
+					obj.children[0].add(stringer(this.big,Math.round(num/2),sx*ss,sy*ss,sz*ss,ss,divs));
+					obj.children[0].children[2].rotation.x = (.5);
+					obj.children[0].add(stringer(this.big,Math.round(num/2),sx*ss,sy*ss,sz*ss,ss,divs));
+					obj.children[0].children[3].rotation.x = (-.5);
+					
+				//obj.rotation.x = (.3);
 				}
 				
 				return obj;
 			}
+
 		}
-		that.branches.sort(function(a,b){return a-b});
+		
+		
 		return this.big;
-	},
-	
-	next:function(obj){
-		
-		if(obj==undefined)
-			console.log("here");
-		else if(obj.children[0].children[1]==undefined)
-			console.log("here2");
-		else
-			return true;
-	},
-	
-	iterate:function(obj){
 		
 		
-		
-		function stringer(){
-		
-		
-		}
-	
 	},
 	
 	frontTail:function(obj,sx,sy){

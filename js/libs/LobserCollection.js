@@ -23,6 +23,33 @@ function randly(off,mult){
 
 }
 
+function clone(obj) {
+    if (null == obj || "object" != typeof obj) return obj;
+    var copy = obj.constructor();
+    for (var attr in obj) {
+        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+    }
+    return copy;
+}
+
+function killEverything(scene){
+	console.log(scene.scene.children);
+	var l = scene.scene.children.length;
+
+	//remove everything
+	while (l--) {
+		
+		if(scene.scene.children[l] instanceof THREE.Camera) continue; //leave camera in the scene
+		
+		if(scene.scene.children[l] instanceof THREE.Light) continue;
+		
+		if(scene.scene.children[l] instanceof THREE.Object3D){
+			scene.scene.remove(scene.scene.children[l]);
+
+	}
+}
+}	
+
 THREE.saveGeometryToObj = function (geo,nums) {
 
 geo.updateMatrixWorld();
@@ -55,6 +82,16 @@ for (i = 0; i < geo.geometry.faces.length; i++) {
 }
 
 return s;
+}
+
+//var rotWorldMatrix;
+
+function rotateAroundWorldAxis(object, axis, radians) {
+    rotWorldMatrix = new THREE.Matrix4();
+    rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
+    rotWorldMatrix.multiply(object.matrix);        // pre-multiply
+    object.matrix = rotWorldMatrix;
+    object.rotation.setEulerFromRotationMatrix(object.matrix, object.scale);
 }
 
 
@@ -100,7 +137,7 @@ THREE.SphereGeometry3 = function ( radius, widthSegments, heightSegments, height
 	this.radius = radius || 50;
 	
 	this.topVerts = [];
-	this.botVerts=[];
+	this.botVerts = [];
 
 	this.widthSegments = Math.max( 3, Math.floor( widthSegments ) || 8 );
 	this.heightSegments = Math.max( 2, Math.floor( heightSegments ) || 6 );
