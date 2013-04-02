@@ -1,0 +1,279 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+
+		<script src="js/libs/processing.js"></script>
+		<script src="js/three/build/three.js"></script>
+		<style>
+
+			body{
+				background-color:black;
+				color:grey;
+				text-align:center;
+				font-size:16;
+				font-family:sans-serif;
+			}
+
+			#move {
+			   text-align:center;
+			}
+
+			canvas {
+			   display: inline;
+			}
+
+		</style>
+	</head>
+	
+<body>
+
+	<p>
+
+	This script combines threejs and processingjs - click to randomize
+
+	</p>
+
+	<div id="move">
+		<canvas id="processing-canvas"> </canvas>
+	</div>
+
+	<p style="color:#333">
+		<strong>you:</strong> what the?<br>
+		<strong>me:</strong> This script runs a processing sketch that fills an array <br>
+		with the positions of elements. This is then read and rendered by threejs <br>
+		<strong>you:</strong> why are the physics so bad?<br>
+		<strong>me:</strong> Sorry! This is an older processing sketch, I thought it would work well as a demo even if it is a little hinky<br>
+	</p>
+
+</body>
+
+<script>
+
+	//declaring variables to share between three and pjs
+	var pVar = [];
+	var mouser = {x:0,y:0};
+	
+</script>
+
+<script type="text/processing" data-processing-target="processing-canvas">
+
+Ball myball;
+int numBalls = 30;
+Ball[] myballs = new Ball[numBalls];
+
+
+void setup() {
+
+
+  size(500, 500);
+  myball = new Ball(width/2, height/2, 20);
+  for (int i = 0; i<myballs.length; i++) {
+    myballs[i] = new Ball(random(width), random(height), 50, i, myballs);
+  }
+
+}
+
+void draw() {
+
+mouser.x = mouseX;
+mouser.y = mouseY;
+  
+  if(mousePressed == true){
+	  for (int i = 0; i<myballs.length; i++) {
+		myballs[i] = new Ball(random(width), random(height), 50, i, myballs);
+	  }
+  }
+  
+  background(0);
+  smooth(4);
+ 
+fill(255,200,50);
+ellipse(mouseX,mouseY,50,50);
+
+  for (int i = 0; i<myballs.length; i++) {
+    myballs[i].display();
+    myballs[i].move(mouseX, mouseY);
+    myballs[i].collide();
+  }
+  //this lets us share with three
+  pVar = myballs;
+  
+}
+
+class Ball {
+
+  float tx;
+  float ty;
+  float rad, origtx, origty;
+  Ball[] others;
+  int id;
+
+  Ball(float mytx, float myty, float myrad) {
+    tx = mytx;
+    ty = myty;
+    origtx = mytx;
+    origty = myty;
+    rad = myrad;
+  }
+  
+  Ball(float mytx, float myty, float myrad, int myid, Ball[] myball) {
+  
+    tx = mytx;
+    ty = myty;
+    origtx = mytx;
+    origty = myty;
+    rad = myrad;
+    id = myid;
+    others = myball;
+  }
+
+  void display() {
+   fill(255);
+   ellipse(tx,ty,rad,rad);
+  }
+  
+  void move(float movetx, float movety) {
+    float thisx = movetx;
+    float thisy = movety;
+
+    float mox = tx-thisx;
+    float moy = ty-thisy;
+
+    if (dist(tx, ty, thisx, thisy)<120) {
+		tx+=mox/dist(tx, ty, thisx, thisy);
+		ty+=moy/dist(tx, ty, thisx, thisy);
+    }
+	if(dist(tx, ty, thisx, thisy)<50){
+		tx+=mox/5;
+		ty+=moy/5; 
+    }
+    
+  }
+  
+  void collide() {
+    for (int i = id+1;i<numBalls;i++) {
+      float thisx = others[i].tx -tx;
+      float thisy = others[i].ty - ty;
+
+      float distance = sqrt (thisx*thisx + thisy*thisy);
+
+      float minDist = others[i].rad/2+rad/2+15;
+
+      float angle = atan2(thisy, thisx);
+
+      float targetX = tx + cos(angle)*minDist;
+      float targetY = ty + sin(angle)*minDist;
+
+      float ax = (targetX - others[i].tx)*.21;
+      float ay = (targetY - others[i].ty)*.21;
+
+      if (distance < minDist) {
+        tx-=ax;
+        ty-=ay;
+      }
+    }
+  }
+}
+
+</script>
+
+<script>
+//THREE script
+
+var balls = [];
+var done = false;
+
+var container = document.getElementById("move");
+console.log(container);
+
+var renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize( 500, 500 );
+
+container.appendChild(renderer.domElement);
+
+var scene = new THREE.Scene();
+
+var camera = new THREE.OrthographicCamera( 0,500,0,500,0,1000);
+
+//actual position doesn't matter - just the resulting vector
+camera.position.set( 0, 0,10 );
+camera.lookAt( scene.position );
+
+var geometry = new THREE.SphereGeometry( 25, 12, 12 );
+
+/* this makes reflective balls - sadly it was looking strange - maybe because of the orthographic cam
+	var path = "textures/bmap.";
+		var format = '.jpg';
+		var urls = [
+			path + '04' + format, path + '02' + format,
+			path + '05' + format, path + '06' + format,
+			path + '01' + format, path + '03' + format
+		];
+
+		var textureCube = THREE.ImageUtils.loadTextureCube( urls );
+		var material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
+*/
+
+var material = new THREE.MeshLambertMaterial( { color: 0xFFffff } );
+var mesh = new THREE.Mesh( geometry, material );
+
+mesh.updateMatrix();
+mesh.matrixAutoUpdate = true;
+
+var light = new THREE.DirectionalLight( 0xFFFFff );
+light.position.set( 1, -1, 1 );
+scene.add( light );
+
+var light = new THREE.DirectionalLight( 0x555555 );
+light.position.set( 0, 0, -1 );
+scene.add( light );
+
+var light = new THREE.DirectionalLight( 0xFFFFff );
+light.position.set( -1, 1, 1 );
+scene.add( light );
+
+
+
+function addBalls(){
+	for(var i = 0 ; i < pVar.length+1 ; i++){
+	
+		var mesh = new THREE.Mesh( geometry, material );
+		
+		mesh.updateMatrix();
+		mesh.matrixAutoUpdate = true;
+		
+		balls.push(mesh);
+		scene.add(mesh);
+	
+	}
+}
+	
+draw();
+	
+function draw(){
+
+	renderer.render( scene, camera );
+
+	//pVar begins it's life being empty - I assume that means three is rendered before pjs
+	//in any case I need to tell it to wait until pVar has some values before creating all the ball geo
+		
+	if(pVar[0]!=undefined){
+		if(pVar.length == 30 && done==false){
+			addBalls();
+			done = true;
+		}
+		
+		for(var i = 0 ; i < pVar.length ; i++){
+			balls[i].position.x = pVar[i].tx;
+			balls[i].position.y = pVar[i].ty;
+		}
+		balls[30].position.x = mouser.x;
+		balls[30].position.y = mouser.y;
+	}
+	requestAnimationFrame( draw );
+}
+
+</script>
+
+
+</html>
