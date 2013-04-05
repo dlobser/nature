@@ -217,6 +217,12 @@ sc1.prototype.addGeo = function(){
 		//(recurions, scale xyz, scale of each increment)
 		cuber.set(12);
 		
+		/*
+			leafJoint1:8,
+			jScale1:new THREE.Vector3(1,10,1),
+			leafDiv1:1,
+		*/
+		
 		cuber.branchSquares({
 			num:Math.floor(this.text.num),
 			scale:new THREE.Vector3(5,10,5),
@@ -224,10 +230,13 @@ sc1.prototype.addGeo = function(){
 			leaves:Math.floor(this.text.leaves),
 			divs:Math.floor(this.text.divs),
 			rads:Math.floor(this.text.rads),
-			term1:0,
-			term2:1,
+
+			angle2:1,
+			term1:1,
+			term2:0,
 			term3:2,
-			term4:3,
+			leaves:2,
+
 			fruit:true,
 			fruitScale:new THREE.Vector3(5,5,5)
 

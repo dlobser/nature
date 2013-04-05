@@ -39,7 +39,10 @@ function peep(params){
 	this.color4 = (this.params.color4 !== undefined) ? this.params.color4 : this.options.color4;
 	this.color5 = (this.params.color5 !== undefined) ? this.params.color5 : this.options.color5;
 	
+	this.material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.SmoothShading } );
+	
 	this.branches = [];
+	this.fruit = [];
 	this.msh = [];
 	this.sc = [];
 	this.rt = [];
@@ -90,8 +93,8 @@ peep.prototype = {
 	
 		*/
 		
-		this.material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.SmoothShading } );
-		this.material.color.setHex(color);
+		
+		//this.material.color.setHex(color);
 		
 		var pos = new THREE.Vector3(px,py,pz);
 		var scl = new THREE.Vector3(sx,sy,sz);
@@ -121,7 +124,7 @@ peep.prototype = {
 		this.sc.push(this.scalar);
 
 		this.scalar.matrixAutoUpdate = true;					
-		this.scalar.add(this.mesh);					
+		///////////this.scalar.add(this.mesh);					
 		this.scalar.scale = scl;	
 		
 		this.rotator = new THREE.Object3D();
@@ -152,8 +155,9 @@ peep.prototype = {
 		this.mesh2.scale.z = sx;
 		
 		this.mesh2.rotation.y = Math.PI/6;
+		this.mesh2.name = "sphere";
 		
-		this.poser.add(this.mesh2);					
+		//////this.poser.add(this.mesh2);					
 		
 		
 		this.poser.position = pos2;	
@@ -289,31 +293,35 @@ peep.prototype = {
 	
 		var fruitSize = new THREE.Vector3(5,5,5);
 		var num = (params.num!==undefined) ? params.num : 10;
-		var sx = (params.scale!==undefined) ? params.scale.x : 2;
-		var sy = (params.scale!==undefined) ? params.scale.y : 10;
-		var sz = (params.scale!==undefined) ? params.scale.z : 2;
-		var ss = (params.ss!==undefined) ? params.ss : 1;
+		var sx  = (params.scale!==undefined) ? params.scale.x : 2;
+		var sy  = (params.scale!==undefined) ? params.scale.y : 10;
+		var sz  = (params.scale!==undefined) ? params.scale.z : 2;
+		var ss  = (params.ss!==undefined) ? params.ss : 1;
 		
-		var leaves = (params.leaves!==undefined) ? params.leaves : 3;
-		var divs = (params.divs!==undefined) ? params.divs : 8;
-		var rads = (params.rads!==undefined) ? params.rads : 2;
-		var fruit = (params.fruit!==undefined) ? params.fruit : false;
+		var leaves 	= (params.leaves!==undefined) ? params.leaves : 3;
+		var divs 	= (params.divs!==undefined) ? params.divs : 8;
+		var rads 	= (params.rads!==undefined) ? params.rads : 2;
+		var fruit 	= (params.fruit!==undefined) ? params.fruit : false;
 		var fruitScale = (params.fruitScale!==undefined) ? params.fruitScale : fruitSize;
+		
 		this.leaves = leaves;
 		
+		var leafJoints = [];
+		var leafDivs = [];
 		var leafss = [];
 		var angles = [];
 		var term = [];
-
-		for ( var i = 0 ; i < 6 ; i++){
-			leafss[i] = (params["leaf" + i + "ss"]!==undefined) ? params["leaf" + i + "ss"] : ss;
-		}
+		var jScale = [];
 
 		
-		for ( var i = 0 ; i < 6 ; i++){
+		for ( var i = 0 ; i <= leaves ; i++){
 			angles[i] = (params["angle" + i]!==undefined) ? params["angle" + i] : Math.PI/5;
-			
+			leafss[i] = (params["leaf" + i + "ss"]!==undefined) ? params["leaf" + i + "ss"] : ss;
+			leafJoints[i] = (params["leafJoint" + i]!==undefined) ? params["leafJoint" + i] : divs;
+			jScale[i] = (params["jScale" + i]!==undefined) ? params["jScale" + i] : new THREE.Vector3(-1,-1,-1);
+			leafDivs[i] = (params["leafDiv" + i]!==undefined) ? params["leafDiv" + i] : divs;
 		}
+
 		
 		//term is terminal - which branch needs a cap basically
 		//this seems not very smart at the moment
@@ -346,7 +354,7 @@ peep.prototype = {
 			
 
 			num--;
-	
+			
 			//makes a boolean to check if we're at the end, why end isn't 0 I don't know
 			if(num==1)
 				var end = true;
@@ -364,13 +372,12 @@ peep.prototype = {
 				
 				this.big.idq = idq;
 				
-				
-				
 				obj.children[0].add(stringer(this.big,num,id,num,leaf,len,sx*ss,sy*ss,sz*ss,ss,divs));
 				obj.children[0].num=num;
 				
 				for ( var i = 0 ; i < term.length ; i++){
 					if(end && leaf == leaves-term[i]){
+					
 						if (fruit)
 							makeFruit();
 						else
@@ -378,66 +385,72 @@ peep.prototype = {
 						
 					}
 				}
-				/*
-				if(end && leaf == leaves-term[2]){
-					if (fruit)
-						makeFruit();
-					else
-						makeSplit(1,2,2);
-				}
 				
-				if(end && leaf == leaves-term[3]){
-					if (fruit)
-						makeFruit();
-					else
-						makeSplit(1,2,2);
-				}
-*/
+				//get variables then make new branches
 				if( num % divs == 0 && leaf < leaves){
 				
+					//leaf increments per branch
 					var leafSS = leafss[leaf] || 1;
-					var angle = angles[leaf] || Math.PI/5;
+					var angle  = angles[leaf] || Math.PI/5;
 					
 					makeSplit(2,1,1,leafSS,angle);
 				}
 				
-				if(num==1){
-				//	makeSplit(0);
-				}
-
-				//console.log(leaf);
+				//this is the function that creates branches
 				function makeSplit(child,numDiv,lenDiv,newSS,angle){
 				
-				for (var i = 0 ; i < rads ; i ++){
-				
-						var joint = new THREE.Object3D();
-						joint.matrixAutoUpdate = true;	
-						joint.updateMatrix();						
-						joint.name = "joint";
-						obj.children[0].add(joint);
-						//console.log(obj.children[i+child]);
-						obj.children[0].children[i+child].rotation.y = i*((Math.PI*2)/rads);
-						obj.children[0].children[i+child].add(stringer(this.big,	Math.floor(len/numDiv),0,	num,leaf+1,Math.floor(len/lenDiv), 	sx,sy,sz,newSS,	divs));
-						obj.children[0].children[i+child].children[0].rotation.x = angle;
-						obj.children[0].children[i+child].children[0].position.y = sy;
-						var szr = new THREE.Vector3(sx,sy,sz);
-						obj.children[0].children[i+child].children[0].children[0].children[0].scale = szr;
-						
-					}
+					for (var i = 0 ; i < rads ; i ++){
+							
+							var szr = new THREE.Vector3(sx,sy,sz);
+						//	var theseDivs = (leafJoints[leaf] == divs) ? Math.floor(len/numDiv) : Math.floor(leafJoints[leaf]);
+							
+							var theseDivs = leafJoints[leaf+1];
+							
+							if(theseDivs == divs){
+								theseDivs = Math.floor(len/numDiv);
+							
+							}
+							
+							var scalar = (jScale[leaf].x != -1 && jScale[leaf].x <= szr.x) ? jScale[leaf] : szr;
+							//var scalar = jScale[leaf];
+							console.log("leaf: " + leaf + " theseDivs: " + theseDivs + " leafJoints: " + leafJoints[leaf] + " divs: " + divs);
+							var joint = new THREE.Object3D();
+							var divisions = (leafDivs[leaf+1].x != divs) ? leafDivs[leaf+1] : divs;
+							//var divisions  = leafDivs[leaf] || divs;
+							console.log("divisions:  " + divisions);
+							
+							joint.matrixAutoUpdate = true;	
+							joint.updateMatrix();						
+							joint.name = "joint";
+							obj.children[0].add(joint);
+							obj.children[0].children[i+child].rotation.y = i*((Math.PI*2)/rads);
+							obj.children[0].children[i+child].add(stringer(this.big,	theseDivs,0,	num,leaf+1,Math.floor(len/lenDiv), 	scalar.x,scalar.y,scalar.z,newSS,	divisions));
+							obj.children[0].children[i+child].children[0].rotation.x = angle;
+							obj.children[0].children[i+child].children[0].position.y = szr.y;
+							
+							obj.children[0].children[i+child].children[0].children[0].children[0].scale = scalar;
+							//obj.children[0].children[i+child].children[0].children[1].scale = new THREE.Vector3(.1,.1,.1);
+							console.log("HOOOOH");
+							//console.log(obj.children[0].children[i+child].children[0].children[1].scale.x);
+						}
 				}
 				
+				//this adds fruit
 				function makeFruit(child,numDiv,lenDiv){
 				
-				for (var i = 0 ; i < rads ; i ++){
-						var mesh = new THREE.Mesh(geo,mat);
-						mesh.position = obj.children[0].position;
-						mesh.matrixAutoUpdate = true;	
-						mesh.updateMatrix();	
-						var scalar = fruitScale;
-						mesh.scale = scalar;
-						obj.children[0].add(mesh);
-					}
-				
+					for (var i = 0 ; i < rads ; i ++){
+					
+							var mesh = new THREE.Mesh(geo,mat);
+							var positioner = new THREE.Vector3(obj.children[0].position.x,obj.children[0].position.y+sy,obj.children[0].position.z);
+							mesh.position = positioner;
+							mesh.matrixAutoUpdate = true;	
+							mesh.updateMatrix();	
+							var scalar = fruitScale;
+							mesh.scale = scalar;
+							
+							that.fruit.push(mesh);
+							obj.children[0].add(mesh);
+						}
 				}
 				
 				return obj;
