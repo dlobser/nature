@@ -124,7 +124,7 @@ peep.prototype = {
 		this.sc.push(this.scalar);
 
 		this.scalar.matrixAutoUpdate = true;					
-		///////////this.scalar.add(this.mesh);					
+		this.scalar.add(this.mesh);					
 		this.scalar.scale = scl;	
 		
 		this.rotator = new THREE.Object3D();
@@ -157,7 +157,7 @@ peep.prototype = {
 		this.mesh2.rotation.y = Math.PI/6;
 		this.mesh2.name = "sphere";
 		
-		//////this.poser.add(this.mesh2);					
+		this.poser.add(this.mesh2);					
 		
 		
 		this.poser.position = pos2;	
@@ -292,15 +292,25 @@ peep.prototype = {
 	
 	
 		var fruitSize = new THREE.Vector3(5,5,5);
+		
+		//number of joints on each branch
 		var num = (params.num!==undefined) ? params.num : 10;
 		var sx  = (params.scale!==undefined) ? params.scale.x : 2;
 		var sy  = (params.scale!==undefined) ? params.scale.y : 10;
 		var sz  = (params.scale!==undefined) ? params.scale.z : 2;
+		//scalar value
 		var ss  = (params.ss!==undefined) ? params.ss : 1;
 		
+		//number of times to branch
 		var leaves 	= (params.leaves!==undefined) ? params.leaves : 3;
+		
+		//divs is the divisor of num to determine where branches branch
 		var divs 	= (params.divs!==undefined) ? params.divs : 8;
+		
+		//when branches branch, how many times
 		var rads 	= (params.rads!==undefined) ? params.rads : 2;
+		
+		//whether there is fruit or not
 		var fruit 	= (params.fruit!==undefined) ? params.fruit : false;
 		var fruitScale = (params.fruitScale!==undefined) ? params.fruitScale : fruitSize;
 		
@@ -372,9 +382,18 @@ peep.prototype = {
 				
 				this.big.idq = idq;
 				
+				var joint = new THREE.Object3D();
+							joint.matrixAutoUpdate = true;	
+							joint.updateMatrix();						
+							joint.name = "joint";
+							
+				//obj.children[0].add(stringer(this.big,num,id,num,leaf,len,sx*ss,sy*ss,sz*ss,ss,divs));
+				//obj.children[0].num=num;
+				
 				obj.children[0].add(stringer(this.big,num,id,num,leaf,len,sx*ss,sy*ss,sz*ss,ss,divs));
 				obj.children[0].num=num;
 				
+				//if we're terminal
 				for ( var i = 0 ; i < term.length ; i++){
 					if(end && leaf == leaves-term[i]){
 					
@@ -387,7 +406,7 @@ peep.prototype = {
 				}
 				
 				//get variables then make new branches
-				if( num % divs == 0 && leaf < leaves){
+				if( num % divs == 0 && leaf < leaves && num>1){
 				
 					//leaf increments per branch
 					var leafSS = leafss[leaf] || 1;
@@ -401,18 +420,22 @@ peep.prototype = {
 				
 					for (var i = 0 ; i < rads ; i ++){
 							
+							//just convert these three values into one for easy access
 							var szr = new THREE.Vector3(sx,sy,sz);
 						//	var theseDivs = (leafJoints[leaf] == divs) ? Math.floor(len/numDiv) : Math.floor(leafJoints[leaf]);
 							
+							//just making a new variable for readability
 							var theseDivs = leafJoints[leaf+1];
 							
+							//if that one is the same as the parent number of divs, assume it hasn't been set and automatically set it
 							if(theseDivs == divs){
 								theseDivs = Math.floor(len/numDiv);
-							
 							}
 							
+							//setting the joint scale based on the leaf level
 							var scalar = (jScale[leaf].x != -1 && jScale[leaf].x <= szr.x) ? jScale[leaf] : szr;
 							//var scalar = jScale[leaf];
+							
 							console.log("leaf: " + leaf + " theseDivs: " + theseDivs + " leafJoints: " + leafJoints[leaf] + " divs: " + divs);
 							var joint = new THREE.Object3D();
 							var divisions = (leafDivs[leaf+1].x != divs) ? leafDivs[leaf+1] : divs;
@@ -422,15 +445,20 @@ peep.prototype = {
 							joint.matrixAutoUpdate = true;	
 							joint.updateMatrix();						
 							joint.name = "joint";
+							
 							obj.children[0].add(joint);
+							console.log(obj.children[0].children[i+child]);
 							obj.children[0].children[i+child].rotation.y = i*((Math.PI*2)/rads);
+							//if(i>0)
+							//obj.children[0].children[i+child].scale.x = -1;
+
 							obj.children[0].children[i+child].add(stringer(this.big,	theseDivs,0,	num,leaf+1,Math.floor(len/lenDiv), 	scalar.x,scalar.y,scalar.z,newSS,	divisions));
 							obj.children[0].children[i+child].children[0].rotation.x = angle;
 							obj.children[0].children[i+child].children[0].position.y = szr.y;
 							
 							obj.children[0].children[i+child].children[0].children[0].children[0].scale = scalar;
 							//obj.children[0].children[i+child].children[0].children[1].scale = new THREE.Vector3(.1,.1,.1);
-							console.log("HOOOOH");
+							
 							//console.log(obj.children[0].children[i+child].children[0].children[1].scale.x);
 						}
 				}
