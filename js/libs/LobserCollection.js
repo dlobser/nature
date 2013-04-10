@@ -95,6 +95,42 @@ function rotateAroundWorldAxis(object, axis, radians) {
 }
 
 
+THREE.saveGeometryToObj3 = function (geo,nums) {
+
+geo.updateMatrixWorld();
+
+var num = parseInt(nums);
+
+var s = '';
+for (i = 0; i < geo.geometry.vertices.length; i++) {
+
+	var vector = new THREE.Vector3( geo.geometry.vertices[i].x, geo.geometry.vertices[i].y, geo.geometry.vertices[i].z );
+	//vector.multiplyScalar(.0001);
+	geo.matrixWorld.multiplyVector3( vector );
+	
+	//vector.applyProjection( matrix )
+	
+    s+= 'v '+(vector.x) + ' ' +
+    vector.y + ' '+
+    vector.z + '\n';
+}
+
+for (i = 0; i < geo.geometry.faces.length; i++) {
+
+    s+= 'f '+ (geo.geometry.faces[i].a+1+num) + ' ' +
+    (geo.geometry.faces[i].b+1+num) + ' '+
+    (geo.geometry.faces[i].c+1+num);
+
+    if (geo.geometry.faces[i].d!==undefined) {
+        s+= ' '+ (geo.geometry.faces[i].d+1+num);
+    }
+    s+= '\n';
+}
+
+return s;
+}
+
+
 THREE.saveGeometryToObj2 = function (geo,nums) {
 
 geo.updateMatrixWorld();

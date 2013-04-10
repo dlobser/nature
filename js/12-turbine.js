@@ -1,6 +1,11 @@
 var num = 0;
 var rebuild = false;
 var things = [];
+var boxes = [];
+
+rebuilder = function(){
+	rebuild = true;
+}
 
 sc1 = function(){
 
@@ -16,10 +21,10 @@ sc1 = function(){
 	//setup dat.gui
 	var starfield = function()
 	{
-		this.speed = 0.0031;
+		this.speed = 0.00001;
 		this.speed2 = 1;
 		this.size = 43.9;
-		this.x = 0.001;
+		this.x = 0.0001;
 		this.y = 0.0001;
 		this.z = 0.0001;
 		this.x2 = 0.000;
@@ -32,13 +37,13 @@ sc1 = function(){
 		this.y1 = 0.000;
 		this.z1 = 0.000;
 		
-		this.num=30;
+		this.num=20;
 		//this.scale:new THREE.Vector3(5,10,5);
 		this.ss=.96;
 		//this.leaf1ss:.8;
 		//this.leaf0ss:.9;
-		this.leaves=3;
-		this.divs=10;
+		this.leaves=1;
+		this.divs=2;
 		this.rads=2;
 		
 		this.rebuilder = function() { 
@@ -69,7 +74,7 @@ sc1 = function(){
 			this["y2-"+i] = 0;
 			this["z2-"+i] = 0;
 			
-			this["x3-"+i] = 1;
+			this["x3-"+i] = 0;
 			this["y3-"+i] = 0;
 			this["z3-"+i] = 0;
 			
@@ -130,7 +135,7 @@ sc1 = function(){
 		this['fol'+i].add(this.text, 'y4-'+i, -rAm,rAm);
 		this['fol'+i].add(this.text, 'z4-'+i, -rAm,rAm);
 		
-		this['fol'+i].add(this.text, 'off-'+i, 0,2);
+		this['fol'+i].add(this.text, 'off-'+i, -.1,.1);
 		
 		this['fol'+i].add(this.text, 'sc-'+i, .8,1.5);
 		
@@ -148,15 +153,15 @@ sc1.prototype.init = function() {
 	this.camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 1, 10000 );
 	this.camera.position.z = 0;
 	this.camera.position.y = 0;
-	this.camera.position.x = -600;
+	this.camera.position.x = 600;
 
-	this.controls = new THREE.OrbitControls( this.camera );
-	this.controls.addEventListener( 'change', this.render );
+	//this.controls = new THREE.OrbitControls( this.camera );
+	//this.controls.addEventListener( 'change', this.render );
 
 	this.scene = new THREE.Scene();
 	this.scene.fog = new THREE.FogExp2( 0x000000, 0.00052 );
-	
-
+	this.camera.lookAt(new THREE.Vector3(0,0,0));
+	//this.scene.add(this.camera);
 	this.addGeo();
 
 	var light = new THREE.DirectionalLight( 0xffffff );
@@ -207,6 +212,18 @@ sc1.prototype.addGeo = function(){
 	this.mesh = new THREE.Mesh( geometry2, material2 );
 	this.scene.add(this.mesh);
 */
+	var div = document.getElementById('user');
+	user.defaultValue = '{"num":25,"scale":[5,12,5],"ss":0.96,"leaves":2,"divs":5,"rads":2,"leaf1ss":0.9,"jScale1":[2,3,2],"leaf0ss":0.9}';
+	
+	console.log("VALUE VALUE");
+
+	/*
+
+	*/	
+	var testString = '{"num":20,"scale":[5,10,5],"ss":1,"leaves":1,"divs":3,"rads":2}';
+	var your_object = JSON.parse(user.value);
+	
+	//alert(your_object.scale);
 	
 	var parms={color1:0x003399,color2:0xbbffdd,color3:0x0099ff};
 	console.log(this.text);
@@ -223,106 +240,45 @@ sc1.prototype.addGeo = function(){
 			leafDiv1:1,
 		*/
 		
-		cuber.branchSquares({
-			num:Math.floor(this.text.num),
-			scale:new THREE.Vector3(5,10,5),
-			ss:this.text.ss,
-			leaves:Math.floor(this.text.leaves),
-			divs:Math.floor(this.text.divs),
-			rads:Math.floor(this.text.rads),
+		cuber.branchSquares(your_object);
+		
+		/*add cubes
+		for (var i = 0 ; i < cuber.pos.length ; i++){
+		
+			var mesh = new THREE.Mesh(g2,material);
+			mesh.matrixAutoUpdate = true;	
+			mesh.updateMatrix();
+			console.log(mesh.matrixWorld);			
+			mesh.position.x = Math.random()*100;
+			mesh.scale.y = 100;
+			console.log(mesh);
+			boxes.push(mesh);
+			this.scene.add(mesh);
+		
+		}
+		*/
+		
 
-			angle2:1,
-			term1:1,
-			term2:0,
-			term3:2,
-			leaves:2,
-
-			fruit:true,
-			fruitScale:new THREE.Vector3(5,5,5)
-
-		});
-
-		console.log(cuber);
 		
 		this.mesh = new THREE.Mesh( geometry, material );
 		this.scene.add(cuber.pos_big);
 		things.push(cuber);
 	}
 	
-	//console.log("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
-	console.log(things);
-	//console.log("here" + things[0].msh.length);
-	
-	for (i in things[0].msh){
-	//console.log(i);
-		//console.log("i: " + i);
-		//console.log(things[0].pos[i].position);
-	}
-//	console.log(things[0].branches);
-		//	things[0].pos[8].position.y = 6;
-		//things[0].pos[7].position.y = 6;
-		//console.log("fuck id up:   " +things[0].pos[7].id);
-		//things[0].pos[8].rotation.x = 1;
-	for(i in things[0].msh){
-		//console.log(things[0].msh[i].position);
-	}
-		for(i in things[0].sc){
-		//console.log(things[0].sc[i].position);
-	}
-		for(i in things[0].pos){
-		//console.log("pos  "+i);
-		//console.log(things[0].pos[i].position);
-	}
-	
-
-			for(i in things[0].rt){
-		//console.log(things[0].rt[i].position);
-	}
-	
-	for(i in things[0].branches){
-	//console.log("hi");
-		if(things[0].branches[i].name==1){
-						//console.log("ieeeeeeeee" + i);
-						console.log(things[0].branches[i][0]);
-						}
-		}
-	for (i in things[0].pos)
-		//console.log(i + "  " + things[0].pos[i].name);
-	
-	for (var i = 0 ; i< things[0].pos.length; i++){
-		if(things[0].pos[i].name == "pos_big0"){
-	//		console.log(things[0].pos[i]);
-
-			//things[0].pos[i].rotation.x = Math.random(Math.PI);
-		}
-	}
-	
-	console.log(things[0].rt);
-	
-	var thing=things[0];
-	//console.log(thing.branches);
-		for ( i in thing.branches ){
-		if(i>0){
-			for(j in thing.branches[i])
-				if(j>-1){
-				//	console.log(thing.branches[i].name);
-					var l = thing.branches[i][j].length-1;
-					//thing.branches[i][j].rotation.x = 0;
-					//console.log("i: " + i + " j: " + j + " item: " + thing.branches[i][j].name);
-				}
-			}
-		
-		}
-	/*
-	for(i in things[0].branches){
-		console.log(things[0].branches[i][0]);
-	}
-	*/
 	
 }
 
 sc1.prototype.moveThings = function(){
-
+	
+	/*
+	for (var i = 0 ; i < boxes.length ; i++){
+	this.scene.updateMatrixWorld();
+		boxes[i].position.getPositionFromMatrix(things[0].pos[i].matrixWorld);
+		//console.log(things[0].pos[i].matrixWorld);
+		
+	}
+	*/
+	
 	for ( var j = 0 ; j <   things.length  ; j++){
 	
 		var thing = things[j];
@@ -409,7 +365,7 @@ sc1.prototype.moveThings = function(){
 		*/
 		for ( i in thing.rt ) {
 		//	thing.rt[i].useQuaternion = true;
-			this.rotateAroundWorldAxis(thing.pos[i], new THREE.Vector3(1,1,0), 3);
+		//	this.rotateAroundWorldAxis(thing.pos[i], new THREE.Vector3(1,1,0), 3);
 			//thing.pos[i].rotation.x = 1;
 		}
 		
@@ -465,14 +421,14 @@ sc1.prototype.moveThings = function(){
 
 sc1.prototype.animate = function(){
 
-	console.log(rebuild);
+	//console.log(rebuild);
 	if(rebuild){
 		console.log("ITS SO TRUE");
 		console.log(things);
 		things = [];
 		killEverything(scene);
 		this.addGeo();
-			console.log(things);
+		console.log(things);
 		rebuild = false;
 	}
 	//this.render();
@@ -482,7 +438,7 @@ sc1.prototype.animate = function(){
 	}
 	var that = this;
 	requestAnimationFrame( function() { that.animate(); });
-	this.controls.update();
+	//this.controls.update();
 	
 }
 
@@ -493,12 +449,25 @@ sc1.prototype.render = function() {
 
 }
 
-sc1.prototype.rotateAroundWorldAxis=function(object, axis, radians) {
-    rotWorldMatrix = new THREE.Matrix4();
 
-    rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
-    rotWorldMatrix.multiply(object.matrix);        // pre-multiply
-    object.matrix = rotWorldMatrix;
-    object.rotation.setEulerFromRotationMatrix(object.matrix, object.scale);
+function saver() {
+
+	//if(evt.keyCode == 65){
+		alert("saving!");
+		var j = 0;
+		var output = "";
+		
+		//console.log(tree.children.length);
+
+		for (var i = 0 ; i < things[0].msh.length ; i++){
+			output += THREE.saveGeometryToObj3(things[0].msh[i],j);
+			j += things[0].msh[i].geometry.vertices.length;
+		}
+		
+		//console.log(output);
+		output.replace("undefined","");
+		alert("saved!");
+		var blob = new Blob([output], {type: "text/plain;charset=ANSI"});
+		saveAs(blob, "tree.obj");
+	//}
 }
-

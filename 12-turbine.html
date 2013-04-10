@@ -53,7 +53,7 @@
         </div>
       </div>
     </div>
-		<div id="container"></div>
+		<div id="container" style="position:absolute"></div>
 		
 		<script src="js/three/build/three.min.js"></script>
 		
@@ -66,6 +66,7 @@
 		
 		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
 		<script src="js/libs/LobserCollection.js"></script>
+		<script src="js/libs/filesaver.js"></script>
 
 		<script src="js/libs/three/build/three.min.js"></script>
 		
@@ -73,20 +74,43 @@
 
 		<script src="js/three/js/Detector.js"></script>
 		<script src="js/three/js/libs/stats.min.js"></script>
-		<script src="js/08-branch-parent-05.js"></script>
+		<script src="js/12-turbine.js"></script>
 
-		<script src="js/libs/rig_orig.js"></script>
+		<script src="js/libs/rig.js"></script>
 		
 		
 		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
+		
+	
+		<div style="position:absolute;line-height:.3em;padding-left:10px">
+			<h2>Turbine</h2><br>
+			<p>leaf#ss = scale factor - between .9 and 1.1 is suggested</p><br>
+			<p>leafJoint# = amount of joints on branch, not too many or crash!</p><br>
+			<p>jScale# = scale for branch,requires array with 3 values - [1,2,3]</p><br>
+			<p>leafDiv# = number of divisions on the branch</p><br><br>
+			<p>term# = # of leaves minus this number determines if fruit goes here</p><br>
+			<p>fruit = boolean - adds balls to the end of branches based on 'term' settings</br></br></br>
+			
+			<p>format is JSON</p><br>
+			<p>example: -   "leaf2ss":3,  - </p><br>
+			
+			<textarea id="user"  name="user" defaultValue='{"num":25,"scale":[5,12,5],"ss":0.96,"leaves":2,"divs":5,"rads":2,"leaf1ss":0.9,"jScale1":[2,3,2],"leaf0ss":0.9}'}' cols="100" rows="20"></textarea><br>
+			<input type="button" id="buttonid" value="click" onclick="rebuilder()">
+			<input type="button" id="buttonid" value="save" onclick="saver()">
+		</div>
+		
 		</body>
 		</html>
+		<div id="container2">
 		<script>
 		
 		var scene = new sc1();
 		scene.init();
 		scene.animate();
-		
+	
 		</script>
+	</div>
+	
+		</form>
 	</body>
 </html>

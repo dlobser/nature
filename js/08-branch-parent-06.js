@@ -1,6 +1,7 @@
 var num = 0;
 var rebuild = false;
 var things = [];
+var boxes = [];
 
 sc1 = function(){
 
@@ -16,10 +17,10 @@ sc1 = function(){
 	//setup dat.gui
 	var starfield = function()
 	{
-		this.speed = 0.0031;
+		this.speed = 0.00001;
 		this.speed2 = 1;
 		this.size = 43.9;
-		this.x = 0.001;
+		this.x = 0.0001;
 		this.y = 0.0001;
 		this.z = 0.0001;
 		this.x2 = 0.000;
@@ -32,13 +33,13 @@ sc1 = function(){
 		this.y1 = 0.000;
 		this.z1 = 0.000;
 		
-		this.num=30;
+		this.num=10;
 		//this.scale:new THREE.Vector3(5,10,5);
 		this.ss=.96;
 		//this.leaf1ss:.8;
 		//this.leaf0ss:.9;
-		this.leaves=3;
-		this.divs=10;
+		this.leaves=1;
+		this.divs=2;
 		this.rads=2;
 		
 		this.rebuilder = function() { 
@@ -69,7 +70,7 @@ sc1 = function(){
 			this["y2-"+i] = 0;
 			this["z2-"+i] = 0;
 			
-			this["x3-"+i] = 1;
+			this["x3-"+i] = 0;
 			this["y3-"+i] = 0;
 			this["z3-"+i] = 0;
 			
@@ -130,7 +131,7 @@ sc1 = function(){
 		this['fol'+i].add(this.text, 'y4-'+i, -rAm,rAm);
 		this['fol'+i].add(this.text, 'z4-'+i, -rAm,rAm);
 		
-		this['fol'+i].add(this.text, 'off-'+i, 0,2);
+		this['fol'+i].add(this.text, 'off-'+i, -.1,.1);
 		
 		this['fol'+i].add(this.text, 'sc-'+i, .8,1.5);
 		
@@ -235,12 +236,34 @@ sc1.prototype.addGeo = function(){
 			term1:1,
 			term2:0,
 			term3:2,
-			leaves:2,
 
 			fruit:true,
 			fruitScale:new THREE.Vector3(5,5,5)
 
 		});
+		
+		for (var i = 0 ; i < cuber.pos.length ; i++){
+			var mesh = new THREE.Mesh(g2,material);
+			mesh.matrixAutoUpdate = true;	
+			mesh.updateMatrix();	
+			mesh.position.x = Math.random()*100;
+			mesh.scale.y = 100;
+			console.log(mesh);
+			boxes.push(mesh);
+			this.scene.add(mesh);
+		
+		}
+		
+		console.log("BOXES: ");
+		console.log(boxes);
+		
+		console.log(cuber.pos.length + "  cuber pos length ");
+		for(i in cuber.pos){
+			console.log("POSER");
+			
+			//console.log(cuber.children[0].traverse());;
+			console.log(cuber.rt[i].scale.x);
+		}
 
 		console.log(cuber);
 		
@@ -322,6 +345,21 @@ sc1.prototype.addGeo = function(){
 }
 
 sc1.prototype.moveThings = function(){
+
+	for (var i = 0 ; i < boxes.length ; i++){
+	
+		boxes[i].position = things[0].pos[i].position;
+		
+		for (var i = 0 ; i < thing.pos.length; i++){
+	
+		this.scene.updateMatrixWorld();
+		vector = new THREE.Vector3(Math.random()*100,Math.random()*100,Math.random()*100);
+		vector.getPositionFromMatrix( thing.pos[i].matrixWorld );
+		pointss.push(vector);
+		
+	}
+		
+	}
 
 	for ( var j = 0 ; j <   things.length  ; j++){
 	
@@ -501,4 +539,5 @@ sc1.prototype.rotateAroundWorldAxis=function(object, axis, radians) {
     object.matrix = rotWorldMatrix;
     object.rotation.setEulerFromRotationMatrix(object.matrix, object.scale);
 }
+
 
