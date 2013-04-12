@@ -10,6 +10,73 @@ var fromPrototype = function(prototype, object) {
   return newObject;
 };
 
+function makeLimbGeo(things,width){
+
+	var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
+	var geo = new THREE.Geometry();
+	var tree = new THREE.Object3D();
+	
+	//thisScene.updateMatrixWorld();
+	
+	
+	for ( var j = 0; j < things.branches.length ; j ++ ) {
+	
+		if(things.branches[j].length > 3){
+
+			//var newSize = map_range(j,0,things.length,30,1);
+			//var sized = Math.max(newSize,1);
+			//var size = limb[j].scalar;
+
+			for ( var i = 1 ; i < things.branches[j].length-1 ; i++ ){
+			
+				var thisVert = new THREE.Vector3(0,0,0);
+				var nextVert = new THREE.Vector3(0,0,0);
+				
+				things.branches[j][i].children[1].updateMatrixWorld();
+				
+				console.log(things.branches[j][i]);
+			
+				thisVert.getPositionFromMatrix(things.branches[j][i].children[1].matrixWorld);
+				nextVert.getPositionFromMatrix(things.branches[j][i-1].children[1].matrixWorld);
+				
+				var dist = thisVert.distanceTo(nextVert);
+					
+				var geometry = new THREE.SphereGeometry2( 3, 6, 5, 0, Math.PI*2, 0, Math.PI, dist,width,width);
+				
+				//from Garner: rotates the link 90 degrees so that later on the aim will work properly - a hack?  Perhaps - Is there a better way? Perhaps
+				geometry.applyMatrix( new THREE.Matrix4().setRotationFromEuler(new THREE.Vector3(Math.PI/2, 0, 0), 'XYZ'));
+				
+			//	if(size > text.minBranch)
+				//	size *= text.shrink;
+				
+				var mesh = new THREE.Mesh( geometry, material );
+				
+				mesh.updateMatrix();
+				mesh.matrixAutoUpdate = true;
+				
+				mesh.rotation.x = Math.PI/2;
+
+				mesh.position = thisVert;
+				mesh.lookAt(nextVert);
+	
+				mesh.geometry.mergeVertices();
+				THREE.GeometryUtils.merge(geo, mesh);
+				
+			}
+		}	
+	}
+	mesh = new THREE.Mesh( geo,material );
+
+	tree.add(mesh);
+	
+
+	
+	return tree;
+	//scene.add( tree );
+	
+	
+}
+
 function map_range(value, low1, high1, low2, high2) {
 	return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
@@ -95,75 +162,110 @@ function rotateAroundWorldAxis(object, axis, radians) {
 }
 
 
+THREE.saveGeometryToObj4 = function (geo,nums,scalar) {
+
+	geo.updateMatrixWorld();
+
+	var num = parseInt(nums);
+
+	var s = '';
+	for (i = 0; i < geo.geometry.vertices.length; i++) {
+
+		var vector = new THREE.Vector3( geo.geometry.vertices[i].x, geo.geometry.vertices[i].y, geo.geometry.vertices[i].z );
+		vector.multiplyScalar(scalar);
+		geo.matrixWorld.multiplyVector3( vector );
+		
+		//vector.applyProjection( matrix )
+		
+		s+= 'v '+(vector.x) + ' ' +
+		vector.y + ' '+
+		vector.z + '\n';
+	}
+
+	for (i = 0; i < geo.geometry.faces.length; i++) {
+
+		s+= 'f '+ (geo.geometry.faces[i].a+1+num) + ' ' +
+		(geo.geometry.faces[i].b+1+num) + ' '+
+		(geo.geometry.faces[i].c+1+num);
+
+		if (geo.geometry.faces[i].d!==undefined) {
+			s+= ' '+ (geo.geometry.faces[i].d+1+num);
+		}
+		s+= '\n';
+	}
+
+	return s;
+}
+
 THREE.saveGeometryToObj3 = function (geo,nums) {
 
-geo.updateMatrixWorld();
+	geo.updateMatrixWorld();
 
-var num = parseInt(nums);
+	var num = parseInt(nums);
 
-var s = '';
-for (i = 0; i < geo.geometry.vertices.length; i++) {
+	var s = '';
+	for (i = 0; i < geo.geometry.vertices.length; i++) {
 
-	var vector = new THREE.Vector3( geo.geometry.vertices[i].x, geo.geometry.vertices[i].y, geo.geometry.vertices[i].z );
-	//vector.multiplyScalar(.0001);
-	geo.matrixWorld.multiplyVector3( vector );
-	
-	//vector.applyProjection( matrix )
-	
-    s+= 'v '+(vector.x) + ' ' +
-    vector.y + ' '+
-    vector.z + '\n';
-}
+		var vector = new THREE.Vector3( geo.geometry.vertices[i].x, geo.geometry.vertices[i].y, geo.geometry.vertices[i].z );
+		//vector.multiplyScalar(.0001);
+		geo.matrixWorld.multiplyVector3( vector );
+		
+		//vector.applyProjection( matrix )
+		
+		s+= 'v '+(vector.x) + ' ' +
+		vector.y + ' '+
+		vector.z + '\n';
+	}
 
-for (i = 0; i < geo.geometry.faces.length; i++) {
+	for (i = 0; i < geo.geometry.faces.length; i++) {
 
-    s+= 'f '+ (geo.geometry.faces[i].a+1+num) + ' ' +
-    (geo.geometry.faces[i].b+1+num) + ' '+
-    (geo.geometry.faces[i].c+1+num);
+		s+= 'f '+ (geo.geometry.faces[i].a+1+num) + ' ' +
+		(geo.geometry.faces[i].b+1+num) + ' '+
+		(geo.geometry.faces[i].c+1+num);
 
-    if (geo.geometry.faces[i].d!==undefined) {
-        s+= ' '+ (geo.geometry.faces[i].d+1+num);
-    }
-    s+= '\n';
-}
+		if (geo.geometry.faces[i].d!==undefined) {
+			s+= ' '+ (geo.geometry.faces[i].d+1+num);
+		}
+		s+= '\n';
+	}
 
-return s;
+	return s;
 }
 
 
 THREE.saveGeometryToObj2 = function (geo,nums) {
 
-geo.updateMatrixWorld();
+	geo.updateMatrixWorld();
 
-var num = parseInt(nums);
+	var num = parseInt(nums);
 
-var s = '';
-for (i = 0; i < geo.geometry.vertices.length; i++) {
+	var s = '';
+	for (i = 0; i < geo.geometry.vertices.length; i++) {
 
-	var vector = new THREE.Vector3( geo.geometry.vertices[i].x, geo.geometry.vertices[i].y, geo.geometry.vertices[i].z );
-	vector.multiplyScalar(.0001);
-	geo.matrixWorld.multiplyVector3( vector );
-	
-	//vector.applyProjection( matrix )
-	
-    s+= 'v '+(vector.x) + ' ' +
-    vector.y + ' '+
-    vector.z + '\n';
-}
+		var vector = new THREE.Vector3( geo.geometry.vertices[i].x, geo.geometry.vertices[i].y, geo.geometry.vertices[i].z );
+		vector.multiplyScalar(.0001);
+		geo.matrixWorld.multiplyVector3( vector );
+		
+		//vector.applyProjection( matrix )
+		
+		s+= 'v '+(vector.x) + ' ' +
+		vector.y + ' '+
+		vector.z + '\n';
+	}
 
-for (i = 0; i < geo.geometry.faces.length; i++) {
+	for (i = 0; i < geo.geometry.faces.length; i++) {
 
-    s+= 'f '+ (geo.geometry.faces[i].a+1+num) + ' ' +
-    (geo.geometry.faces[i].b+1+num) + ' '+
-    (geo.geometry.faces[i].c+1+num);
+		s+= 'f '+ (geo.geometry.faces[i].a+1+num) + ' ' +
+		(geo.geometry.faces[i].b+1+num) + ' '+
+		(geo.geometry.faces[i].c+1+num);
 
-    if (geo.geometry.faces[i].d!==undefined) {
-        s+= ' '+ (geo.geometry.faces[i].d+1+num);
-    }
-    s+= '\n';
-}
+		if (geo.geometry.faces[i].d!==undefined) {
+			s+= ' '+ (geo.geometry.faces[i].d+1+num);
+		}
+		s+= '\n';
+	}
 
-return s;
+	return s;
 }
 
 THREE.SphereGeometry3 = function ( radius, widthSegments, heightSegments, height, topScale, botScale ) {

@@ -94,9 +94,14 @@
 			<p>format is JSON</p><br>
 			<p>example: -   "leaf2ss":3,  - </p><br>
 			
-			<textarea id="user"  name="user" defaultValue='{"num":25,"scale":[5,12,5],"ss":0.96,"leaves":2,"divs":5,"rads":2,"leaf1ss":0.9,"jScale1":[2,3,2],"leaf0ss":0.9}'}' cols="100" rows="20"></textarea><br>
-			<input type="button" id="buttonid" value="click" onclick="rebuilder()">
+			<textarea id="user"  name="user" defaultValue='{"num":25,"scale":[5,12,5],"ss":0.96,"leaves":2,"divs":5,"rads":2,"leaf1ss":0.9,"jScale1":[2,3,2],"leaf0ss":0.9}'}' cols="100" rows="10"></textarea><br>
+			anim params<br><br><br>
+			<textarea id="anim"  name="anim" cols="100" rows="10"></textarea><br>
+			
+			<input type="button" id="buttonid" value="rebuild" onclick="rebuilder()">
 			<input type="button" id="buttonid" value="save" onclick="saver()">
+			<input type="button" id="buttonid" value="helperGeo" onclick="helperGeo()">
+			
 		</div>
 		
 		</body>
@@ -110,6 +115,7 @@
 	
 		</script>
 	</div>
+	
 	
 		</form>
 	</body>

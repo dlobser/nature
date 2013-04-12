@@ -1,7 +1,5 @@
 function peep(params){
 	
-	//if you give it geo, it will use that, otherwise it will use a default cube
-
 	this.params;
 	this.CTRL = new THREE.Object3D();
 	//( radiusTop, radiusBottom, height, radiusSegments, heightSegments, openEnded )
@@ -12,19 +10,48 @@ function peep(params){
 		geo:new THREE.CylinderGeometry( 1,1,1,6,1),
 		geo2:new THREE.SphereGeometry(1,6,6),
 		color1:0xffffff,
-		color2:0x00ffff,
+		color2:0xffffff,
 		color3:0xffffff,
 		color4:0xffffff,
-		color5:0xffffff
+		color5:0xffffff,
+		
+		anim:{
+			size:0,
+			num:0,
+			x:0,
+			y:0,
+			z:0,
+			x1:[],
+			y1:[],
+			z1:[],
+			x2:[],
+			y2:[],
+			z2:[],
+			x3:[],
+			y3:[],
+			z3:[],
+			x4:[],
+			y4:[],
+			z4:[],
+			off:[],
+			sc:[],
+			def:[]
+		}
+		
 	};
+	
+	for (key in this.options.anim){
+		if (this.options.anim[key] instanceof Array){
+			this.options.anim[key] = Array.apply(null, new Array(100)).map(Number.prototype.valueOf,0);
+		}
+	}
+
+	this.options.anim.sc = Array.apply(null, new Array(100)).map(Number.prototype.valueOf,1);
 	
 	
 	if(params === undefined) this.params = this.options;
 	else this.params = params;
-	
-	//console.log(this.params.color2);
-	//console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-	//console.log(params);
+
 	this.geometry = (this.params.geo !== undefined) ? this.params.geo : this.options.geo;
 	this.geometry2 = (this.params.geo2 !== undefined) ? this.params.geo2 : this.options.geo2;
 	this.geometry.mergeVertices();
@@ -41,7 +68,7 @@ function peep(params){
 	this.color4 = (this.params.color4 !== undefined) ? this.params.color4 : this.options.color4;
 	this.color5 = (this.params.color5 !== undefined) ? this.params.color5 : this.options.color5;
 	
-	this.material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.SmoothShading } );
+	this.material =  new THREE.MeshLambertMaterial( { color:this.color1, shading: THREE.SmoothShading } );
 	
 	this.branches = [];
 	this.fruit = [];
@@ -57,22 +84,6 @@ peep.prototype = {
 	id:0,
 	speed:0,
 	q:0,
-	//CTRL:new THREE.Object3D(),
-	
-	
-	/*
-	//this.geometry is a cube set to a scale of 1,1,1 - this is true of every object that's created
-	//It is placed inside a group which scales it to the desired size
-	//this group is placed inside a group designated for 'rotation' although you can do anything with it
-	//this group is placed inside 'poser' the top group, which is returned
-	//each item's name is assigned to the peep object so it can be easily accessed later
-	
-	//(mesh offset xyz, scale xyz, controller position xyz, name, color)
-	*/
-	
-	set:function(id){
-		this.id = id;
-	},
 	
 	part:function(px,py,pz,	sx,sy,sz,	p2x,p2y,p2z,	namer,color){
 	
@@ -131,6 +142,7 @@ peep.prototype = {
 		this.scalar.scale = scl;	
 		
 		this.rotator = new THREE.Object3D();
+		//this.rotator.useQuaternion = true;
 
 		this.rotator.name = "rt_"+namer;	
 
@@ -141,9 +153,6 @@ peep.prototype = {
 		this.rotator.matrixAutoUpdate = true;
 		
 		this.rotator.add(this.scalar);	
-
-
-
 		
 		this.poser = new THREE.Object3D();	
 		
@@ -171,126 +180,6 @@ peep.prototype = {
 		
 		this.pos.push(this.poser);
 		return this.poser;
-	},
-	
-	creature:function(mx,my,mz,al,aw,ll,lw,ls,ex,ey,es) {
-		
-		
-		this.CTRL.name = "CTRL";
-		this.CTRL.mx = mx;
-		this.CTRL.my = my;
-		this.CTRL.mz = mz;
-		
-		this[  this.CTRL.name ] = this.CTRL;
-		
-		//(mesh offset xyz, scale xyz, controller position xyz, name, color)
-		var rflArm = this.part(0,-.5,0,aw,al,aw,0,-al,0,								"rflarm",this.color1);
-		var rfuArm = this.part(0,-.5,0,aw,al,aw,	(mx-aw)*.5,(my)*-.5,(mz-aw)*.5,		"rfuarm",this.color1);
-		
-		var lflArm =	this.part(0,-.5,0,aw,al,aw,0,-al,0,								"lflarm",this.color1);
-		var lfuArm =	this.part(0,-.5,0,aw,al,aw,	(mx-aw)*-.5,(my)*-.5,(mz-aw)*.5,	"lfuarm",this.color1);
-		
-		var rblArm = this.part(0,-.5,0,aw,al,aw,0,-al,0,								"rblarm",this.color1);
-		var rbuArm = this.part(0,-.5,0,aw,al,aw,	(mx-aw)*.5,(my)*-.5,(mz-aw)*-.5,	"rbuarm",this.color1);
-		
-		var lblArm =	this.part(0,-.5,0,aw,al,aw,0,-al,0,								"lblarm",this.color1);
-		var lbuArm =	this.part(0,-.5,0,aw,al,aw,	(mx-aw)*-.5,(my)*-.5,(mz-aw)*-.5,	"lbuarm",this.color1);
-	
-		var tail =	this.part(0,.5,0,aw,al,aw,		0,my*.5,(mz-aw)*-.5,				"tail",this.color1);
-		
-		var leye =	this.part(0,0,0,ex,ey,ex,es,0,mz*.5,								"leye",this.color2);
-		var reye =	this.part(0,0,0,ex,ey,ex,-es,0,mz*.5,								"reye",this.color2);
-		
-		var lear =	this.part(0,.5,.5,ex,ey,ex,	mx*.5-(ex/2),(my*.5),(mz*.5)-(ex),					"lear",this.color1);
-		var rear =	this.part(0,.5,.5,ex,ey,ex,	-1*((mx*.5)-(ex/2)),(my*.5),(mz*.5)-(ex),			"rear",this.color1);
-	
-		var bod =	this.part(0,0,0,mx,my,mz,0,0,0,										"bod",this.color1);
-		
-		this.rt_rfuarm.add(rflArm);			
-		this.rt_lfuarm.add(lflArm);
-		
-		this.rt_rbuarm.add(rblArm);			
-		this.rt_lbuarm.add(lblArm);
-		
-		this.rt_bod.add(rfuArm);
-		this.rt_bod.add(lfuArm);
-		
-		this.rt_bod.add(rbuArm);
-		this.rt_bod.add(lbuArm);
-		
-		this.rt_bod.add(lear);
-		this.rt_bod.add(rear);
-		
-		this.rt_bod.add(tail);
-		
-		
-		this.rt_bod.add(leye);
-		this.rt_bod.add(reye);
-		
-		this.CTRL.add(bod);
-		
-		this.pos_bod.position.y = (my/2)+(al*2);
-	},	
-	
-	frontSquares:function(obj,sx,sy,sz){
-		
-		var lboob =	this.part(0,0,0,	sx,sy,sz,	obj.sc_bod.scale.x/4,obj.sc_bod.scale.y/-6,obj.sc_bod.scale.z/2,								"lboob",obj.color1);
-		var lnip=	this.part(0,0,0,	sx/5,sy/5,sz+(sz/10),	0,0,0,																				"lnip",obj.color3);
-		
-		var rboob =	this.part(0,0,0,	sx,sy,sz,	obj.sc_bod.scale.x/-4,obj.sc_bod.scale.y/-6,obj.sc_bod.scale.z/2,								"rboob",obj.color1);
-		var rnip=	this.part(0,0,0,	sx/5,sy/5,sz+(sz/10),	0,0,0,																				"rnip",obj.color3);
-		
-		this.rt_lboob.add(lnip);
-		this.rt_rboob.add(rnip);
-		obj.rt_bod.add(lboob);
-		obj.rt_bod.add(rboob);
-		
-	},
-	
-	groundSquares:function(obj,sx,sy,sz){
-		
-		var big =	this.part(0,-.5,0,	sx,sy,sz,	0,0,0,								"big",obj.color1);
-		var med =	this.part(0,-.5,0,	sx-(sx*.5),sy+(sy/10),sx-(sx*.5),	0,sy,0,		"med",obj.color2);
-		var small=	this.part(0,-.5,0,	sx-(sx*.8),sy+(sy/9),sx-(sx*.8),	0,sy*2,0,	"small",obj.color3);
-		
-		this.rt_med.add(small);
-		this.rt_big.add(med);
-		obj.CTRL.add(big);
-		
-	},
-	
-	parentSquares:function(num,sx,sy,sz,ss){
-		
-		this.big = this.part(0,.5,0,	sx,sy,sz,	0,0,0,   "big",this.color1);
-		var i = 1;
-		var that = this;
-		
-		
-		stringer(this.big,num,sx,sy,sz,ss);
-		
-		function stringer(obj,num,sx,sy,sz,ss)
-		{		
-			
-			var move = sy;
-			
-			if(num>0){
-				
-				num--;
-				move++;
-				
-				this.big = that.part(0,.5,0,	sx,sy,sz,	0,sy,0,   "big"+num,that.color1);
-				this.big.idq = move;
-				obj.children[0].add(stringer(this.big,num,sx*ss,sy*ss,sz*ss,ss));
-				
-				return obj;
-			}
-
-		}
-		
-		
-		return this.big;
-		
-		
 	},
 	
 	branchSquares:function(params){
@@ -344,14 +233,25 @@ peep.prototype = {
 		//term1:1, term2:2 is the same as term2:1, term1:2
 		for ( var i = 0 ; i < 6 ; i++){
 			term[i] = (params["term" + i]!==undefined) ? params["term" + i] : -100;
-			console.log(term[i]);
+			//console.log(term[i]);
 		}
 		
 		this.big = this.part(0,.5,0,	sx,sy,sz,	0,0,0,   "big",this.color1);
 		var that = this;
 		
-		var geo = new THREE.SphereGeometry(1,6,6);
-		var mat =  new THREE.MeshLambertMaterial( { shading: THREE.SmoothShading } );
+		var geo = new THREE.SphereGeometry(1,12,12);
+		
+				var path = "textures/bmap.";
+				var format = '.jpg';
+				var urls = [
+					path + '04' + format, path + '02' + format,
+					path + '05' + format, path + '06' + format,
+					path + '01' + format, path + '03' + format
+				];
+
+				var textureCube = THREE.ImageUtils.loadTextureCube( urls );
+				var mat = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
+		//var mat =  new THREE.MeshLambertMaterial( { shading: THREE.SmoothShading,color:this.color2 } );
 		geo.mergeVertices();
 		
 		stringer(this.big, num, 0,0,0,Math.floor(num/2),sx,sy,sz,ss,divs);
@@ -439,21 +339,21 @@ peep.prototype = {
 							}
 							
 							//setting the joint scale based on the leaf level
-							var scalar = (jScale[leaf].x != -1 && jScale[leaf].x <= szr.x) ? jScale[leaf] : szr;
+							var scalar = (jScale[leaf+1].x != -1 && jScale[leaf+1].x <= szr.x) ? jScale[leaf+1] : szr;
 							//var scalar = jScale[leaf];
 							
-							console.log("leaf: " + leaf + " theseDivs: " + theseDivs + " leafJoints: " + leafJoints[leaf] + " divs: " + divs);
+						//	console.log("leaf: " + leaf + " theseDivs: " + theseDivs + " leafJoints: " + leafJoints[leaf] + " divs: " + divs);
 							var joint = new THREE.Object3D();
 							var divisions = (leafDivs[leaf+1].x != divs) ? leafDivs[leaf+1] : divs;
 							//var divisions  = leafDivs[leaf] || divs;
-							console.log("divisions:  " + divisions);
+						//	console.log("divisions:  " + divisions);
 							
 							joint.matrixAutoUpdate = true;	
 							joint.updateMatrix();						
 							joint.name = "joint";
 							
 							obj.children[0].add(joint);
-							console.log(obj.children[0].children[i+child]);
+						//	console.log(obj.children[0].children[i+child]);
 							obj.children[0].children[i+child].rotation.y = i*((Math.PI*2)/rads);
 							//if(i>0)
 							//obj.children[0].children[i+child].scale.x = -1;
@@ -496,85 +396,59 @@ peep.prototype = {
 		return this.big;
 	},
 	
-	next:function(obj){
-		
-		if(obj==undefined)
-			console.log("here");
-		else if(obj.children[0].children[1]==undefined)
-			console.log("here2");
-		else
-			return true;
-	},
+	animate:function(){
 	
-	iterate:function(obj){
-		
-		
-		
-		function stringer(){
-		
-		
+		for ( i in this.branches ){
+			if(i>=0){
+				//j is each branch
+				for(j in this.branches[i]){
+					if(j>=0){
+						
+						//separate branches into layers of branches by querying the name of each branch array
+						for (var q = 0 ; q <= this.leaves ; q++){
+							if( this.branches[i].name==q && j < this.branches[i].length-1 ){
+							
+								var rot1 = new THREE.Vector3(this.options.anim.x1[q],this.options.anim.y1[q],this.options.anim.z1[q]);
+								var rot2 = new THREE.Vector3(this.options.anim.x2[q],this.options.anim.y2[q],this.options.anim.z2[q]);
+								
+								var sinR = new THREE.Vector3(
+									Math.sin(j*this.options.anim.x3[q]*3),
+									Math.sin(j*this.options.anim.y3[q]*3),
+									Math.sin(j*this.options.anim.z3[q]*3)
+								);
+								
+								var R = new THREE.Vector3(
+									this.options.anim.x3[q]*3,
+									this.options.anim.y3[q]*3,
+									this.options.anim.z3[q]*3
+								);
+								
+								var spine = new THREE.Vector3(
+									this.options.anim.x4[q]*this.branches[i][1].idq*this.options.anim.off[q],
+									this.options.anim.y4[q]*this.branches[i][1].idq*this.options.anim.off[q],
+									this.options.anim.z4[q]*this.branches[i][1].idq*this.options.anim.off[q]
+								);
+								
+								var scalar = new THREE.Vector3(this.options.anim.sc[q],this.options.anim.sc[q],this.options.anim.sc[q]);
+								
+								var motion = new THREE.Vector3(
+									(Math.sin(((j+1)/this.options.anim.size)+this.options.anim.num)*((j+1)*this.options.anim.x))*(i+1)*(this.options.anim.x3[q]/(i+1)),
+									(Math.sin(((j+1)/this.options.anim.size)+this.options.anim.num)*((j+1)*this.options.anim.y))*(i+1)*(this.options.anim.y3[q]/(i+1)),
+									(Math.sin(((j+1)/this.options.anim.size)+this.options.anim.num)*((j+1)*this.options.anim.z))*(i+1)*(this.options.anim.z3[q]/(i+1))
+								);
+								
+								
+								this.branches[i][j].rotation = spine.add(rot1.add(motion));							
+								this.branches[i][0].rotation = rot2;
+								//this.branches[i][j].children[0].rotation = R;
+								this.branches[i][j].scale = scalar;
+							}
+						}
+					}
+				}
+			}	
 		}
-	
-	},
-	
-	frontTail:function(obj,sx,sy){
 		
-		var weenie =	this.part(0,-.5,0,	sx,sy,sx,	0,(obj.sc_bod.scale.y/-2),(obj.sc_bod.scale.z/2)-sx/2,								"dk",obj.color1);
-		
-		obj.rt_bod.add(weenie);
-		
-	},
-	
-	hair:function(obj,sy){
-		//console.log(this.color4);
-		this.hair =	this.part(0,.5,0,	obj.sc_bod.scale.x,sy,obj.sc_bod.scale.z,	0,(obj.sc_bod.scale.y/2),0,								"hair",obj.color4);
-		
-		obj.rt_bod.add(this.hair);
-		
-	},
-	
-	dude:function(mx,my,mz,al,aw,ll,lw,ls,ex,ey,es) {
-	
-		this.CTRL.mx = mx;
-		this.CTRL.my = my;
-		this.CTRL.mz = mz;
-		
-		
-		//this.CTRL = new THREE.Object3D();
-		this.CTRL.name = "CTRL";
-		
-		this[  this.CTRL.name ] = this.CTRL;
-		
-		//(mesh offset xyz, scale xyz, controller position xyz, name, color)
-		var rlArm = this.part(0,-.5,0,aw,al,aw,0,-al,0,"rlarm",this.color1);
-		var ruArm = this.part(0,-.5,0,aw,al,aw,(mx+(aw))*.5,0,0,"ruarm",this.color1);
-		
-		var llArm =	this.part(0,-.5,0,aw,al,aw,0,-al,0,"llarm",this.color1);
-		var luArm =	this.part(0,-.5,0,aw,al,aw,(mx+(aw))*-.5,0,0,"luarm",this.color1);
-		
-		var lLeg =	this.part(0,-.5,0,lw,ll,lw,ls,-(my*.5),0,"lleg",this.color1);
-		var rLeg =	this.part(0,-.5,0,lw,ll,lw,-ls,-(my*.5),0,"rleg",this.color1);
-		
-		var leye =	this.part(0,0,0,ex,ey,ex,es,0,mz*.5,"leye",this.color2);
-		var reye =	this.part(0,0,0,ex,ey,ex,-es,0,mz*.5,"reye",this.color2);
-	
-		var bod =	this.part(0,0,0,mx,my,mz,0,0,0,"bod",this.color1);
-		
-		this.rt_ruarm.add(rlArm);			
-		this.rt_luarm.add(llArm);
-		
-		this.rt_bod.add(ruArm);
-		this.rt_bod.add(luArm);
-		
-		this.rt_bod.add(lLeg);
-		this.rt_bod.add(rLeg);
-		
-		this.rt_bod.add(leye);
-		this.rt_bod.add(reye);
-		
-		this.CTRL.add(bod);
-		
-		this.pos_bod.position.y = (my/2)+(ll);
 	}
 	
 }

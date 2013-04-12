@@ -2,9 +2,22 @@ var num = 0;
 var rebuild = false;
 var things = [];
 var boxes = [];
+var vector = new THREE.Vector3(0,0,0);
+var objRotate = false;
+var helpGeo = false;
 
 rebuilder = function(){
+
+	console.log(user.value);
+	console.log(anim.value);
 	rebuild = true;
+
+}
+
+helperGeo = function(){
+
+	helpGeo = !helpGeo;
+
 }
 
 sc1 = function(){
@@ -18,10 +31,11 @@ sc1 = function(){
 	this.scene;
 	var text;
 	this.rebuild = false;
+	this.pos = new THREE.Vector3(0,0,0);
 	//setup dat.gui
 	var starfield = function()
 	{
-		this.speed = 0.00001;
+		this.speed = 0.01;
 		this.speed2 = 1;
 		this.size = 43.9;
 		this.x = 0.0001;
@@ -36,6 +50,7 @@ sc1 = function(){
 		this.x1 = 0.000;
 		this.y1 = 0.000;
 		this.z1 = 0.000;
+		this.fruitSize = 4.6;
 		
 		this.num=20;
 		//this.scale:new THREE.Vector3(5,10,5);
@@ -46,12 +61,16 @@ sc1 = function(){
 		this.divs=2;
 		this.rads=2;
 		
+		this.rotatorx=0;
+		this.rotatory=0;
+		this.rotatorz=0;
+		
 		this.rebuilder = function() { 
 			//console.log(scene.text);
 			//killEverything(scene);
-			console.log(rebuild);
+			//console.log(rebuild);
 			rebuild = true;
-			console.log(rebuild);
+			//console.log(rebuild);
 			//sc1.prototype.addGeo();
 
 		};
@@ -93,16 +112,19 @@ sc1 = function(){
 	//gui.remember(this.text);
 	// gui.add(text, 'message');
 	var f0 = gui.addFolder('constructdor');
-		f0.add(this.text, 'num',1,100);
-		f0.add(this.text, 'ss',.8,1.2);
-		f0.add(this.text, 'leaves',0,6);
-		f0.add(this.text, 'divs',1,30);
-		f0.add(this.text, 'rads',1,20);
-		f0.add(this.text, 'rebuilder');
-	
+		//f0.add(this.text, 'num',1,100);
+	//	f0.add(this.text, 'ss',.8,1.2);
+		//f0.add(this.text, 'leaves',0,6);
+		//f0.add(this.text, 'divs',1,30);
+		//f0.add(this.text, 'rads',1,20);
+		//f0.add(this.text, 'rebuilder');
+		//f0.add(this.text, 'rotatorx',-3,3);
+		//f0.add(this.text, 'rotatory',-3,3);
+		//f0.add(this.text, 'rotatorz',-3,3);
+		f0.add(this.text, 'fruitSize',0.01,10);
 	
 	var f1 = gui.addFolder('motion');
-		f1.add(this.text, 'speed', -.0001, .001);
+		f1.add(this.text, 'speed', -.0001, .1);
 		f1.add(this.text, 'speed2', 0,10);
 		f1.add(this.text, 'size', 1, 100);
 		f1.add(this.text, 'x', 0,.01);
@@ -110,13 +132,13 @@ sc1 = function(){
 		f1.add(this.text, 'z', 0,.01);
 	
 	for( var i = 0 ; i < 6 ; i++){
-		console.log("pre: " + rAm);
+		//console.log("pre: " + rAm);
 		if(i<1){
 			rAm=.5;
 		}
 		else
 			rAm = Math.PI/2;
-		console.log("rArm: " + rAm);
+	//	console.log("rArm: " + rAm);
 		this['fol'+i] = gui.addFolder('level' + i);
 		
 		this['fol'+i].add(this.text, 'x1-'+i, -rAm,rAm);
@@ -144,7 +166,7 @@ sc1 = function(){
 //	gui.add(this.text, 'sizerx', 0,10);
 //	gui.add(this.text, 'sizery', 0,10);
 //	gui.add(this.text, 'sizerz', 0,10);
-f0.open();
+f1.open();
 }
 
 //sets up the three scene and calls addGeo
@@ -194,241 +216,159 @@ sc1.prototype.addGeo = function(){
 	var g2 = new THREE.CubeGeometry( 1,1,1 );
 	var g1 = new THREE.Geometry();
 	var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
-	
-	//( radius, widthSegments, heightSegments, height, topScale, botScale )
-	
-	/*
-	var geometry2 = new THREE.SphereGeometry3( 10, 10, 11, 1, 1,1 );
-	var material2 =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
-	
-	console.log("top: " +geometry2.topVerts.length);
-	
-	for(i in geometry2.topVerts){
-		
-		geometry2.topVerts[i].y += -100;
-		console.log(geometry2.topVerts[i]);
-	}
-	
-	this.mesh = new THREE.Mesh( geometry2, material2 );
-	this.scene.add(this.mesh);
-*/
+
 	var div = document.getElementById('user');
-	user.defaultValue = '{"num":25,"scale":[5,12,5],"ss":0.96,"leaves":2,"divs":5,"rads":2,"leaf1ss":0.9,"jScale1":[2,3,2],"leaf0ss":0.9}';
+	var divAnim = document.getElementById('anim');
+	user.defaultValue = '{"num":25,"scale":[5,16,5],"ss":0.92,"leaves":2,"divs":5,"rads":2,"leaf1ss":0.9,"leaf0ss":0.9,"fruit":true,"term0":0,"term1":1,"term2":2,"leafDiv1":3,"jScale2":[1,6,1],"leafJoint2":8}';
+	anim.defaultValue = '{"x1":[0,0.1,0.2,0.3,0],"x2":[0,0,-0.6],"y1":[0.1,0.2],"y2":[-0.8],"x3":[1,1,1]}';
 	
-	console.log("VALUE VALUE");
-
-	/*
-
-	*/	
-	var testString = '{"num":20,"scale":[5,10,5],"ss":1,"leaves":1,"divs":3,"rads":2}';
 	var your_object = JSON.parse(user.value);
-	
-	//alert(your_object.scale);
-	
-	var parms={color1:0x003399,color2:0xbbffdd,color3:0x0099ff};
-	console.log(this.text);
-	for ( var i = 0 ; i < 1 ; i++){
-		var cuber = new peep({geo_not:g2,geo2_not:g1});
-		//console.log(cuber.rt);
-		//check out peep.js to see what this function does - 
-		//(recurions, scale xyz, scale of each increment)
-		cuber.set(12);
-		
-		/*
-			leafJoint1:8,
-			jScale1:new THREE.Vector3(1,10,1),
-			leafDiv1:1,
-		*/
-		
-		cuber.branchSquares(your_object);
-		
-		/*add cubes
-		for (var i = 0 ; i < cuber.pos.length ; i++){
-		
-			var mesh = new THREE.Mesh(g2,material);
-			mesh.matrixAutoUpdate = true;	
-			mesh.updateMatrix();
-			console.log(mesh.matrixWorld);			
-			mesh.position.x = Math.random()*100;
-			mesh.scale.y = 100;
-			console.log(mesh);
-			boxes.push(mesh);
-			this.scene.add(mesh);
-		
-		}
-		*/
-		
+	this.animObject = JSON.parse(anim.value);
 
+	var parms={color1:0x225577,color2:0xbbffdd,color3:0x0099ff};
+	
+	this.rotator = new THREE.Object3D(0,0,0);
+
+	for ( var i = 0 ; i < 1 ; i++){
+		var cuber = new peep(parms);
+
+		cuber.branchSquares(your_object);
+		console.log(cuber);
+		cuber.big.position.y = -100;
 		
-		this.mesh = new THREE.Mesh( geometry, material );
-		this.scene.add(cuber.pos_big);
+		this.rotator.add(cuber.big);
+		this.scene.add(this.rotator);
 		things.push(cuber);
+		things[i].animVals = cuber.options.anim;
+		//console.log(things[i].animVals);
+		
+		for(key in this.animObject){
+			if(this.animObject[key] instanceof Array){
+				for( i in this.animObject[key] )
+					if (this.animObject[key][i] !== undefined){
+						
+					//	console.log(this.animObject.x1);
+						//console.log(this.animObject[key][i]);
+
+						
+					}
+			}
+		}
+		
 	}
+
+//	console.log(things);
 	
 	
 }
 
 sc1.prototype.moveThings = function(){
 	
-	/*
-	for (var i = 0 ; i < boxes.length ; i++){
-	this.scene.updateMatrixWorld();
-		boxes[i].position.getPositionFromMatrix(things[0].pos[i].matrixWorld);
-		//console.log(things[0].pos[i].matrixWorld);
-		
-	}
-	*/
-	
 	for ( var j = 0 ; j <   things.length  ; j++){
 	
 		var thing = things[j];
 		
-		//console.log(thing);
-		//thing array has two cubers, I'm just rotating the first one around for symmetry
-		if(j==0){
-			//thing.rt[0].rotation.x = Math.PI;
-			//thing.children[0].position.y = -100;
-		}
+		for (var q = 0 ; q <= thing.leaves ; q++){
 		
-		thing.pos[0].position.y = -100;
-		//thing.rt[0].children[0].scale.y = this.text.length;
-		
-	
-		var sizer = new THREE.Vector3(1,1,1);
-		
-		//peep creates an array called rot with a list of all the required joints
-		//the alternate method would involve tracing through the heirarchy by finding links to children[]
-		
-		for (var i = 0 ; i< thing.pos.length; i++){
-			//if (thing.pos[i].name == "pos_big159")
-				//thing.pos[i].rotation.x = 1;
-		}
-		
-		for (var i = 1 ; i< thing.rt.length; i++){
-		/*
-			sizer.multiplyScalar(2);
-			thing.rt[i].rotation.x = (Math.sin((i/this.text.size)+num)*(i*this.text.x))+(Math.sin(this.text.x2)*(i/thing.rt.length))+(Math.sin(this.text.x1));
-			thing.rt[i].rotation.z = (Math.sin((i/this.text.size)+num)*(i*this.text.y))+(Math.sin(this.text.y2)*(i/thing.rt.length))+(Math.sin(this.text.y1));
-			thing.rt[i].rotation.y = (Math.sin((i/this.text.size)+num)*(i*this.text.z))+(Math.sin(this.text.z2)*(i/thing.rt.length))+(Math.sin(this.text.z1));
-			*/
-			//if(thing.rt[i].name != "rt_big0")
-			//thing.pos[i].position.y = this.text.length;
-			//thing.rt[i].children[0].scale.y = this.text.length;
-			//thing.rt[i].children[0].scale.y = this.text.length;
-			//console.log(thing.rt[i].children[0]);
-	
+			if(this.animObject.x1 !== undefined)
+			var myx1 = ( this.animObject.x1[q] === undefined ) ? 0:this.animObject.x1[q];
+			else myx1 = thing.options.anim.def[q];
+			if(this.animObject.y1 !== undefined)
+			var myy1 = ( this.animObject.y1[q] === undefined ) ? 0:this.animObject.y1[q];
+			else myy1 = thing.options.anim.def[q];
+			if(this.animObject.z1 !== undefined)
+			var myz1 = ( this.animObject.z1[q] === undefined ) ? 0:this.animObject.z1[q];
+			else myz1 = thing.options.anim.def[q];
+			if(this.animObject.x2 !== undefined)
+			var myx2 = ( this.animObject.x2[q] === undefined ) ? 0:this.animObject.x2[q];
+			else myx2 = thing.options.anim.def[q];
+			if(this.animObject.y2 !== undefined)
+			var myy2 = ( this.animObject.y2[q] === undefined ) ? 0:this.animObject.y2[q];
+			else myy2 = thing.options.anim.def[q];
+			if(this.animObject.z2 !== undefined)
+			var myz2 = ( this.animObject.z2[q] === undefined ) ? 0:this.animObject.z2[q];
+			else myz2 = thing.options.anim.def[q];
+			if(this.animObject.x3 !== undefined)
+			var myx3 = ( this.animObject.x3[q] === undefined ) ? 0:this.animObject.x3[q];
+			else myx3 = thing.options.anim.def[q];
+			if(this.animObject.y3 !== undefined)
+			var myy3 = ( this.animObject.y3[q] === undefined ) ? 0:this.animObject.y3[q];
+			else myy3 = thing.options.anim.def[q];
+			if(this.animObject.z3 !== undefined)
+			var myz3 = ( this.animObject.z3[q] === undefined ) ? 0:this.animObject.z3[q];
+			else myz3 = thing.options.anim.def[q];
+			if(this.animObject.x4 !== undefined)
+			var myx4 = ( this.animObject.x4[q] === undefined ) ? 0:this.animObject.x4[q];
+			else myx4 = thing.options.anim.def[q];
+			if(this.animObject.y4 !== undefined)
+			var myy4 = ( this.animObject.y4[q] === undefined ) ? 0:this.animObject.y4[q];
+			else myy4 = thing.options.anim.def[q];
+			if(this.animObject.z4 !== undefined)
+			var myz4 = ( this.animObject.z4[q] === undefined ) ? 0:this.animObject.z4[q];
+			else myz4 = thing.options.anim.def[q];
+			//if(this.animObject.def !== undefined)
+			//var myx1 = ( this.animObject.def[q] === undefined ) ? 0:this.animObject.def[q];
+		//	else myx1 = thing.options.anim.def[q];
 			
-			//when enabled, these options would allow for the scaling of each joint in isolation without respect to the heirarchy
-			
-		//	thing.rot[i].children[0].scale.x = this.text.sizerx;
-		//	thing.rot[i].children[0].scale.y = this.text.sizery;
-		//	thing.rot[i].children[0].scale.z = this.text.sizerz;
-		}
-		/*
-		for ( i in thing.branches ){
-		if(i>=0){
-			for(j in thing.branches[i])
-				if(j>=0){
-				if(thing.branches[i].length-1){
-					 //thing.branches[i][j].rotation.x = this.text.test;
-				}
-					if(thing.branches[i].name==1 && j<thing.branches[i].length-1){
-						//thing.branches[i][j].rotation.x = this.text.test*(.3)*(thing.branches[i][1].idq/10);
-						//thing.branches[i][j].rotation.x =(Math.sin((i/this.text.size)+num)*(i*this.text.x))+(Math.sin(this.text.x2)*(i/thing.rt.length))+(Math.sin(this.text.x1));
-						thing.branches[i][0].children[0].scale.x = 2;//thing.branches[i][1].children[0].scale.x;
-						thing.branches[i][0].children[0].scale.y = 5;//thing.branches[i][1].children[0].scale.y;
-						thing.branches[i][0].children[0].scale.z = 2;//thing.branches[i][1].children[0].scale.z;
-					
-					}
-					
-					if(thing.branches[i].name==0 && j<thing.branches[i].length-1)
-						thing.branches[i][j].rotation.x = (Math.sin((j/this.text.size)+num)*(j*this.text.x*5))+(Math.sin(this.text.x)*(j/thing.branches[i].length))+(Math.sin(this.text.x))+(Math.sin(j)*this.text.test);
-					//if(thing.branches[i].name==1)
-					//	thing.branches[i][j].rotation.x = (Math.sin((j/this.text.size)+num)) + this.text.test*(.8);
-					if(thing.branches[i].name==1 && j<thing.branches[i].length-1){
-					    thing.branches[i][j].rotation.x = (Math.sin((j/this.text.size*2+(thing.branches[i][1].idq*6))+num)*(j*this.text.x*15))+(Math.sin(this.text.x1)*(j/thing.branches[i].length))+(Math.sin(this.text.x1))+(Math.sin(j)*this.text.test);
-						//thing.branches[i][j].rotation.x = this.text.x1*thing.branches[i][1].idq/10;
-					//	thing.branches[i][j].rotation.y = this.text.y1 + Math.sin(num*thing.branches[i][1].idq);
-					//	thing.branches[i][j].rotation.z = this.text.z1*thing.branches[i][1].idq;
-						}
-					if(thing.branches[i].name==5  && j<thing.branches[i].length-1){
-						//thing.branches[i][j].rotation.x = (Math.sin((j/this.text.size+(thing.branches[i][1].idq))+num)*(j*this.text.x*15))+(Math.sin(this.text.x2)*(j/thing.branches[i].length))+(Math.sin(this.text.x2))+(Math.sin(j)*this.text.test);
-						//thing.branches[i][j].rotation.x = this.text.x2*thing.branches[i][1].idq/10;
-					//	thing.branches[i][j].rotation.y = this.text.y2*thing.branches[i][1].idq/10;
-					//	thing.branches[i][j].rotation.z = this.text.z2*thing.branches[i][1].idq/10;
-						}	
-					//console.log(thing.branches[i][j]);
-				}
-			}
+
 		
+			thing.options.anim.x1[q] = this.text["x1-"+q] + myx1;
+			thing.options.anim.y1[q] = this.text["y1-"+q] + myy1;
+			thing.options.anim.z1[q] = this.text["z1-"+q] + myz1;
+			thing.options.anim.x2[q] = this.text["x2-"+q] + myx2;
+			thing.options.anim.y2[q] = this.text["y2-"+q] + myy2;
+			thing.options.anim.z2[q] = this.text["z2-"+q] + myz2;
+			thing.options.anim.x3[q] = this.text["x3-"+q] + myx3;
+			thing.options.anim.y3[q] = this.text["y3-"+q] + myy3;
+			thing.options.anim.z3[q] = this.text["z3-"+q] + myz3;
+			thing.options.anim.x4[q] = this.text["x4-"+q] + myx4;
+			thing.options.anim.y4[q] = this.text["y4-"+q] + myy4;
+			thing.options.anim.z4[q] = this.text["z4-"+q] + myz4;
+			thing.options.anim.off[q] = this.text["off-"+q];
+			thing.options.anim.sc[q] = this.text["sc-"+q];
 		}
-		*/
-		for ( i in thing.rt ) {
-		//	thing.rt[i].useQuaternion = true;
-		//	this.rotateAroundWorldAxis(thing.pos[i], new THREE.Vector3(1,1,0), 3);
-			//thing.pos[i].rotation.x = 1;
-		}
+
 		
-		//branches is a two dimensional array
-		for ( i in thing.branches ){
-			if(i>=0){
-			
-				for(j in thing.branches[i]){
-					if(j>=0){
-					
-						for (var q = 0 ; q <= thing.leaves ; q++){
-							if( thing.branches[i].name==q && j < thing.branches[i].length-1 ){
-							
-								var rot1 = new THREE.Vector3(this.text["x1-"+q],this.text["y1-"+q],this.text["z1-"+q]);
-								var rot2 = new THREE.Vector3(this.text["x2-"+q],this.text["y2-"+q],this.text["z2-"+q]);
-								
-								var sinR = new THREE.Vector3(
-									Math.sin(j*this.text["x3-"+q]*3),
-									Math.sin(j*this.text["y3-"+q]*3),
-									Math.sin(j*this.text["y3-"+q]*3)
-								);
-								
-								var spine = new THREE.Vector3(
-								this.text["x4-"+q]*thing.branches[i][1].idq*this.text["off-"+q],
-								this.text["y4-"+q]*thing.branches[i][1].idq*this.text["off-"+q],
-								this.text["z4-"+q]*thing.branches[i][1].idq*this.text["off-"+q]
-								);
-								
-								var scalar = new THREE.Vector3(this.text["sc-"+q],this.text["sc-"+q],this.text["sc-"+q]);
-								
-								var motion = new THREE.Vector3(
-									(Math.sin(((j+1)/this.text.size)+num)*((j+1)*this.text.x))*(i+1)*(this.text["x3-"+q]/(i+1)),
-									(Math.sin(((j+1)/this.text.size)+num)*((j+1)*this.text.y))*(i+1)*(this.text["x3-"+q]/(i+1)),
-									(Math.sin(((j+1)/this.text.size)+num)*((j+1)*this.text.z))*(i+1)*(this.text["x3-"+q]/(i+1))
-								);
-								
-								thing.branches[i][j].rotation = spine.add(rot1.add(motion));
-								thing.branches[i][0].rotation = rot2;
-								thing.branches[i][j].scale = scalar;
-							
-							}
-						}
-					}
-				}
-			}
-		//*(thing.branches[i][0].idq);
+		for (var q = 0 ; q < thing.fruit.length ; q++){
+			thing.fruit[q].scale = new THREE.Vector3(this.text.fruitSize,this.text.fruitSize,this.text.fruitSize);
 		
 		}
 		
-		num-=i*this.text.speed*this.text.speed2;
+		thing.options.anim.size = this.text.size;
+		thing.options.anim.x = this.text.x;
+		thing.options.anim.y = this.text.y;
+		thing.options.anim.z = this.text.z;
+		
+		thing.animate();
+		thing.options.anim.num-=this.text.speed*this.text.speed2;
 	}	
+	
+	var rot = new THREE.Vector3(this.text.rotatorx,this.text.rotatory,this.text.rotatorz);
+
+	this.rotator.rotation = vector;
 }
 
 sc1.prototype.animate = function(){
 
 	//console.log(rebuild);
 	if(rebuild){
-		console.log("ITS SO TRUE");
-		console.log(things);
+		
+		//make a fake tree
+		
+		if(helpGeo){
+			var tree = new THREE.Object3D();
+			tree.add(makeLimbGeo(things[0],.5));
+		}
+		//console.log(things[0].msh);
 		things = [];
 		killEverything(scene);
 		this.addGeo();
-		console.log(things);
+		
+		if (helpGeo){
+			this.scene.add(tree);
+			things[0].msh.push(tree.children[0].children[0]);
+		}
+		//console.log(things);
 		rebuild = false;
 	}
 	//this.render();
@@ -450,6 +390,36 @@ sc1.prototype.render = function() {
 }
 
 
+document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+document.addEventListener( 'mouseup', onDocumentMouseUp, false );
+
+var projector;
+projector = new THREE.Projector();
+
+function onDocumentMouseMove( event ) {
+	if(objRotate){
+		vector = new THREE.Vector3(
+		0,
+		( event.clientX*-3 / window.innerWidth ) * 2 + 1,
+		-( event.clientY / window.innerHeight ) * 2 + 1
+		);
+		
+	
+	}		
+}
+
+function onDocumentMouseDown( event ) {
+	if(( event.clientX / window.innerWidth ) < .7 && ( event.clientX/ window.innerWidth ) > .3)
+	objRotate = true;
+}
+
+function onDocumentMouseUp( event ) {
+	objRotate = false;
+}
+
+
+
 function saver() {
 
 	//if(evt.keyCode == 65){
@@ -458,9 +428,10 @@ function saver() {
 		var output = "";
 		
 		//console.log(tree.children.length);
+		//things[0].big.scale.x = .01;
 
 		for (var i = 0 ; i < things[0].msh.length ; i++){
-			output += THREE.saveGeometryToObj3(things[0].msh[i],j);
+			output += THREE.saveGeometryToObj4(things[0].msh[i],j,1);
 			j += things[0].msh[i].geometry.vertices.length;
 		}
 		
@@ -470,4 +441,5 @@ function saver() {
 		var blob = new Blob([output], {type: "text/plain;charset=ANSI"});
 		saveAs(blob, "tree.obj");
 	//}
+	
 }
