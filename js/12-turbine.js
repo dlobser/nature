@@ -228,8 +228,21 @@ sc1.prototype.addGeo = function(){
 	var parms={color1:0x225577,color2:0xbbffdd,color3:0x0099ff};
 	
 	this.rotator = new THREE.Object3D(0,0,0);
+	
+	var mesh = new THREE.Mesh(geometry);
+	
+	var dir = new THREE.Vector3(.1,.5,-.4);
+	
+	//align(mesh,dir,1);
+	
+	this.scene.add(mesh);
+	
+	
+	
+	
 
 	for ( var i = 0 ; i < 1 ; i++){
+	
 		var cuber = new peep(parms);
 
 		cuber.branchSquares(your_object);

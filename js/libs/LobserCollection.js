@@ -81,6 +81,32 @@ function map_range(value, low1, high1, low2, high2) {
 	return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
 
+//object, normalized direction vector, rotation in radians
+function align(target, dir, rot) {
+    //Three.js uses a Y up coordinate system, so the cube inits with this vector
+    var up = new THREE.Vector3(0, 1, 0);
+
+    //euler angle between direction vector and up vector
+    var angle = Math.acos(up.dot(dir));
+
+    //cross product of the up vector and direction vector
+    var axis = new THREE.Vector3();
+    axis.crossVectors(up, dir);
+    axis.normalize();
+
+    //rotation to aligns the target with the direction vector
+    var rotate = THREE.Matrix4.rotationAxisAngleMatrix(axis, angle);
+
+    //rotation around direction vector
+    var revolve = THREE.Matrix4.rotationAxisAngleMatrix(dir, rot);
+
+    //compose the rotations (order matters, can be done other ways)
+    revolve.multiplySelf(rotate);
+
+    //assign matrix (autoUpdateMatrix = false)
+    target.matrix = revolve;
+}
+
 function randly(off,mult){
 
 	var offs = off || -.5;

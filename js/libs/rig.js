@@ -184,11 +184,11 @@ peep.prototype = {
 	
 	branchSquares:function(params){
 	
-	
 		var fruitSize = new THREE.Vector3(5,5,5);
 		
 		//number of joints on each branch
-		var num = (params.num!==undefined) ? params.num : 10;
+		var num = params.num || 70;
+		//var num = (params.num!==undefined) ? params.num : 10;
 		var sx  = (params.scale!==undefined) ? params.scale[0] : 2;
 		var sy  = (params.scale!==undefined) ? params.scale[1] : 10;
 		var sz  = (params.scale!==undefined) ? params.scale[2] : 2;
