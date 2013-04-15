@@ -8,8 +8,11 @@ var helpGeo = false;
 
 rebuilder = function(){
 
-	console.log(user.value);
-	console.log(anim.value);
+	//console.log(user.value);
+	//console.log(anim.value);
+	//console.log(JSON.stringify(things[0].p));
+	console.log(things[0].p);
+	//console.log($.extend(things[0].p,this.animObject));	
 	rebuild = true;
 
 }
@@ -17,6 +20,42 @@ rebuilder = function(){
 helperGeo = function(){
 
 	helpGeo = !helpGeo;
+
+}
+
+applyPreset = function(){
+
+	var div = document.getElementById('user');
+	var options = document.getElementById('select').options;
+	var divAnim = document.getElementById('anim');
+	
+	switch(options.selectedIndex)
+	{
+	case 0:
+		div.value = '{"num":25,"scale":[5,16,5],"ss":0.92,"leaves":2,"divs":5,"rads":2,"leafss":[0.95,0.8,0.2],"leafDivs":[2,4,2],"fruit":true,"term":[0,1,2,3],"leafJoints":[10,10,10],"jScale2":[2,10,2],"anim":{"num":2.7}}';
+		divAnim.value = '{"x1":[0,0.1,0.2,0.3,0],"x2":[0,0,-0.6],"y1":[0.1,0.2],"y2":[-0.8],"x3":[1,1,1]}';
+		rebuilder();
+		break;
+	case 1:
+	  div.value = '{"num":200,"scale":[2,8,2],"ss":1,"leaves":1,"divs":2,"rads":1,"leafss":[0.95,0.8,0.2],"leafDivs":[2,2,2],"fruit":true,"term":[0,1,2,3],"leafJoints":[10,15,10],"jScale1":[2,5,2],"anim":{"num":2.7}}';
+	  divAnim.value = '{"x1":[0,0,0],"x2":[0,0.9,0],"y1":[0.0051],"z1":[0.1],"y2":[-0.8],"x3":[0,0,0],"x4":[1,1,-1],"y4":[1,1,1],"off":[0,1]}';
+	  rebuilder();
+	  break;
+	case 2:
+		div.value = '{"num":55,"scale":[2,8,2],"ss":0.98,"leaves":1,"divs":7,"rads":2,"leaf1ss":0.98,"leaf0ss":0.98,"fruit":true,"term0":0,"term1":1,"term2":2,"leafDiv1":3,"jScale2":[1,6,1],"leafJoints":[10,30]}';
+		divAnim.value = '{"x1":[0,0.1,0.2,0.3,0],"x2":[0,-0.5,-0.6],"y1":[0.1,0.2],"y2":[-0.8],"x3":[24,24,1]}';
+		rebuilder();
+		break;
+	case 3:
+		div.value = '{"num":25,"scale":[5,16,5],"ss":0.95,"leaves":2,"divs":10,"rads":2,"leafss":[0.95,0.95,0.2],"leafDivs":[2,4,2],"fruit":true,"term":[0,1,2,3],"leafJoints":[10,10,5],"jScale2":[2,10,2],"anim":{"num":2.7}}';
+		divAnim.value = '{"x1":[0,0,0],"x2":[0,0,0],"y1":[0,0,0],"y2":[0,0,0],"x3":[0,0,0]}';
+		rebuilder();
+		break;
+	default:
+	   div.value = '{"num":200,"scale":[2,8,2],"ss":1,"leaves":1,"divs":2,"rads":1,"leafss":[0.95,0.8,0.2],"leafDivs":[2,2,2],"fruit":true,"term":[0,1,2,3],"leafJoints":[10,15,10],"jScale1":[2,5,2],"anim":{"num":2.7}}';
+	
+	}
+	
 
 }
 
@@ -124,8 +163,8 @@ sc1 = function(){
 		f0.add(this.text, 'fruitSize',0.01,10);
 	
 	var f1 = gui.addFolder('motion');
-		f1.add(this.text, 'speed', -.0001, .1);
-		f1.add(this.text, 'speed2', 0,10);
+		f1.add(this.text, 'speed', 0, .1);
+		f1.add(this.text, 'speed2', 0.0000001,10);
 		f1.add(this.text, 'size', 1, 100);
 		f1.add(this.text, 'x', 0,.01);
 		f1.add(this.text, 'y', 0,.01);
@@ -219,7 +258,7 @@ sc1.prototype.addGeo = function(){
 
 	var div = document.getElementById('user');
 	var divAnim = document.getElementById('anim');
-	user.defaultValue = '{"num":25,"scale":[5,16,5],"ss":0.92,"leaves":2,"divs":5,"rads":2,"leaf1ss":0.9,"leaf0ss":0.9,"fruit":true,"term0":0,"term1":1,"term2":2,"leafDiv1":3,"jScale2":[1,6,1],"leafJoint2":8}';
+	user.defaultValue ='{"num":25,"scale":[5,16,5],"ss":0.92,"leaves":2,"divs":5,"rads":2,"leafss":[0.95,0.8,0.2],"leafDivs":[2,4,2],"fruit":true,"term":[0,1,2,3],"leafJoints":[10,10,10],"jScale2":[2,10,2],"anim":{"num":2.7}}';
 	anim.defaultValue = '{"x1":[0,0.1,0.2,0.3,0],"x2":[0,0,-0.6],"y1":[0.1,0.2],"y2":[-0.8],"x3":[1,1,1]}';
 	
 	var your_object = JSON.parse(user.value);
@@ -235,7 +274,7 @@ sc1.prototype.addGeo = function(){
 	
 	//align(mesh,dir,1);
 	
-	this.scene.add(mesh);
+	//this.scene.add(mesh);
 	
 	
 	
@@ -243,17 +282,20 @@ sc1.prototype.addGeo = function(){
 
 	for ( var i = 0 ; i < 1 ; i++){
 	
-		var cuber = new peep(parms);
+		var cuber = new peep(your_object);
+		
+		cuber.makeParams(your_object);
+		console.log(JSON.stringify(cuber.p));
 
-		cuber.branchSquares(your_object);
+		cuber.branchSquares();
 		console.log(cuber);
 		cuber.big.position.y = -100;
 		
 		this.rotator.add(cuber.big);
+
 		this.scene.add(this.rotator);
 		things.push(cuber);
-		things[i].animVals = cuber.options.anim;
-		//console.log(things[i].animVals);
+		things[i].animVals = cuber.p.anim;
 		
 		for(key in this.animObject){
 			if(this.animObject[key] instanceof Array){
@@ -281,64 +323,64 @@ sc1.prototype.moveThings = function(){
 	
 		var thing = things[j];
 		
-		for (var q = 0 ; q <= thing.leaves ; q++){
+		for (var q = 0 ; q <= thing.p.leaves ; q++){
 		
 			if(this.animObject.x1 !== undefined)
 			var myx1 = ( this.animObject.x1[q] === undefined ) ? 0:this.animObject.x1[q];
-			else myx1 = thing.options.anim.def[q];
+			else myx1 = thing.p.anim.def[q];
 			if(this.animObject.y1 !== undefined)
 			var myy1 = ( this.animObject.y1[q] === undefined ) ? 0:this.animObject.y1[q];
-			else myy1 = thing.options.anim.def[q];
+			else myy1 = thing.p.anim.def[q];
 			if(this.animObject.z1 !== undefined)
 			var myz1 = ( this.animObject.z1[q] === undefined ) ? 0:this.animObject.z1[q];
-			else myz1 = thing.options.anim.def[q];
+			else myz1 = thing.p.anim.def[q];
 			if(this.animObject.x2 !== undefined)
 			var myx2 = ( this.animObject.x2[q] === undefined ) ? 0:this.animObject.x2[q];
-			else myx2 = thing.options.anim.def[q];
+			else myx2 = thing.p.anim.def[q];
 			if(this.animObject.y2 !== undefined)
 			var myy2 = ( this.animObject.y2[q] === undefined ) ? 0:this.animObject.y2[q];
-			else myy2 = thing.options.anim.def[q];
+			else myy2 = thing.p.anim.def[q];
 			if(this.animObject.z2 !== undefined)
 			var myz2 = ( this.animObject.z2[q] === undefined ) ? 0:this.animObject.z2[q];
-			else myz2 = thing.options.anim.def[q];
+			else myz2 = thing.p.anim.def[q];
 			if(this.animObject.x3 !== undefined)
 			var myx3 = ( this.animObject.x3[q] === undefined ) ? 0:this.animObject.x3[q];
-			else myx3 = thing.options.anim.def[q];
+			else myx3 = thing.p.anim.def[q];
 			if(this.animObject.y3 !== undefined)
 			var myy3 = ( this.animObject.y3[q] === undefined ) ? 0:this.animObject.y3[q];
-			else myy3 = thing.options.anim.def[q];
+			else myy3 = thing.p.anim.def[q];
 			if(this.animObject.z3 !== undefined)
 			var myz3 = ( this.animObject.z3[q] === undefined ) ? 0:this.animObject.z3[q];
-			else myz3 = thing.options.anim.def[q];
+			else myz3 = thing.p.anim.def[q];
 			if(this.animObject.x4 !== undefined)
 			var myx4 = ( this.animObject.x4[q] === undefined ) ? 0:this.animObject.x4[q];
-			else myx4 = thing.options.anim.def[q];
+			else myx4 = thing.p.anim.def[q];
 			if(this.animObject.y4 !== undefined)
 			var myy4 = ( this.animObject.y4[q] === undefined ) ? 0:this.animObject.y4[q];
-			else myy4 = thing.options.anim.def[q];
+			else myy4 = thing.p.anim.def[q];
 			if(this.animObject.z4 !== undefined)
 			var myz4 = ( this.animObject.z4[q] === undefined ) ? 0:this.animObject.z4[q];
-			else myz4 = thing.options.anim.def[q];
+			else myz4 = thing.p.anim.def[q];
 			//if(this.animObject.def !== undefined)
 			//var myx1 = ( this.animObject.def[q] === undefined ) ? 0:this.animObject.def[q];
-		//	else myx1 = thing.options.anim.def[q];
-			
+		//	else myx1 = thing.defaults.anim.def[q];
+			//console.log(myx1);
 
 		
-			thing.options.anim.x1[q] = this.text["x1-"+q] + myx1;
-			thing.options.anim.y1[q] = this.text["y1-"+q] + myy1;
-			thing.options.anim.z1[q] = this.text["z1-"+q] + myz1;
-			thing.options.anim.x2[q] = this.text["x2-"+q] + myx2;
-			thing.options.anim.y2[q] = this.text["y2-"+q] + myy2;
-			thing.options.anim.z2[q] = this.text["z2-"+q] + myz2;
-			thing.options.anim.x3[q] = this.text["x3-"+q] + myx3;
-			thing.options.anim.y3[q] = this.text["y3-"+q] + myy3;
-			thing.options.anim.z3[q] = this.text["z3-"+q] + myz3;
-			thing.options.anim.x4[q] = this.text["x4-"+q] + myx4;
-			thing.options.anim.y4[q] = this.text["y4-"+q] + myy4;
-			thing.options.anim.z4[q] = this.text["z4-"+q] + myz4;
-			thing.options.anim.off[q] = this.text["off-"+q];
-			thing.options.anim.sc[q] = this.text["sc-"+q];
+			thing.p.anim.x1[q] = this.text["x1-"+q] + myx1;
+			thing.p.anim.y1[q] = this.text["y1-"+q] + myy1;
+			thing.p.anim.z1[q] = this.text["z1-"+q] + myz1;
+			thing.p.anim.x2[q] = this.text["x2-"+q] + myx2;
+			thing.p.anim.y2[q] = this.text["y2-"+q] + myy2;
+			thing.p.anim.z2[q] = this.text["z2-"+q] + myz2;
+			thing.p.anim.x3[q] = this.text["x3-"+q] + myx3;
+			thing.p.anim.y3[q] = this.text["y3-"+q] + myy3;
+			thing.p.anim.z3[q] = this.text["z3-"+q] + myz3;
+			thing.p.anim.x4[q] = this.text["x4-"+q] + myx4;
+			thing.p.anim.y4[q] = this.text["y4-"+q] + myy4;
+			thing.p.anim.z4[q] = this.text["z4-"+q] + myz4;
+			thing.p.anim.off[q] = this.text["off-"+q];
+			thing.p.anim.sc[q] = this.text["sc-"+q];
 		}
 
 		
@@ -347,13 +389,13 @@ sc1.prototype.moveThings = function(){
 		
 		}
 		
-		thing.options.anim.size = this.text.size;
-		thing.options.anim.x = this.text.x;
-		thing.options.anim.y = this.text.y;
-		thing.options.anim.z = this.text.z;
+		thing.p.anim.size = this.text.size;
+		thing.p.anim.x = this.text.x;
+		thing.p.anim.y = this.text.y;
+		thing.p.anim.z = this.text.z;
 		
 		thing.animate();
-		thing.options.anim.num-=this.text.speed*this.text.speed2;
+		thing.p.anim.num-=this.text.speed*this.text.speed2;
 	}	
 	
 	var rot = new THREE.Vector3(this.text.rotatorx,this.text.rotatory,this.text.rotatorz);
@@ -362,17 +404,16 @@ sc1.prototype.moveThings = function(){
 }
 
 sc1.prototype.animate = function(){
-
-	//console.log(rebuild);
+	
 	if(rebuild){
-		
 		//make a fake tree
-		
 		if(helpGeo){
 			var tree = new THREE.Object3D();
-			tree.add(makeLimbGeo(things[0],.5));
+			for (var i in things){
+				tree.add(makeLimbGeo(things[i],.5));
+			}
 		}
-		//console.log(things[0].msh);
+		
 		things = [];
 		killEverything(scene);
 		this.addGeo();
@@ -381,7 +422,7 @@ sc1.prototype.animate = function(){
 			this.scene.add(tree);
 			things[0].msh.push(tree.children[0].children[0]);
 		}
-		//console.log(things);
+		
 		rebuild = false;
 	}
 	//this.render();
@@ -432,7 +473,6 @@ function onDocumentMouseUp( event ) {
 }
 
 
-
 function saver() {
 
 	//if(evt.keyCode == 65){
@@ -442,10 +482,18 @@ function saver() {
 		
 		//console.log(tree.children.length);
 		//things[0].big.scale.x = .01;
-
+		//things[0].big.position.y = 0;
+		
 		for (var i = 0 ; i < things[0].msh.length ; i++){
-			output += THREE.saveGeometryToObj4(things[0].msh[i],j,1);
-			j += things[0].msh[i].geometry.vertices.length;
+			
+
+			
+			//grrr - somehow two extra objects are being added to the msh array - so I'm manually skipping them, messy
+			if(i == things[0].msh.length-2 || i == things[0].msh.length-3) i++;
+			else{
+				output += THREE.saveGeometryToObj4(things[0].msh[i],j,.0002);
+				j += things[0].msh[i].geometry.vertices.length;
+			}
 		}
 		
 		//console.log(output);

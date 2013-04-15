@@ -56,7 +56,8 @@
 		<div id="container" style="position:absolute"></div>
 		
 		<script src="js/three/build/three.min.js"></script>
-		
+		<script src="js/libs/LobserCollection.js"></script>
+		<script src="js/libs/jquery.js"></script>
 		<script src="js/libs/ImprovedNoise.js"></script>
 
 		<script src="js/three/js/controls/OrbitControls.js"></script>
@@ -65,7 +66,7 @@
 		<script src="js/three/js/libs/stats.min.js"></script>
 		
 		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
-		<script src="js/libs/LobserCollection.js"></script>
+		
 		<script src="js/libs/filesaver.js"></script>
 
 		<script src="js/libs/three/build/three.min.js"></script>
@@ -84,13 +85,22 @@
 	
 		<div style="position:absolute;line-height:.3em;padding-left:10px">
 			<h2>Turbine</h2><br>
+			<select id="select">
+				<option value="1">A nice tree</option>
+				<option value="2">zoetrope base</option>
+				<option value="3">sea tentacles</option>
+				<option value="4">vanilla starter</option>
+			</select>
+<br><br></br>
+<input type="button" id="buttonid" value="applyPreset" onclick="applyPreset()" style="padding:10"><br><br><br></br>
+<!--
 			<p>leaf#ss = scale factor - between .9 and 1.1 is suggested</p><br>
 			<p>leafJoint# = amount of joints on branch, not too many or crash!</p><br>
 			<p>jScale# = scale for branch,requires array with 3 values - [1,2,3]</p><br>
 			<p>leafDiv# = number of divisions on the branch</p><br><br>
 			<p>term# = # of leaves minus this number determines if fruit goes here</p><br>
 			<p>fruit = boolean - adds balls to the end of branches based on 'term' settings</br></br></br>
-			
+			-->
 			<p>format is JSON</p><br>
 			<p>example: -   "leaf2ss":3,  - </p><br>
 			
@@ -99,7 +109,7 @@
 			<textarea id="anim"  name="anim" cols="100" rows="10"></textarea><br>
 			
 			<input type="button" id="buttonid" value="rebuild" onclick="rebuilder()">
-			<input type="button" id="buttonid" value="save" onclick="saver()">
+			<input type="button" id="buttonid" value="save.obj" onclick="saver()">
 			<input type="button" id="buttonid" value="helperGeo" onclick="helperGeo()">
 			
 		</div>

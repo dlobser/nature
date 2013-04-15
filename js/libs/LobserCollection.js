@@ -126,7 +126,7 @@ function clone(obj) {
 }
 
 function killEverything(scene){
-	console.log(scene.scene.children);
+	//console.log(scene.scene.children);
 	var l = scene.scene.children.length;
 
 	//remove everything
@@ -179,6 +179,16 @@ return s;
 
 //var rotWorldMatrix;
 
+function debug(stringer,bool){
+
+	byul = bool || true;
+
+	if(byul){
+		console.log(stringer);
+	}
+
+}
+
 function rotateAroundWorldAxis(object, axis, radians) {
     rotWorldMatrix = new THREE.Matrix4();
     rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
@@ -187,6 +197,23 @@ function rotateAroundWorldAxis(object, axis, radians) {
     object.rotation.setEulerFromRotationMatrix(object.matrix, object.scale);
 }
 
+function parameters2(params,defaults){
+
+	this.params = params;
+	this.defaults = defaults;
+	this.all = $.extend(this.defaults,this.params);	
+	
+	this.getter = function(string){
+	/*
+		if (this.params.hasOwnProperty(string){
+			return this.params[string]
+		}else{
+			return this.defaults[string]
+		}
+		*/
+	}
+	
+}
 
 THREE.saveGeometryToObj4 = function (geo,nums,scalar) {
 
@@ -198,9 +225,9 @@ THREE.saveGeometryToObj4 = function (geo,nums,scalar) {
 	for (i = 0; i < geo.geometry.vertices.length; i++) {
 
 		var vector = new THREE.Vector3( geo.geometry.vertices[i].x, geo.geometry.vertices[i].y, geo.geometry.vertices[i].z );
-		vector.multiplyScalar(scalar);
-		geo.matrixWorld.multiplyVector3( vector );
 		
+		geo.matrixWorld.multiplyVector3( vector );
+		vector.multiplyScalar(scalar);
 		//vector.applyProjection( matrix )
 		
 		s+= 'v '+(vector.x) + ' ' +
