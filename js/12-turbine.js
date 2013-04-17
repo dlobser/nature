@@ -1,26 +1,43 @@
+/*
+todo - incorporate offset into the anim params
+figure out how to rotate around arbitrary axis
+add scale controls for helper geo and exporter
+make better camera controls - or see if you can just orbit when something is true
+add controller to grow limbs, one after the next
+see why built in per limb ss is setting position of joints incorrectly
+add a way for subleafs to see where they are on the bigger tree
+
+
+*/
+
 var num = 0;
 var rebuild = false;
 var things = [];
 var boxes = [];
 var vector = new THREE.Vector3(0,0,0);
 var objRotate = false;
+var sizeCounter=0;
 var helpGeo = false;
-
-rebuilder = function(){
-
-	//console.log(user.value);
-	//console.log(anim.value);
-	//console.log(JSON.stringify(things[0].p));
-	console.log(things[0].p);
-	//console.log($.extend(things[0].p,this.animObject));	
-	rebuild = true;
-
-}
+var paint = [];
 
 helperGeo = function(){
 
 	helpGeo = !helpGeo;
 
+}
+
+writePaint = function(){
+
+	saver2();
+}
+
+slidersToParams = function(){
+	var div = document.getElementById('user');
+	var options = document.getElementById('select').options;
+	//var divAnim = document.getElementById('anim');
+	
+	div.value = JSON.stringify(things[0].p);
+	//divAnim.value = "{}";	
 }
 
 applyPreset = function(){
@@ -32,23 +49,20 @@ applyPreset = function(){
 	switch(options.selectedIndex)
 	{
 	case 0:
-		div.value = '{"num":25,"scale":[5,16,5],"ss":0.92,"leaves":2,"divs":5,"rads":2,"leafss":[0.95,0.8,0.2],"leafDivs":[2,4,2],"fruit":true,"term":[0,1,2,3],"leafJoints":[10,10,10],"jScale2":[2,10,2],"anim":{"num":2.7}}';
-		divAnim.value = '{"x1":[0,0.1,0.2,0.3,0],"x2":[0,0,-0.6],"y1":[0.1,0.2],"y2":[-0.8],"x3":[1,1,1]}';
+		div.value = '{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":47.94137209302124,"speed":0.01127554615926709,"speed2":5.073995820930233,"num":-214.52494437326584,"x":0.0020954678614509737,"y":0.0014658210007047218,"z":0,"x1":[0,0,0.2,0.3,0],"y1":[0.1,0],"z1":[0,null],"x2":[0,1.1567879926008926,0],"y2":[-0.8,null],"z2":[0,null],"x3":[0.07505285412262153,1.5464428953717198,1],"y3":[0.2441860465116279,null],"z3":[0,null],"x4":[0,null],"y4":[0,null],"z4":[0,null],"off":[0,0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":20,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":1,"leaves":1,"divs":20,"rads":25,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,20],"leafDivs":[2,4],"leafss":[0.96,0.95],"angles":[0.6283185307179586,0.6283185307179586],"term":[0,1],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":3,"y":12,"z":3}],"leafRads":[25,25]}';
 		rebuilder();
 		break;
 	case 1:
-	  div.value = '{"num":200,"scale":[2,8,2],"ss":1,"leaves":1,"divs":2,"rads":1,"leafss":[0.95,0.8,0.2],"leafDivs":[2,2,2],"fruit":true,"term":[0,1,2,3],"leafJoints":[10,15,10],"jScale1":[2,5,2],"anim":{"num":2.7}}';
-	  divAnim.value = '{"x1":[0,0,0],"x2":[0,0.9,0],"y1":[0.0051],"z1":[0.1],"y2":[-0.8],"x3":[0,0,0],"x4":[1,1,-1],"y4":[1,1,1],"off":[0,1]}';
+	  div.value = '{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":29.584678959158914,"speed":0.014337411683611925,"speed2":7.278993651197657,"num":-352.6514378402901,"x":0.005073237980354989,"y":0,"z":0,"x1":[0,0.1,0.2,0.3,0],"y1":[0.1,0.2],"z1":[0],"x2":[0,0,0],"y2":[-0.8],"z2":[0],"x3":[0.45950370498018267,1,1],"y3":[0],"z3":[0],"x4":[0],"y4":[0],"z4":[0],"off":[0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":75,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":0,"divs":5,"rads":2,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10],"leafDivs":[2],"leafss":[0.95],"angles":[0.6283185307179586],"term":[0],"jScale":[{"x":-1,"y":-1,"z":-1}],"leafRads":[2]}';
 	  rebuilder();
 	  break;
 	case 2:
-		div.value = '{"num":55,"scale":[2,8,2],"ss":0.98,"leaves":1,"divs":7,"rads":2,"leaf1ss":0.98,"leaf0ss":0.98,"fruit":true,"term0":0,"term1":1,"term2":2,"leafDiv1":3,"jScale2":[1,6,1],"leafJoints":[10,30]}';
-		divAnim.value = '{"x1":[0,0.1,0.2,0.3,0],"x2":[0,-0.5,-0.6],"y1":[0.1,0.2],"y2":[-0.8],"x3":[24,24,1]}';
+		div.value = '{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":15.787641392383241,"num":-60.56000000000387,"x":0.007499569188350853,"y":0.0001,"z":0.0001,"x1":[0,-0.254175038921318,-0.0809353957800576,0.3,0],"y1":[0.1,0.2,null],"z1":[0,null,null],"x2":[0,0.750614891297992,0],"y2":[-0.8,null,null],"z2":[0,null,null],"x3":[0.2,0.2,1.5707963267948966],"y3":[0,null,null],"z3":[0,null,null],"x4":[0,null,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,0,0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":25,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.96,"leaves":2,"divs":10,"rads":2,"animFunc":"if(q>0)this.branches[i][1].parent.parent.parent.rotation.y += .0051;","fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10,10],"leafDivs":[2,10,2],"leafss":[0.95,0.8,0.2],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":1,"y":13,"z":1}],"leafRads":[2,5,2]}';
+		
 		rebuilder();
 		break;
 	case 3:
-		div.value = '{"num":25,"scale":[5,16,5],"ss":0.95,"leaves":2,"divs":10,"rads":2,"leafss":[0.95,0.95,0.2],"leafDivs":[2,4,2],"fruit":true,"term":[0,1,2,3],"leafJoints":[10,10,5],"jScale2":[2,10,2],"anim":{"num":2.7}}';
-		divAnim.value = '{"x1":[0,0,0],"x2":[0,0,0],"y1":[0,0,0],"y2":[0,0,0],"x3":[0,0,0]}';
+		div.value = '{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":36.64623255813561,"speed":0.04397463002114165,"speed2":5.75052858372093,"num":-1240.0682519908075,"x":0.002255109231853418,"y":0.0029316420014094437,"z":0,"x1":[0,0.4,-0.4,0],"y1":[-0.003875968992248069,0.1,null],"z1":[0,null,null],"x2":[0,-0.6,-1.2],"y2":[-0.015151515151515138,null,null],"z2":[0,null,null],"x3":[0,0.3066318411009066,null],"y3":[0.18780831571529244,null,null],"z3":[0,null,null],"x4":[0,1.5707963267948966,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,-0.032346723044397466,0],"sc":[0.95,0.98,0.8],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":25,"scale":[12,12,12],"sx":12,"sy":12,"sz":12,"ss":1,"leaves":2,"divs":9,"rads":2,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,30,6],"leafDivs":[2,5,6],"leafss":[0.95,1,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[2,1,1]}';
 		rebuilder();
 		break;
 	default:
@@ -75,8 +89,8 @@ sc1 = function(){
 	var starfield = function()
 	{
 		this.speed = 0.01;
-		this.speed2 = 1;
-		this.size = 43.9;
+		this.speed2 = 2;
+		this.size = 1;
 		this.x = 0.0001;
 		this.y = 0.0001;
 		this.z = 0.0001;
@@ -180,7 +194,7 @@ sc1 = function(){
 	//	console.log("rArm: " + rAm);
 		this['fol'+i] = gui.addFolder('level' + i);
 		
-		this['fol'+i].add(this.text, 'x1-'+i, -rAm,rAm);
+		this['fol'+i].add(this.text, 'x1-'+i, -rAm,rAm).listen();
 		this['fol'+i].add(this.text, 'y1-'+i, -rAm,rAm);
 		this['fol'+i].add(this.text, 'z1-'+i, -rAm,rAm);
 		
@@ -198,10 +212,10 @@ sc1 = function(){
 		
 		this['fol'+i].add(this.text, 'off-'+i, -.1,.1);
 		
-		this['fol'+i].add(this.text, 'sc-'+i, .8,1.5);
+		this['fol'+i].add(this.text, 'sc-'+i, .8,1.5).listen();
 		
 	}
-
+//console.log(this.text);
 //	gui.add(this.text, 'sizerx', 0,10);
 //	gui.add(this.text, 'sizery', 0,10);
 //	gui.add(this.text, 'sizerz', 0,10);
@@ -257,38 +271,24 @@ sc1.prototype.addGeo = function(){
 	var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
 
 	var div = document.getElementById('user');
-	var divAnim = document.getElementById('anim');
-	user.defaultValue ='{"num":25,"scale":[5,16,5],"ss":0.92,"leaves":2,"divs":5,"rads":2,"leafss":[0.95,0.8,0.2],"leafDivs":[2,4,2],"fruit":true,"term":[0,1,2,3],"leafJoints":[10,10,10],"jScale2":[2,10,2],"anim":{"num":2.7}}';
-	anim.defaultValue = '{"x1":[0,0.1,0.2,0.3,0],"x2":[0,0,-0.6],"y1":[0.1,0.2],"y2":[-0.8],"x3":[1,1,1]}';
+	//var divAnim = document.getElementById('anim');
+	user.defaultValue ='{"num":25,"scale":[5,8,5],"ss":0.96,"leaves":1,"divs":5,"rads":2,"leafss":[0.95,0.8,0.2],"leafDivs":[2,4,2],"fruit":true,"term":[0,1,2,3],"leafJoints":[10,10,10],"jScale2":[3,3,3],"anim":{"x1":[0,0.1,0.2,0.3,0],"x2":[0,0,0],"y1":[0.1,0.2],"y2":[-0.8],"x3":[1,1,1]}}';
+	
 	
 	var your_object = JSON.parse(user.value);
-	this.animObject = JSON.parse(anim.value);
-
 	var parms={color1:0x225577,color2:0xbbffdd,color3:0x0099ff};
-	
 	this.rotator = new THREE.Object3D(0,0,0);
-	
 	var mesh = new THREE.Mesh(geometry);
-	
 	var dir = new THREE.Vector3(.1,.5,-.4);
-	
-	//align(mesh,dir,1);
-	
-	//this.scene.add(mesh);
-	
-	
-	
-	
-
+	console.log(your_object);
 	for ( var i = 0 ; i < 1 ; i++){
 	
 		var cuber = new peep(your_object);
 		
 		cuber.makeParams(your_object);
-		console.log(JSON.stringify(cuber.p));
-
+		//console.log(JSON.stringify(cuber.p));
+		//console.log(cuber.joints);
 		cuber.branchSquares();
-		console.log(cuber);
 		cuber.big.position.y = -100;
 		
 		this.rotator.add(cuber.big);
@@ -297,6 +297,38 @@ sc1.prototype.addGeo = function(){
 		things.push(cuber);
 		things[i].animVals = cuber.p.anim;
 		
+		for(var i = 0 ; i < cuber.branches.length ; i++){
+			
+				//console.log(cuber.branches[i][0].parent.parent.rotation.y);
+			
+		
+		}
+		for (var q = 0 ; q <= things[0].p.leaves ; q++){
+		
+			this.text["x1-"+q]=things[0].p.anim.x1[q];
+			this.text["y1-"+q]=things[0].p.anim.y1[q];
+			this.text["z1-"+q]=things[0].p.anim.z1[q];
+			this.text["x2-"+q]=things[0].p.anim.x2[q];
+			this.text["y2-"+q]=things[0].p.anim.y2[q];
+			this.text["z2-"+q]=things[0].p.anim.z2[q];
+			this.text["x3-"+q]=things[0].p.anim.x3[q];
+			this.text["y3-"+q]=things[0].p.anim.y3[q];
+			this.text["z3-"+q]=things[0].p.anim.z3[q];
+			this.text["x4-"+q]=things[0].p.anim.x4[q];
+			this.text["y4-"+q]=things[0].p.anim.y4[q];
+			this.text["z4-"+q]=things[0].p.anim.z4[q];
+			this.text["sc-"+q]=things[0].p.anim.sc[q];
+			
+		}
+		
+		this.text.speed = things[0].p.anim.speed;
+		this.text.speed2 = things[0].p.anim.speed2;
+		this.text.x = things[0].p.anim.x;
+		this.text.y = things[0].p.anim.y;
+		this.text.z = things[0].p.anim.z;
+		this.text.size = things[0].p.anim.size;
+		
+		//this.text
 		for(key in this.animObject){
 			if(this.animObject[key] instanceof Array){
 				for( i in this.animObject[key] )
@@ -324,7 +356,7 @@ sc1.prototype.moveThings = function(){
 		var thing = things[j];
 		
 		for (var q = 0 ; q <= thing.p.leaves ; q++){
-		
+		/*
 			if(this.animObject.x1 !== undefined)
 			var myx1 = ( this.animObject.x1[q] === undefined ) ? 0:this.animObject.x1[q];
 			else myx1 = thing.p.anim.def[q];
@@ -361,26 +393,36 @@ sc1.prototype.moveThings = function(){
 			if(this.animObject.z4 !== undefined)
 			var myz4 = ( this.animObject.z4[q] === undefined ) ? 0:this.animObject.z4[q];
 			else myz4 = thing.p.anim.def[q];
-			//if(this.animObject.def !== undefined)
-			//var myx1 = ( this.animObject.def[q] === undefined ) ? 0:this.animObject.def[q];
-		//	else myx1 = thing.defaults.anim.def[q];
-			//console.log(myx1);
+			if(this.animObject.off !== undefined)
+			var myOff = ( this.animObject.off[q] === undefined ) ? 0:this.animObject.off[q];
+			else myOff = thing.p.anim.off[q];
+			if(this.animObject.sc !== undefined)
+			var mysc = ( this.animObject.sc[q] === undefined ) ? 0:this.animObject.sc[q];
+			else mysc = thing.p.anim.sc[q];
+			*/
 
-		
-			thing.p.anim.x1[q] = this.text["x1-"+q] + myx1;
-			thing.p.anim.y1[q] = this.text["y1-"+q] + myy1;
-			thing.p.anim.z1[q] = this.text["z1-"+q] + myz1;
-			thing.p.anim.x2[q] = this.text["x2-"+q] + myx2;
-			thing.p.anim.y2[q] = this.text["y2-"+q] + myy2;
-			thing.p.anim.z2[q] = this.text["z2-"+q] + myz2;
-			thing.p.anim.x3[q] = this.text["x3-"+q] + myx3;
-			thing.p.anim.y3[q] = this.text["y3-"+q] + myy3;
-			thing.p.anim.z3[q] = this.text["z3-"+q] + myz3;
-			thing.p.anim.x4[q] = this.text["x4-"+q] + myx4;
-			thing.p.anim.y4[q] = this.text["y4-"+q] + myy4;
-			thing.p.anim.z4[q] = this.text["z4-"+q] + myz4;
+			//var tempx1 = this.text["x1-"+q] + thing.p.anim.x1[q];
+			//thing.p.anim.x1[q] = tempx1;
+			
+			thing.p.anim.x1[q] = this.text["x1-"+q];
+			thing.p.anim.y1[q] = this.text["y1-"+q];
+			
+			thing.p.anim.z1[q] = this.text["z1-"+q];
+			thing.p.anim.x2[q] = this.text["x2-"+q];
+			thing.p.anim.y2[q] = this.text["y2-"+q];
+			thing.p.anim.z2[q] = this.text["z2-"+q];
+			thing.p.anim.x3[q] = this.text["x3-"+q];
+			thing.p.anim.y3[q] = this.text["y3-"+q];
+			thing.p.anim.z3[q] = this.text["z3-"+q];
+			thing.p.anim.x4[q] = this.text["x4-"+q];
+			thing.p.anim.y4[q] = this.text["y4-"+q];
+			thing.p.anim.z4[q] = this.text["z4-"+q];
 			thing.p.anim.off[q] = this.text["off-"+q];
-			thing.p.anim.sc[q] = this.text["sc-"+q];
+			thing.p.anim.sc[q] = this.text["sc-"+q];// + mysc;
+			
+			
+			//thing.p.anim.off[q] = this.text["off-"+q] + myOff;
+			//thing.p.anim.sc[q] = this.text["sc-"+q];// + mysc;
 		}
 
 		
@@ -389,10 +431,14 @@ sc1.prototype.moveThings = function(){
 		
 		}
 		
-		thing.p.anim.size = this.text.size;
+		thing.p.anim.size = this.text.size+ sizeCounter;
 		thing.p.anim.x = this.text.x;
 		thing.p.anim.y = this.text.y;
 		thing.p.anim.z = this.text.z;
+		thing.p.anim.speed = this.text.speed;
+		thing.p.anim.speed2 = this.text.speed2;
+		
+		sizeCounter+=.001;
 		
 		thing.animate();
 		thing.p.anim.num-=this.text.speed*this.text.speed2;
@@ -404,6 +450,11 @@ sc1.prototype.moveThings = function(){
 }
 
 sc1.prototype.animate = function(){
+
+	//console.log("HIHIHI");
+	//console.log(this.text);
+	
+
 	
 	if(rebuild){
 		//make a fake tree
@@ -503,4 +554,49 @@ function saver() {
 		saveAs(blob, "tree.obj");
 	//}
 	
+}
+
+
+function saver2() {
+
+	alert("saving!");
+	var j = 0;
+	var output = "";
+	
+	for (var i = 0 ; i < paint.length ; i++){
+		output += paint[i];
+		output += ",";
+	}
+	
+	output.replace("undefined","");
+	alert("saved!");
+	var blob = new Blob([output], {type: "text/plain;charset=ANSI"});
+	saveAs(blob, "drawing.txt");
+	
+}
+
+
+rebuilder = function(){
+	var that = this;
+	//console.log(user.value);
+	//console.log(anim.value);
+	console.log(JSON.stringify(things[0].p));
+	//console.log(things[0].p);
+	//console.log($.extend(things[0].p,this.animObject));	
+	rebuild = true;
+	
+
+}
+
+window.onkeyup = onKeyUp;
+window.onkeypress = onKeyPress;
+
+
+
+function onKeyUp(evt) {
+
+	if(evt.keyCode == 65){
+		console.log(evt.keyCode);
+		$("#.enu").css("position","relative");
+	}
 }

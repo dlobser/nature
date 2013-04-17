@@ -36,6 +36,7 @@ function peep(params){
 	this.sc = [];
 	this.rt = [];
 	this.pos = [];
+	this.joints = [];
 	
 }
 
@@ -155,6 +156,8 @@ peep.prototype = {
 			
 			anim:{
 				size:0,
+				speed:0,
+				speed2:0,
 				num:0,
 				x:0,
 				y:0,
@@ -183,23 +186,26 @@ peep.prototype = {
 		
 		for (key in this.p.anim){
 			if (this.p.anim[key] instanceof Array){
-				this.p.anim[key] = Array.apply(null, new Array(10)).map(Number.prototype.valueOf,0);
+				this.p.anim[key] = Array.apply(null, new Array(this.p.leaves)).map(Number.prototype.valueOf,0);
 			}
 		}
-
+		
+		
 		this.p.anim.sc = Array.apply(null, new Array(10)).map(Number.prototype.valueOf,1);
-	
-	
+		this.p.anim = $.extend(this.p.anim,params.anim);
 		this.p.fruitSize = new THREE.Vector3(5,5,5);
 		
 		//number of joints on each branch
+		
 		this.p.num = (params.num!==undefined) ? params.num : 10;
+		this.p.scale  = (params.scale!==undefined) ? params.scale : [2,10,2];
 		this.p.sx  = (params.scale!==undefined) ? params.scale[0] : 2;
 		this.p.sy  = (params.scale!==undefined) ? params.scale[1] : 10;
 		this.p.sz  = (params.scale!==undefined) ? params.scale[2] : 2;
 		//scalar value
 		this.p.ss  = (params.ss!==undefined) ? params.ss : 1;
-		
+		console.log(params.anim);
+		console.log(this.p.anim);
 		//number of times to branch
 		this.p.leaves 	= (params.leaves!==undefined) ? params.leaves : 3;
 		
@@ -208,11 +214,18 @@ peep.prototype = {
 		
 		//when branches branch, how many times
 		this.p.rads 	= (params.rads!==undefined) ? params.rads : 2;
+		this.p.animFunc 	= (params.animFunc!==undefined) ? params.animFunc : 2;
 		
 		//whether there is fruit or not
 		this.p.fruit 	= (params.fruit!==undefined) ? params.fruit : false;
 		this.p.fruitScale = (params.fruitScale!==undefined) ? params.fruitScale : this.p.fruitSize;
 		
+		this.p.anim.speed = (params.anim != undefined && params.anim.speed!==undefined) ? params.anim.speed : 0.001;
+		this.p.anim.speed2  = (params.anim != undefined &&params.anim.speed2!==undefined) ? params.anim.speed2: 0.001;;
+		this.p.anim.x  = (params.anim != undefined &&params.anim.x!==undefined) ? params.anim.x : 0;
+		this.p.anim.y  = (params.anim != undefined &&params.anim.y!==undefined) ? params.anim.y : 0;
+		this.p.anim.z  = (params.anim != undefined &&params.anim.z!==undefined) ? params.anim.z : 0;
+		this.p.anim.size  = (params.anim != undefined &&params.anim.size!==undefined) ? params.anim.size : 1;
 		//this.p.leaves = leaves;
 		
 		this.p.leafJoints = [];
@@ -221,34 +234,35 @@ peep.prototype = {
 		this.p.angles = [];
 		this.p.term = [];
 		this.p.jScale = [];
+		this.p.leafRads = [];
 
 		
-		for ( var i = 0 ; i <= this.p.leaves ; i++){
+		for ( var i = 0 ; i < this.p.leaves ; i++){
 			this.p.angles[i] = (params["angle" + i]!==undefined) ? params["angle" + i] : Math.PI/5;
 			this.p.leafss[i] = (params["leaf" + i + "ss"]!==undefined) ? params["leaf" + i + "ss"] : this.p.ss;
 			this.p.leafJoints[i] = (params["leafJoint" + i]!==undefined) ? params["leafJoint" + i] : this.p.divs;
 			this.p.jScale[i] = (params["jScale" + i]!==undefined) ? new THREE.Vector3(params["jScale" + i][0],  params["jScale" + i][1],  params["jScale" + i][2]) : new THREE.Vector3(-1,-1,-1);
 			this.p.leafDivs[i] = (params["leafDiv" + i]!==undefined) ? params["leafDiv" + i] : this.p.divs;
-			//console.log(this.p.leafDivs[i]);
+			this.p.leafRads[i] = (params["leafRads" + i]!==undefined) ? params["leafRads" + i] : this.p.rads;
 		}
 		
-		
-		//console.log(params);
-		
+		console.log(params.angles);
 		for ( var i = 0 ; i <= this.p.leaves ; i++){
 		
 			this.p.angles[i] = (params.angles !== undefined && params.angles[i]!==undefined) ? params.angles[i] : Math.PI/5;
 			this.p.leafss[i] = (params.leafss !== undefined && params.leafss[i] !== undefined) ? params.leafss[i] : this.p.ss;
 			this.p.leafJoints[i] = (params.leafJoints !== undefined && params.leafJoints[i]!==undefined) ? params.leafJoints[i] : this.p.divs;
-			this.p.jScale[i] = (params.jScale !== undefined && params.jScale[i]!==undefined) ? new THREE.Vector3(params.jScale[i][0],  params.jScale[i][1],  params.jScale[i][2]) : new THREE.Vector3(-1,-1,-1);
-					if(params["jScale" + i]!==undefined) this.p.jScale[i] =  new THREE.Vector3(params["jScale" + i][0],  params["jScale" + i][1],  params["jScale" + i][2]);
+			this.p.jScale[i] = (params.jScale !== undefined && params.jScale[i]!==undefined) ? new THREE.Vector3(params.jScale[i].x,  params.jScale[i].y,  params.jScale[i].z) : new THREE.Vector3(-1,-1,-1);
+				if(params["jScale" + i]!==undefined) this.p.jScale[i] =  new THREE.Vector3(params["jScale" + i][0],  params["jScale" + i][1],  params["jScale" + i][2]);
 
 			this.p.leafDivs[i] = (params.leafDivs !== undefined && params.leafDivs[i]!==undefined) ? params.leafDivs[i] : this.p.divs;
 			this.p.term[i] = (params.term !== undefined && params.term[i]!==undefined) ? params.term[i] : -100;
-			//console.log(this.p.leafDivs[i]);
+			this.p.leafRads[i] = (params.leafRads !== undefined && params.leafRads[i]!==undefined) ? params.leafRads[i] : this.p.rads;
+			//	if(this.p.leafRads[i] == this.p.leafJoints[i]) this.p.leafRads[i]
 		}
 
-		
+		console.log(this.p);
+		console.log(params);
 		return this.p;
 	
 	},
@@ -308,41 +322,54 @@ peep.prototype = {
 				
 				this.big.idq = idq;
 				
-				var joint = new THREE.Object3D();
-							joint.matrixAutoUpdate = true;	
-							joint.updateMatrix();						
-							joint.name = "joint";
+				//var joint = new THREE.Object3D();
+				//			joint.matrixAutoUpdate = true;	
+				//			joint.updateMatrix();						
+				//			joint.name = "joint";
 							
 				
 				obj.children[0].add(stringer(this.big,num,id,num,leaf,len,sx*ss,sy*ss,sz*ss,ss,divs));
 				obj.children[0].num=num;
 				
 				//if we're terminal
+				
 				for ( var i = 0 ; i < that.p.term.length ; i++){
 					if(end && leaf == that.p.leaves-that.p.term[i]){
 					
 						if (that.p.fruit)
 							makeFruit();
-						else
-							makeSplit(1,2,2);
+						else{
+							console.log("fruit ain't true, and true ain't fruit");
+						}
 						
 					}
 				}
 				
+				var sub;
+				if(divs==1)
+					sub=0;
+				else
+					sub=1;
+				
 				//get variables then make new branches
-				if( num % divs == 0 && leaf < that.p.leaves && that.p.num > 1 ){
+				if( num % divs-sub == 0 && leaf < that.p.leaves && that.p.num > 1){
 				
 					//leaf increments per branch
 					var leafSS = that.p.leafss[leaf] || 1;
-					var angle  = that.p.angles[leaf] || Math.PI/5;
+					var angle  = (that.p.angles[leaf]!=undefined) ? that.p.angles[leaf] : Math.PI/5;
+					var myRads = that.p.leafRads[leaf] || 2;
 					
-					makeSplit(2,1,1,leafSS,angle);
+					console.log(that.p.angles[leaf]);
+					
+					makeSplit(2,1,1,leafSS,angle,myRads);
 				}
 				
 				//this is the function that creates branches
-				function makeSplit(child,numDiv,lenDiv,newSS,angle){
+				function makeSplit(child,numDiv,lenDiv,newSS,angle,rads){
 				
-					for (var i = 0 ; i < that.p.rads ; i ++){
+					for (var i = 0 ; i < rads ; i ++){
+					
+					
 							
 							var szr = new THREE.Vector3(sx,sy,sz);
 							var theseDivs = that.p.leafJoints[leaf+1];
@@ -352,14 +379,17 @@ peep.prototype = {
 						
 							joint.matrixAutoUpdate = true;	
 							joint.updateMatrix();						
-							joint.name = "joint";
+							joint.name = leaf;
+							that.joints.push(joint);
 							
+					console.log(obj.children[0]);
 							obj.children[0].add(joint);
-							obj.children[0].children[i+child].rotation.y = i*((Math.PI*2)/that.p.rads);
+							obj.children[0].children[i+child].rotation.y = i*((Math.PI*2)/rads);
 							obj.children[0].children[i+child].add(stringer(this.big,	theseDivs,0,	num,leaf+1,Math.floor(len/lenDiv), 	scalar.x,scalar.y,scalar.z,newSS,	divisions));
 							obj.children[0].children[i+child].children[0].rotation.x = angle;
 							obj.children[0].children[i+child].children[0].position.y = szr.y;
 							obj.children[0].children[i+child].children[0].children[0].children[0].scale = scalar;
+
 							
 						}
 				}
@@ -395,6 +425,11 @@ peep.prototype = {
 	},
 	
 	animate:function(){
+	
+		for(i in this.joints){
+			var thing = this.joints[i];
+		//	thing.rotation.y += .1;
+		}
 		for ( i in this.branches ){
 			if(i>=0){
 				//j is each branch
@@ -407,8 +442,18 @@ peep.prototype = {
 						
 							if( this.branches[i].name==q && j < this.branches[i].length-1 ){
 							
+								var idq = this.branches[i][1].idq;
+								var size = this.p.anim.size;
+								var num = this.p.anim.num;
+								var angle = this.branches[i][0].parent.parent.rotation.y;
+								var limbRot = this.branches[i][j].children[0].rotation;
+								var baseRot = this.branches[i][0].rotation;
+								
+								//this.branches[i][1].parent.parent.parent.rotation.y;
+								
 								var rot1 = new THREE.Vector3(this.p.anim.x1[q],this.p.anim.y1[q],this.p.anim.z1[q]);
 								var rot2 = new THREE.Vector3(this.p.anim.x2[q],this.p.anim.y2[q],this.p.anim.z2[q]);
+								//+ Math.sin(this.branches[i][0].parent.parent.rotation.y+this.p.anim.num)
 								
 								var sinR = new THREE.Vector3(
 									Math.sin(j*this.p.anim.x3[q]*3),
@@ -430,7 +475,7 @@ peep.prototype = {
 								
 								);
 								*/
-											var spine = new THREE.Vector3(
+								var spine = new THREE.Vector3(
 									this.p.anim.x4[q]*(Math.sin(this.branches[i][1].idq*this.p.anim.off[q]/this.p.anim.size)*((j+1)/100)),
 									this.p.anim.y4[q]*(Math.sin(this.branches[i][1].idq*this.p.anim.off[q]/this.p.anim.size)*((j+1)/100)),
 									this.p.anim.z4[q]*(Math.sin(this.branches[i][1].idq*this.p.anim.off[q]/this.p.anim.size)*((j+1)/100))
@@ -446,10 +491,19 @@ peep.prototype = {
 								);
 								
 								
-								this.branches[i][j].rotation = spine.add(rot1.add(motion));							
+								this.branches[i][j].rotation = spine.add(rot1.add(motion));		
+								
+								//console.log(q);
+								//if(q>0)console.log(this.branches[i][1].parent.parent.parent.rotation.y += .01);
 								this.branches[i][0].rotation = rot2;
 								//this.branches[i][j].children[0].rotation = R;
 								this.branches[i][j].scale = scalar;
+								
+								//if(this.p.animFunc!=undefined){
+									eval(this.p.animFunc);
+									//this.p.animFunc();
+								//}
+								
 							}
 						}
 					}
