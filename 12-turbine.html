@@ -96,18 +96,22 @@
 		
 		
 		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
-		<div style="margin-top:-50px">
-		<img src="images/ylem.png" padding="10px" alt="Ylem" height="500" width="250">
-		<p style="padding-left:10px">branching animation and modeling</p>
-		<div class="menu" style="position:absolute;line-height:.3em;padding-left:10px">
+		<div class="everything" style="margin-top:-50px">
+			<img src="images/ylem.png" padding="10px" alt="Ylem" height="500" width="250">
+			<p style="padding-left:10px">branching animation and modeling</p>
+			<div class="menu" style="position:absolute;line-height:.3em;padding-left:10px">
 			<select id="select">
 				<option value="1">Anemone my Enemy</option>
 				<option value="2">Tentacle Paintbrush</option>
 				<option value="3">Egg Beater</option>
 				<option value="4">The Aristocrat</option>
+				<option value="5">I Believe I Can Fly</option>
+				<option value="6">Cages</option>
+				<option value="7">For Amusement Only</option>
+				<option value="8">Something Wicked This Way Comes</option>
 			</select>
-<br><br></br>
-<input type="button" id="buttonid" value="applyPreset" onclick="applyPreset()" style="padding:10"><br><br><br></br>
+			<br><br></br>
+			<input type="button" id="buttonid" value="applyPreset" onclick="applyPreset()" style="padding:10"><br><br><br></br>
 <!--
 			<p>leaf#ss = scale factor - between .9 and 1.1 is suggested</p><br>
 			<p>leafJoint# = amount of joints on branch, not too many or crash!</p><br>
@@ -126,8 +130,8 @@
 			<input type="button" id="buttonid" value="helperGeo" onclick="helperGeo()"><br>
 			<input type="button" id="buttonid" value="slidersToParams" onclick="slidersToParams()">
 			<input type="button" id="buttonid" value="writePaint" onclick="writePaint()">
-			
-		</div>
+				
+			</div>
 		</div>
 		</body>
 		</html>
@@ -177,6 +181,7 @@ void draw(){
 			ellipse((-vector.z*7+width/2),-(vector.y*7-height/4),5,5);
 			paint.push(-vector.z);
 			paint.push(-(vector.y));
+			paint.push(up);
 			
 		}
 	}

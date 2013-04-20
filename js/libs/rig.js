@@ -332,19 +332,33 @@ peep.prototype = {
 				obj.children[0].num=num;
 				
 				//if we're terminal
-				
+			
 				for ( var i = 0 ; i < that.p.term.length ; i++){
 					if(end && leaf == that.p.leaves-that.p.term[i]){
 					
-						if (that.p.fruit)
+						if (that.p.fruit){
+							console.log("making fruit");
+							console.log(that.p.term);
 							makeFruit();
+							}
 						else{
 							console.log("fruit ain't true, and true ain't fruit");
 						}
 						
 					}
 				}
-				
+					/*
+				console.log("end: " + end);
+				console.log(that.p.term[leaf]);
+				if(end && that.p.term[leaf]==1){
+					console.log("whatsit");
+					if (that.p.fruit)
+						makeFruit();
+					else{
+						console.log("fruit ain't true, and true ain't fruit");
+				}
+				}
+				*/
 				var sub;
 				if(divs==1)
 					sub=0;
@@ -369,8 +383,7 @@ peep.prototype = {
 				
 					for (var i = 0 ; i < rads ; i ++){
 					
-					
-							
+	
 							var szr = new THREE.Vector3(sx,sy,sz);
 							var theseDivs = that.p.leafJoints[leaf+1];
 							var scalar = (that.p.jScale[leaf+1].x != -1 && that.p.jScale[leaf+1].x <= szr.x) ? that.p.jScale[leaf+1] : szr;
@@ -381,9 +394,10 @@ peep.prototype = {
 							joint.updateMatrix();						
 							joint.name = leaf;
 							that.joints.push(joint);
-							
+							console.log("branchBase");
 					console.log(obj.children[0]);
 							obj.children[0].add(joint);
+							console.log(obj.children[0]);
 							obj.children[0].children[i+child].rotation.y = i*((Math.PI*2)/rads);
 							obj.children[0].children[i+child].add(stringer(this.big,	theseDivs,0,	num,leaf+1,Math.floor(len/lenDiv), 	scalar.x,scalar.y,scalar.z,newSS,	divisions));
 							obj.children[0].children[i+child].children[0].rotation.x = angle;
@@ -411,6 +425,8 @@ peep.prototype = {
 							
 							that.fruit.push(mesh);
 							that.msh.push(mesh);
+							console.log("fruiter");
+							console.log(obj.children[0].id);
 							obj.children[0].add(mesh);
 					//	}
 				}

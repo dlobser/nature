@@ -20,6 +20,8 @@ var sizeCounter=0;
 var helpGeo = false;
 var paint = [];
 
+var up = 0;
+
 helperGeo = function(){
 
 	helpGeo = !helpGeo;
@@ -58,13 +60,37 @@ applyPreset = function(){
 	  break;
 	case 2:
 		div.value = '{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":15.787641392383241,"num":-60.56000000000387,"x":0.007499569188350853,"y":0.0001,"z":0.0001,"x1":[0,-0.254175038921318,-0.0809353957800576,0.3,0],"y1":[0.1,0.2,null],"z1":[0,null,null],"x2":[0,0.750614891297992,0],"y2":[-0.8,null,null],"z2":[0,null,null],"x3":[0.2,0.2,1.5707963267948966],"y3":[0,null,null],"z3":[0,null,null],"x4":[0,null,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,0,0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":25,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.96,"leaves":2,"divs":10,"rads":2,"animFunc":"if(q>0)this.branches[i][1].parent.parent.parent.rotation.y += .0051;","fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10,10],"leafDivs":[2,10,2],"leafss":[0.95,0.8,0.2],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":1,"y":13,"z":1}],"leafRads":[2,5,2]}';
-		
 		rebuilder();
 		break;
 	case 3:
 		div.value = '{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":36.64623255813561,"speed":0.04397463002114165,"speed2":5.75052858372093,"num":-1240.0682519908075,"x":0.002255109231853418,"y":0.0029316420014094437,"z":0,"x1":[0,0.4,-0.4,0],"y1":[-0.003875968992248069,0.1,null],"z1":[0,null,null],"x2":[0,-0.6,-1.2],"y2":[-0.015151515151515138,null,null],"z2":[0,null,null],"x3":[0,0.3066318411009066,null],"y3":[0.18780831571529244,null,null],"z3":[0,null,null],"x4":[0,1.5707963267948966,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,-0.032346723044397466,0],"sc":[0.95,0.98,0.8],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":25,"scale":[12,12,12],"sx":12,"sy":12,"sz":12,"ss":1,"leaves":2,"divs":9,"rads":2,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,30,6],"leafDivs":[2,5,6],"leafss":[0.95,1,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[2,1,1]}';
 		rebuilder();
 		break;
+		case 3:
+		div.value = '{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":36.64623255813561,"speed":0.04397463002114165,"speed2":5.75052858372093,"num":-1240.0682519908075,"x":0.002255109231853418,"y":0.0029316420014094437,"z":0,"x1":[0,0.4,-0.4,0],"y1":[-0.003875968992248069,0.1,null],"z1":[0,null,null],"x2":[0,-0.6,-1.2],"y2":[-0.015151515151515138,null,null],"z2":[0,null,null],"x3":[0,0.3066318411009066,null],"y3":[0.18780831571529244,null,null],"z3":[0,null,null],"x4":[0,1.5707963267948966,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,-0.032346723044397466,0],"sc":[0.95,0.98,0.8],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":25,"scale":[12,12,12],"sx":12,"sy":12,"sz":12,"ss":1,"leaves":2,"divs":9,"rads":2,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,30,6],"leafDivs":[2,5,6],"leafss":[0.95,1,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[2,1,1]}';
+		rebuilder();
+		break;
+
+case 4:
+		div.value = '{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":40.07886748233662,"speed":0.015785764622973927,"speed2":7.720144775512666,"num":-1931.1613748139728,"x":0.0028188865398167725,"y":0.002029598308668076,"z":0.002029598308668076,"x1":[-0.003875968992248069,-0.08302306166992057,-0.08302306166992057,0.3,0],"y1":[-0.047820093055316204,-0.04759988869075449,0.058669630246743765],"z1":[0,-0.012176715711588404,null],"x2":[-0.015151515151515138,0.09409280322591007,0.12695217598945496],"y2":[-0.2022229881095985,0.12951597620507616,null],"z2":[0,-1.5707963267948966,null],"x3":[0.04041013268998794,-0.08302306166992057,1],"y3":[0.02995066948555325,-0.08302306166992057,null],"z3":[0.02995066948555325,-0.6852170023157442,null],"x4":[0,-0.18929258060741883,0.02324645726757768],"y4":[0,-0.11844623464908666,null],"z4":[0,null,null],"off":[0,0,0],"sc":[0.9736434108527132,1.052572233967583,1.5,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":45,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":2,"divs":45,"rads":2,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,18,3],"leafDivs":[45,1,2],"leafss":[0.95,0.99,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":4,"y":11,"z":4},{"x":1,"y":24,"z":1}],"leafRads":[2,1,5]}';
+		rebuilder();
+		break;
+
+case 5:
+		div.value = '{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":14.339339479579493,"speed":0.04622973925299507,"speed2":6.3966914025676385,"num":-416.4346237434354,"x":0.004411511287265208,"y":0.0054122621564482035,"z":0.005750528541226215,"x1":[-0.015151515151515138,-0.08302306166992057,-0.7206401752949102,0.3,0],"y1":[0.1,-0.04759988869075449,null,null],"z1":[0,-0.012176715711588404,null,null],"x2":[-0.03770260747004933,-0.614370656357412,-0.7045981110885947,-0.18487918166481365],"y2":[-0.8,-0.08302306166992057,null,null],"z2":[0,null,null,null],"x3":[0.02995066948555325,0.09409280322591007,0.8199107485544963,0.4387835336437238],"y3":[0,null,null,null],"z3":[0,null,null,null],"x4":[0,null,null,null],"y4":[0,null,null,null],"z4":[0,null,null,null],"off":[0,0,0,0],"sc":[0.9815362931642002,1,1.000723763570567,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":25,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.96,"leaves":3,"divs":10,"rads":4,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10,4,10],"leafDivs":[2,10,5,10],"leafss":[0.95,1,1,0.96],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":1,"y":9,"z":1},{"x":-1,"y":-1,"z":-1}],"leafRads":[3,9,1,4]}';
+	rebuilder();
+		break;
+
+case 6:
+		div.value = '{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":83.18095348835782,"speed":0.01654316732724453,"speed2":0.1127555604651163,"num":-940.549444235234,"x":0.01,"y":0.0032699083861874563,"z":0.01,"x1":[0,0.1,0.023008390104698684,0.3,0],"y1":[0.1,0.2,null],"z1":[0,null,null],"x2":[0,1,1],"y2":[-0.8,null,null],"z2":[0,null,null],"x3":[-0.015151515151515138,-0.08302306166992057,1],"y3":[-0.003875968992248069,1.5707963267948966,null],"z3":[0,1.5707963267948966,null],"x4":[0,2,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,0,0],"sc":[0.9852834740651387,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":45,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":2,"divs":5,"rads":1,"animFunc":"this.branches[i][1].parent.parent.parent.rotation.y+=((this.branches[i][1].idq/-10000));if(i>0)this.branches[i][0].rotation.x=Math.sin(this.p.anim.num*2+ this.branches[i][0].id)/6;if(q>1)this.branches[i][1].parent.parent.parent.rotation.y+=0.03","fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,8,3],"leafDivs":[2,8,5],"leafss":[0.95,0.92,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":4,"y":24,"z":4},{"x":1,"y":24,"z":1}],"leafRads":[1,5,5]}';
+		rebuilder();
+		break;
+
+case 7:
+		div.value = '{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":321.29741860471756,"speed":0.04622973925299507,"speed2":2.3678647697674418,"num":-593.7243406469867,"x":0.007499569188350853,"y":0.0054122621564482035,"z":0.005750528541226215,"x1":[-0.015151515151515138,-0.18929258060741883,-0.4726779644407477,-0.04759988869075449,0],"y1":[-0.22938689217758984,-0.08302306166992057,null,-0.40183161848241533],"z1":[0,-0.012176715711588404,null,0.4483245330175709],"x2":[-0.03770260747004933,-0.614370656357412,-1.328260826397132,0.9931503916957567],"y2":[-0.8,-0.08302306166992057,null,null],"z2":[0,0,null,null],"x3":[0,0,-0.1502312530365617,1.5707963267948966],"y3":[0.01867512332628607,0,0.3348397477589673,null],"z3":[0,0,0.750614891297992,null],"x4":[0,null,null,null],"y4":[0,-1.5707963267948966,null,null],"z4":[0,0,null,null],"off":[0,0,0,0],"sc":[0.9815362931642002,1,1.1551797040169134,0.8552501761804088,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":45,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.98,"leaves":3,"divs":15,"rads":1,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10,9,10],"leafDivs":[2,15,10,10],"leafss":[0.95,1,1,0.96],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":1,"y":12,"z":1},{"x":1,"y":4,"z":1}],"leafRads":[1,2,9,4]}';
+		rebuilder();
+		break;
+
 	default:
 	   div.value = '{"num":200,"scale":[2,8,2],"ss":1,"leaves":1,"divs":2,"rads":1,"leafss":[0.95,0.8,0.2],"leafDivs":[2,2,2],"fruit":true,"term":[0,1,2,3],"leafJoints":[10,15,10],"jScale1":[2,5,2],"anim":{"num":2.7}}';
 	
@@ -272,7 +298,7 @@ sc1.prototype.addGeo = function(){
 
 	var div = document.getElementById('user');
 	//var divAnim = document.getElementById('anim');
-	user.defaultValue ='{"num":25,"scale":[5,8,5],"ss":0.96,"leaves":1,"divs":5,"rads":2,"leafss":[0.95,0.8,0.2],"leafDivs":[2,4,2],"fruit":true,"term":[0,1,2,3],"leafJoints":[10,10,10],"jScale2":[3,3,3],"anim":{"x1":[0,0.1,0.2,0.3,0],"x2":[0,0,0],"y1":[0.1,0.2],"y2":[-0.8],"x3":[1,1,1]}}';
+	user.defaultValue ='{"num":25,"scale":[5,8,5],"ss":0.96,"leaves":1,"divs":5,"rads":2,"leafss":[0.95,0.8,0.2],"leafDivs":[2,4,2],"fruit":true,"term":[0,1],"leafJoints":[10,10,10],"jScale2":[3,3,3],"anim":{"x1":[0,0.1,0.2,0.3,0],"x2":[0,0,0],"y1":[0.1,0.2],"y2":[-0.8],"x3":[1,1,1]}}';
 	
 	
 	var your_object = JSON.parse(user.value);
@@ -356,54 +382,7 @@ sc1.prototype.moveThings = function(){
 		var thing = things[j];
 		
 		for (var q = 0 ; q <= thing.p.leaves ; q++){
-		/*
-			if(this.animObject.x1 !== undefined)
-			var myx1 = ( this.animObject.x1[q] === undefined ) ? 0:this.animObject.x1[q];
-			else myx1 = thing.p.anim.def[q];
-			if(this.animObject.y1 !== undefined)
-			var myy1 = ( this.animObject.y1[q] === undefined ) ? 0:this.animObject.y1[q];
-			else myy1 = thing.p.anim.def[q];
-			if(this.animObject.z1 !== undefined)
-			var myz1 = ( this.animObject.z1[q] === undefined ) ? 0:this.animObject.z1[q];
-			else myz1 = thing.p.anim.def[q];
-			if(this.animObject.x2 !== undefined)
-			var myx2 = ( this.animObject.x2[q] === undefined ) ? 0:this.animObject.x2[q];
-			else myx2 = thing.p.anim.def[q];
-			if(this.animObject.y2 !== undefined)
-			var myy2 = ( this.animObject.y2[q] === undefined ) ? 0:this.animObject.y2[q];
-			else myy2 = thing.p.anim.def[q];
-			if(this.animObject.z2 !== undefined)
-			var myz2 = ( this.animObject.z2[q] === undefined ) ? 0:this.animObject.z2[q];
-			else myz2 = thing.p.anim.def[q];
-			if(this.animObject.x3 !== undefined)
-			var myx3 = ( this.animObject.x3[q] === undefined ) ? 0:this.animObject.x3[q];
-			else myx3 = thing.p.anim.def[q];
-			if(this.animObject.y3 !== undefined)
-			var myy3 = ( this.animObject.y3[q] === undefined ) ? 0:this.animObject.y3[q];
-			else myy3 = thing.p.anim.def[q];
-			if(this.animObject.z3 !== undefined)
-			var myz3 = ( this.animObject.z3[q] === undefined ) ? 0:this.animObject.z3[q];
-			else myz3 = thing.p.anim.def[q];
-			if(this.animObject.x4 !== undefined)
-			var myx4 = ( this.animObject.x4[q] === undefined ) ? 0:this.animObject.x4[q];
-			else myx4 = thing.p.anim.def[q];
-			if(this.animObject.y4 !== undefined)
-			var myy4 = ( this.animObject.y4[q] === undefined ) ? 0:this.animObject.y4[q];
-			else myy4 = thing.p.anim.def[q];
-			if(this.animObject.z4 !== undefined)
-			var myz4 = ( this.animObject.z4[q] === undefined ) ? 0:this.animObject.z4[q];
-			else myz4 = thing.p.anim.def[q];
-			if(this.animObject.off !== undefined)
-			var myOff = ( this.animObject.off[q] === undefined ) ? 0:this.animObject.off[q];
-			else myOff = thing.p.anim.off[q];
-			if(this.animObject.sc !== undefined)
-			var mysc = ( this.animObject.sc[q] === undefined ) ? 0:this.animObject.sc[q];
-			else mysc = thing.p.anim.sc[q];
-			*/
-
-			//var tempx1 = this.text["x1-"+q] + thing.p.anim.x1[q];
-			//thing.p.anim.x1[q] = tempx1;
-			
+		
 			thing.p.anim.x1[q] = this.text["x1-"+q];
 			thing.p.anim.y1[q] = this.text["y1-"+q];
 			
@@ -442,6 +421,7 @@ sc1.prototype.moveThings = function(){
 		
 		thing.animate();
 		thing.p.anim.num-=this.text.speed*this.text.speed2;
+		if(helpGeo)up += map_range(this.text.speed*this.text.speed2,0,Math.PI*2,0,1.27);
 	}	
 	
 	var rot = new THREE.Vector3(this.text.rotatorx,this.text.rotatory,this.text.rotatorz);
@@ -563,12 +543,53 @@ function saver2() {
 	var j = 0;
 	var output = "";
 	
-	for (var i = 0 ; i < paint.length ; i++){
-		output += paint[i];
-		output += ",";
+	output +=
+	"M73 P0 (enable build progress)" + "\n" +
+	"G21 (set units to mm)" + "\n" + 
+	"G90 (set positioning to absolute)" + "\n" + 
+	"G10 P1 X-16.5 Y0 Z0 (Designate T0 Offset)" + "\n" + 
+	"G55 (Recall offset cooridinate system)" + "\n" + 
+	"(**** begin homing ****)" + "\n" + 
+	"G162 X Y F2500 (home XY axes maximum)" + "\n" + 
+	"G161 Z F1100 (home Z axis minimum)" + "\n" + 
+	"G92 Z-5 (set Z to -5)" + "\n" + 
+	"G1 Z0.0 (move Z to “0?)" + "\n" + 
+	"G161 Z F100 (home Z axis minimum)" + "\n" + 
+	"M132 X Y Z A B (Recall stored home offsets for XYZAB axis)" + "\n" + 
+	"(**** end homing ****)" + "\n" + 
+	"G1 X112 Y-73 Z155 F3300.0 (move to waiting position)" + "\n" + 
+	"G130 X0 Y0 A0 B0 (Lower stepper Vrefs while heating)" + "\n" + 
+	"M6 T0 (wait for toolhead, and HBP to reach temperature)" + "\n" + 
+	"M104 S230 T0 (set extruder temperature)" + "\n" + 
+	"M6 T0 (wait for toolhead, and HBP to reach temperature)" + "\n" + 
+	"G130 X127 Y127 A127 B127 (Set Stepper motor Vref to defaults)" + "\n" + 
+	"M108 R3.0 T0" + "\n" + 
+	"G0 X112 Y-73 (Position Nozzle)" + "\n" + 
+	"G0 Z0.2 (Position Height)" + "\n" + 
+	"M108 R4.0 (Set Extruder Speed)" + "\n" + 
+	"M101 (Start Extruder)" + "\n" + 
+	"G4 P1500 (Create Anchor)" + "\n";
+	
+	var zed = 0;
+	
+	
+	for (var i = 0 ; i < paint.length ; i+=3){
+		
+		if(up > Math.PI*2){
+			zed+=1.27;
+			up=0;
+		}
+		console.log(up);
+		output += "G1 X";
+		output += (paint[i]/1.5);
+		output += " Y";
+		output += (paint[i+1]/1.5);
+		output += " Z";
+		output += (paint[i+2])+1.27;
+		output +=  " F1556.0";
+		output += "\n";
 	}
 	
-	output.replace("undefined","");
 	alert("saved!");
 	var blob = new Blob([output], {type: "text/plain;charset=ANSI"});
 	saveAs(blob, "drawing.txt");
@@ -587,6 +608,23 @@ rebuilder = function(){
 	
 
 }
+
+
+$( document ).on( 'keydown', function ( e ) {
+	console.log(e.keyCode);
+    if ( e.keyCode === 27 ) { // ESC
+console.log(e.keyCode);
+        $(".everything").hide();
+    }
+});
+$( document ).on( 'keydown', function ( e ) {
+	console.log(e.keyCode);
+    if ( e.keyCode === 65 ) { // ESC
+console.log(e.keyCode);
+        $(".everything").show();
+    }
+});
+
 
 window.onkeyup = onKeyUp;
 window.onkeypress = onKeyPress;
