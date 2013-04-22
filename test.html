@@ -1,0 +1,416 @@
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title></title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				background-color: #000000;
+				margin: 0px;
+				overflow: hidden;
+				font-family:Monospace;
+				font-size:13px;
+				text-align:center;
+				font-weight: bold;
+				text-align:center;
+			}
+
+			a {
+				color:#0078ff;
+			}
+
+			#info {
+				color:#fff;
+				position: absolute;
+				top: 0px;
+				width: 50em;
+				margin: 0 auto -2.1em;
+				padding: 5px;
+				z-index:100;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="container" style="position:absolute"></div>
+		
+		<script src="js/three/build/three.min.js"></script>
+		<script src="js/libs/LobserCollection.js"></script>
+		<script src="js/libs/jquery.js"></script>
+		<script src="js/libs/ImprovedNoise.js"></script>
+		<script src="js/three/shaders/BokehShader.js"></script>
+
+		<script src="js/three/js/controls/OrbitControls.js"></script>
+		<script src="js/libs/processing.js"></script>
+
+		<script src="js/three/js/Detector.js"></script>
+		<script src="js/three/js/libs/stats.min.js"></script>
+		
+		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
+		
+		<script src="js/libs/filesaver.js"></script>
+
+		<script src="js/libs/three/build/three.min.js"></script>
+		
+		<script src="js/three/js/controls/OrbitControls.js"></script>
+
+		<script src="js/three/js/Detector.js"></script>
+		<script src="js/three/js/libs/stats.min.js"></script>
+		<script src="js/13-turbine.js"></script>
+
+		<script src="js/libs/rig.js"></script>
+		
+
+		<div id="info">
+			
+		</div>
+
+
+		<script>
+
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+			var container, stats;
+			var camera, scene, renderer,
+				materials = [], objects = [],
+				singleMaterial, zmaterial = [],
+				parameters, i, j, k, h, color, x, y, z, s, n, nobjects,
+				material_depth, cubeMaterial,cuber;
+
+			var mouseX = 0, mouseY = 0;
+			
+			var plants = [];
+
+			var windowHalfX = window.innerWidth ;//*2;/// 2;
+			var windowHalfY = window.innerHeight ;//*2;/// 2;
+
+			var height = window.innerHeight ;
+
+			var postprocessing = { enabled  : true };
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / height, 1, 3000 );
+				camera.position.z = 1500;
+
+				scene = new THREE.Scene();
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setSize( window.innerWidth, height );
+				container.appendChild( renderer.domElement );
+
+				renderer.sortObjects = false;
+
+				material_depth = new THREE.MeshDepthMaterial();
+
+			//	var path = "textures/cube/SwedishRoyalCastle/";
+			//	var format = '.jpg';
+			//	var urls = [
+			//			path + 'px' + format, path + 'nx' + format,
+			//			path + 'py' + format, path + 'ny' + format,
+			//			path + 'pz' + format, path + 'nz' + format
+			//		];
+					
+					var path = "textures/bmap.";
+					var format = '.jpg';
+					var urls = [
+						path + '04' + format, path + '02' + format,
+						path + '05' + format, path + '06' + format,
+						path + '01' + format, path + '03' + format
+					];
+
+				var textureCube = THREE.ImageUtils.loadTextureCube( urls );
+
+				parameters = { color: 0xff1100, envMap: textureCube, shading: THREE.FlatShading };
+				cubeMaterial = new THREE.MeshBasicMaterial( parameters );
+
+				singleMaterial = false;
+
+				if( singleMaterial ) zmaterial = [ cubeMaterial ];
+
+				var geo = new THREE.SphereGeometry( 1, 20, 10 );
+
+				var start = Date.now();
+
+				renderer.initMaterial( cubeMaterial, scene.__lights, scene.fog );
+
+				var xgrid = 14,
+					ygrid = 9,
+					zgrid = 14;
+
+				nobjects = xgrid * ygrid * zgrid;
+
+				c = 0;
+
+				//var s = 0.25;
+				var s = 60;
+
+				for ( i = 0; i < xgrid; i ++ )
+				for ( j = 0; j < ygrid; j ++ )
+				for ( k = 0; k < zgrid; k ++ ) {
+
+					if ( singleMaterial ) {
+
+						mesh = new THREE.Mesh( geo, zmaterial );
+
+					} else {
+
+						materials[ c ] = new THREE.MeshBasicMaterial( parameters );
+						mesh = new THREE.Mesh( geo, materials[ c ] );
+						renderer.initMaterial( materials[ c ], scene.__lights, scene.fog, mesh );
+
+					}
+
+					x = 200 * ( i - xgrid/2 );
+					y = 200 * ( j - ygrid/2 );
+					z = 200 * ( k - zgrid/2 );
+
+					mesh.position.set( x, y, z );
+					mesh.scale.set( s, s, s );
+
+					mesh.matrixAutoUpdate = false;
+					mesh.updateMatrix();
+
+					//scene.add( mesh );
+					//objects.push( mesh );
+
+					c ++;
+
+				}
+				
+				
+				
+				var uservalue ='{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":83.18095348835782,"speed":0.01654316732724453,"speed2":0.1127555604651163,"num":-940.549444235234,"x":0.01,"y":0.0032699083861874563,"z":0.01,"x1":[0,0.1,0.023008390104698684,0.3,0],"y1":[0.1,0.2,null],"z1":[0,null,null],"x2":[0,1,1],"y2":[-0.8,null,null],"z2":[0,null,null],"x3":[-0.015151515151515138,-0.08302306166992057,1],"y3":[-0.003875968992248069,1.5707963267948966,null],"z3":[0,1.5707963267948966,null],"x4":[0,2,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,0,0],"sc":[0.9852834740651387,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":45,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":2,"divs":5,"rads":1,"animFunc":"this.branches[i][1].parent.parent.parent.rotation.y+=((this.branches[i][1].idq/-10000));if(i>0)this.branches[i][0].rotation.x=Math.sin(this.p.anim.num*2+ this.branches[i][0].id)/6;if(q>1)this.branches[i][1].parent.parent.parent.rotation.y+=0.03","fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,8,3],"leafDivs":[2,8,5],"leafss":[0.95,0.92,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":4,"y":24,"z":4},{"x":1,"y":24,"z":1}],"leafRads":[1,5,5]}';
+	var uservalue2 ='{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":37.980678959159704,"speed":0.014337411683611925,"speed2":7.278993651197657,"num":-404.51931636422944,"x":0.01,"y":0,"z":0,"x1":[0,0.1,0.2,0.3,0],"y1":[0.1,0.2],"z1":[0],"x2":[0,0,0],"y2":[-0.8],"z2":[0],"x3":[0.45950370498018267,1,1],"y3":[0],"z3":[0],"x4":[0],"y4":[0],"z4":[0],"off":[0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":5,"scale":[5,15,5],"sx":5,"sy":5,"sz":5,"ss":0.95,"leaves":0,"divs":5,"rads":2,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10],"leafDivs":[2],"leafss":[0.95],"angles":[0.6283185307179586],"term":[0],"jScale":[{"x":-1,"y":-1,"z":-1}],"leafRads":[2]}';
+	
+				var your_object = JSON.parse(uservalue);
+				cuber = new peep(your_object);
+				console.log(your_object);
+				cuber.makeParams(your_object);
+				//console.log(JSON.stringify(cuber.p));
+				//console.log(cuber.joints);
+				cuber.branchSquares(your_object);
+				var newScale = new THREE.Vector3(10,10,10);
+				cuber.big.scale = newScale;
+				cuber.big.position.y = -900;
+				
+				var rotator = new THREE.Object3D();
+				rotator.add(cuber.big);
+
+				scene.add(rotator);
+				
+				for(var i = 0 ; i < 35 ; i++){
+					var your_object2 = JSON.parse(uservalue2);
+					var cuber2 = new peep(your_object2);
+					//console.log(your_object2);
+					cuber2.makeParams(your_object2);
+					//console.log(JSON.stringify(cuber.p));
+					//console.log(cuber.joints);
+					cuber2.branchSquares(your_object);
+					var newScale = new THREE.Vector3(10,10,10);
+					var Pos = new THREE.Vector3(randly(-.5,3000),-700,randly(-.5,3000));
+					var Rot = new THREE.Vector3(0,randly(-.5,1000),0);
+					var scRand = randly(1,3)
+					var SC = new THREE.Vector3(scRand,scRand,scRand);
+					cuber2.big.scale = newScale;
+					cuber2.big.position = Pos;
+						cuber2.big.rotation = Rot;
+						cuber2.big.scale = SC;
+					cuber2.p.anim.speed2 = randly(0,10)+4;
+					
+					var rotator2 = new THREE.Object3D();
+					rotator.add(cuber2.big);
+					plants.push(cuber2);
+
+					scene.add(rotator2);
+				}
+				//console.log("init time: ", Date.now() - start );
+
+				scene.matrixAutoUpdate = false;
+
+				initPostprocessing();
+
+				renderer.autoClear = false;
+
+				renderer.domElement.style.position = 'absolute';
+				renderer.domElement.style.top = "0px";
+				renderer.domElement.style.left = "0px";
+
+				stats = new Stats();
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.top = '0px';
+				//container.appendChild( stats.domElement );
+
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				document.addEventListener( 'touchstart', onDocumentTouchStart, false );
+				document.addEventListener( 'touchmove', onDocumentTouchMove, false );
+
+				var effectController  = {
+
+					focus: 		0.36,
+					aperture:	0.025,
+					maxblur:	1.0
+
+				};
+
+				var matChanger = function( ) {
+
+					postprocessing.bokeh_uniforms[ "focus" ].value = effectController.focus;
+					postprocessing.bokeh_uniforms[ "aperture" ].value = effectController.aperture;
+					postprocessing.bokeh_uniforms[ "maxblur" ].value = effectController.maxblur;
+
+				};
+
+				var gui = new dat.GUI();
+				gui.add( effectController, "focus", 0.0, 3.0, 0.036 ).onChange( matChanger );
+				gui.add( effectController, "aperture", 0.001, 0.2, 0.001 ).onChange( matChanger );
+				gui.add( effectController, "maxblur", 0.0, 3.0, 0.025 ).onChange( matChanger );
+				gui.close();
+
+			}
+
+			function onDocumentMouseMove( event ) {
+
+				mouseX = event.clientX - windowHalfX;
+				mouseY = event.clientY - windowHalfY;
+
+			}
+
+			function onDocumentTouchStart( event ) {
+
+				if ( event.touches.length == 1 ) {
+
+					event.preventDefault();
+
+					mouseX = event.touches[ 0 ].pageX - windowHalfX;
+					mouseY = event.touches[ 0 ].pageY - windowHalfY;
+
+				}
+			}
+
+			function onDocumentTouchMove( event ) {
+
+				if ( event.touches.length == 1 ) {
+
+					event.preventDefault();
+
+					mouseX = event.touches[ 0 ].pageX - windowHalfX;
+					mouseY = event.touches[ 0 ].pageY - windowHalfY;
+
+				}
+
+			}
+
+			function initPostprocessing() {
+
+				postprocessing.scene = new THREE.Scene();
+
+				postprocessing.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2,  window.innerHeight / 2, window.innerHeight / - 2, -1000000, 1000000 );
+				postprocessing.camera.position.z = 100;
+
+				postprocessing.scene.add( postprocessing.camera );
+
+				var pars = { minFilter: THREE.GaussianFilter, magFilter: THREE.GaussianFilter, format: THREE.RGBFormat };
+				postprocessing.rtTextureDepth = new THREE.WebGLRenderTarget( window.innerWidth, height, pars );
+				postprocessing.rtTextureColor = new THREE.WebGLRenderTarget( window.innerWidth, height, pars );
+
+				var bokeh_shader = THREE.BokehShader;
+
+				postprocessing.bokeh_uniforms = THREE.UniformsUtils.clone( bokeh_shader.uniforms );
+
+				postprocessing.bokeh_uniforms[ "tColor" ].value = postprocessing.rtTextureColor;
+				postprocessing.bokeh_uniforms[ "tDepth" ].value = postprocessing.rtTextureDepth;
+				postprocessing.bokeh_uniforms[ "focus" ].value = .36;
+				postprocessing.bokeh_uniforms[ "aspect" ].value = window.innerWidth / height;
+
+				postprocessing.materialBokeh = new THREE.ShaderMaterial( {
+
+					uniforms: postprocessing.bokeh_uniforms,
+					vertexShader: bokeh_shader.vertexShader,
+					fragmentShader: bokeh_shader.fragmentShader
+
+				} );
+
+				postprocessing.quad = new THREE.Mesh( new THREE.PlaneGeometry( window.innerWidth, window.innerHeight ), postprocessing.materialBokeh );
+				postprocessing.quad.position.z = - 500;
+				postprocessing.scene.add( postprocessing.quad );
+
+			}
+
+			function animate() {
+
+				requestAnimationFrame( animate, renderer.domElement );
+
+				render();
+				stats.update();
+				cuber.animate();
+				cuber.p.anim.num-=cuber.p.anim.speed*cuber.p.anim.speed2;
+				
+				for(var b in plants){
+					var thing = plants[b];
+					thing.animate();
+					thing.p.anim.num-=thing.p.anim.speed*thing.p.anim.speed2;
+				}
+
+			}
+
+			function render() {
+
+				var time = Date.now() * 0.00005;
+
+				camera.position.x += ( mouseX - camera.position.x ) * 0.036;
+				camera.position.y += ( - (mouseY) - camera.position.y ) * 0.036;
+
+				camera.lookAt( scene.position );
+
+				if ( !singleMaterial ) {
+
+					for( i = 0; i < nobjects; i ++ ) {
+
+						h = ( 360 * ( i / nobjects + time ) % 360 ) / 360;
+						//m aterials[ i ].color.setHSL( h, 1, 0.5 );
+
+					}
+
+				}
+
+				if ( postprocessing.enabled ) {
+
+					renderer.clear();
+
+					// Render scene into texture
+
+					scene.overrideMaterial = null;
+					renderer.render( scene, camera, postprocessing.rtTextureColor, true );
+
+					// Render depth into texture
+
+					scene.overrideMaterial = material_depth;
+					renderer.render( scene, camera, postprocessing.rtTextureDepth, true );
+
+					// Render bokeh composite
+
+					renderer.render( postprocessing.scene, postprocessing.camera );
+
+
+				} else {
+
+					renderer.clear();
+					renderer.render( scene, camera );
+
+				}
+
+			}
+
+
+		</script>
+	</body>
+</html>

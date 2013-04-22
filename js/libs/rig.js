@@ -7,8 +7,8 @@ function peep(params){
 	
 	//attempting to use geoDivs to set the divs on my geo does NOT work - fix later
 	this.defaults = {
-	geo:new THREE.CylinderGeometry( 1,1,1,6,1),
-		geo2:new THREE.SphereGeometry(1,6,6)
+		geo:new THREE.CylinderGeometry( 1,1,1,12,1),
+		geo2:new THREE.SphereGeometry(1,12,6)
 	}
 	
 	
@@ -29,6 +29,21 @@ function peep(params){
 	this.color5 = (this.params.color5 !== undefined) ? this.params.color5 : this.defaults.color5;
 	
 	this.material =  new THREE.MeshLambertMaterial( { color:this.color1, shading: THREE.SmoothShading } );
+	
+	this.path = "textures/bmap.";
+	this.format = '.jpg';
+	this.urls = [
+		this.path + '04' + this.format, this.path + '02' + this.format,
+		this.path + '05' + this.format, this.path + '06' + this.format,
+		this.path + '01' + this.format, this.path + '03' + this.format
+	];
+	
+	this.material_depth = new THREE.MeshDepthMaterial();
+
+	this.textureCube = THREE.ImageUtils.loadTextureCube( this.urls );
+	this.mat = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: this.textureCube } );
+	
+	
 	
 	this.branches = [];
 	this.fruit = [];
@@ -75,8 +90,9 @@ peep.prototype = {
 		var pos2 = new THREE.Vector3(p2x,p2y,p2z);
 		
 		
-		this.mesh = new THREE.Mesh( this.geometry, this.material );
-		this.mesh2 = new THREE.Mesh( this.geometry2, this.material );
+		this.mesh = new THREE.Mesh( this.geometry, this.mat );
+		this.mesh2 = new THREE.Mesh( this.geometry2, this.mat );
+		this.mesh3 = new THREE.Mesh( this.geometry2, this.mat );
 							
 		this.mesh.updateMatrix();
 		this.mesh.matrixAutoUpdate = true;					
@@ -122,7 +138,7 @@ peep.prototype = {
 		this.poser.matrixAutoUpdate = true;					
 		this.poser.add(this.rotator);	
 		
-		
+		//add sphere
 		this.mesh2.scale.x = sx;
 		this.mesh2.scale.y = sx;
 		this.mesh2.scale.z = sx;
@@ -130,9 +146,19 @@ peep.prototype = {
 		this.mesh2.rotation.y = Math.PI/6;
 		this.mesh2.name = "sphere_" + namer;
 		
+		this.mesh3.scale.x = sx;
+		this.mesh3.scale.y = sx;
+		this.mesh3.scale.z = sz;
+		
+		this.mesh3.position.y = sy;
+		
+		this.mesh3.rotation.y = Math.PI/6;
+		this.mesh3.name = "sphere2_" + namer;
+		
 		
 		this.msh.push(this.mesh2);
-		this.poser.add(this.mesh2);					
+		this.poser.add(this.mesh2);		
+		//this.poser.add(this.mesh3);							
 		
 		
 		this.poser.position = pos2;	
@@ -181,6 +207,7 @@ peep.prototype = {
 			
 		};
 		
+		//console.log(params);
 		if(params.anim !== undefined)
 		this.p.anim.num = params.anim.num || 0 ;
 		
@@ -204,8 +231,8 @@ peep.prototype = {
 		this.p.sz  = (params.scale!==undefined) ? params.scale[2] : 2;
 		//scalar value
 		this.p.ss  = (params.ss!==undefined) ? params.ss : 1;
-		console.log(params.anim);
-		console.log(this.p.anim);
+		//console.log(params.anim);
+		//console.log(this.p.anim);
 		//number of times to branch
 		this.p.leaves 	= (params.leaves!==undefined) ? params.leaves : 3;
 		
@@ -246,7 +273,7 @@ peep.prototype = {
 			this.p.leafRads[i] = (params["leafRads" + i]!==undefined) ? params["leafRads" + i] : this.p.rads;
 		}
 		
-		console.log(params.angles);
+		//console.log(params.angles);
 		for ( var i = 0 ; i <= this.p.leaves ; i++){
 		
 			this.p.angles[i] = (params.angles !== undefined && params.angles[i]!==undefined) ? params.angles[i] : Math.PI/5;
@@ -261,8 +288,8 @@ peep.prototype = {
 			//	if(this.p.leafRads[i] == this.p.leafJoints[i]) this.p.leafRads[i]
 		}
 
-		console.log(this.p);
-		console.log(params);
+		//console.log(this.p);
+		//console.log(params);
 		return this.p;
 	
 	},
@@ -276,19 +303,9 @@ peep.prototype = {
 		
 		var geo = new THREE.SphereGeometry(1,12,12);
 		geo.mergeVertices();
-		
-				var path = "textures/bmap.";
-				var format = '.jpg';
-				var urls = [
-					path + '04' + format, path + '02' + format,
-					path + '05' + format, path + '06' + format,
-					path + '01' + format, path + '03' + format
-				];
 
-				var textureCube = THREE.ImageUtils.loadTextureCube( urls );
-				var mat = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
-		
-		stringer(this.big, that.p.num, 0,0,0,Math.floor(num/2),that.p.sx,that.p.sy,that.p.sz,that.p.ss,that.p.divs);
+	
+		stringer(this.big, that.p.num, 0,0,0,Math.floor(that.p.num/2),that.p.sx,that.p.sy,that.p.sz,that.p.ss,that.p.divs);
 		
 		//len becomes num in the branching part
 		function stringer(obj,num,id,idq,leaf,len,sx,sy,sz,ss,divs)
@@ -337,12 +354,12 @@ peep.prototype = {
 					if(end && leaf == that.p.leaves-that.p.term[i]){
 					
 						if (that.p.fruit){
-							console.log("making fruit");
-							console.log(that.p.term);
+						//	console.log("making fruit");
+							//console.log(that.p.term);
 							makeFruit();
 							}
 						else{
-							console.log("fruit ain't true, and true ain't fruit");
+							//console.log("fruit ain't true, and true ain't fruit");
 						}
 						
 					}
@@ -373,7 +390,7 @@ peep.prototype = {
 					var angle  = (that.p.angles[leaf]!=undefined) ? that.p.angles[leaf] : Math.PI/5;
 					var myRads = that.p.leafRads[leaf] || 2;
 					
-					console.log(that.p.angles[leaf]);
+					//console.log(that.p.angles[leaf]);
 					
 					makeSplit(2,1,1,leafSS,angle,myRads);
 				}
@@ -394,10 +411,10 @@ peep.prototype = {
 							joint.updateMatrix();						
 							joint.name = leaf;
 							that.joints.push(joint);
-							console.log("branchBase");
-					console.log(obj.children[0]);
+							//console.log("branchBase");
+					//console.log(obj.children[0]);
 							obj.children[0].add(joint);
-							console.log(obj.children[0]);
+							//console.log(obj.children[0]);
 							obj.children[0].children[i+child].rotation.y = i*((Math.PI*2)/rads);
 							obj.children[0].children[i+child].add(stringer(this.big,	theseDivs,0,	num,leaf+1,Math.floor(len/lenDiv), 	scalar.x,scalar.y,scalar.z,newSS,	divisions));
 							obj.children[0].children[i+child].children[0].rotation.x = angle;
@@ -413,7 +430,7 @@ peep.prototype = {
 				
 					//for (var i = 0 ; i < that.p.rads ; i ++){
 					
-							var mesh = new THREE.Mesh(geo,mat);
+							var mesh = new THREE.Mesh(geo,that.mat);
 							var positioner = new THREE.Vector3(obj.children[0].position.x,obj.children[0].position.y+sy,obj.children[0].position.z);
 							mesh.name = "fruit";
 							mesh.position = positioner;
@@ -425,8 +442,8 @@ peep.prototype = {
 							
 							that.fruit.push(mesh);
 							that.msh.push(mesh);
-							console.log("fruiter");
-							console.log(obj.children[0].id);
+							//console.log("fruiter");
+							//console.log(obj.children[0].id);
 							obj.children[0].add(mesh);
 					//	}
 				}

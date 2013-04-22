@@ -19,8 +19,12 @@ var objRotate = false;
 var sizeCounter=0;
 var helpGeo = false;
 var paint = [];
+var singleMaterial = false;
 
+var height = window.innerHeight - 300;
 var up = 0;
+
+var postprocessing = { enabled  : true };
 
 helperGeo = function(){
 
@@ -256,12 +260,15 @@ sc1.prototype.init = function() {
 	this.camera.position.y = 0;
 	this.camera.position.x = 600;
 
-	//this.controls = new THREE.OrbitControls( this.camera );
-	//this.controls.addEventListener( 'change', this.render );
+	this.controls = new THREE.OrbitControls( this.camera );
+	this.controls.addEventListener( 'change', this.render );
 
 	this.scene = new THREE.Scene();
 	this.scene.fog = new THREE.FogExp2( 0x000000, 0.00052 );
 	this.camera.lookAt(new THREE.Vector3(0,0,0));
+	this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+	this.renderer.sortObjects = false;
+	this.material_depth = new THREE.MeshDepthMaterial();
 	//this.scene.add(this.camera);
 	this.addGeo();
 
@@ -276,12 +283,26 @@ sc1.prototype.init = function() {
 	light = new THREE.AmbientLight( 0x222222 );
 	this.scene.add( light );
 
-	this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+	
 	//this.renderer.setClearColor( scene.fog.color, 1 );
 	this.renderer.setSize( window.innerWidth, window.innerHeight -100);	
 
 	this.container = document.getElementById( 'container' );
 	this.container.appendChild( this.renderer.domElement );
+	
+	this.renderer.sortObjects = false;
+	
+	
+		initPostprocessing();
+	var matChanger = function( ) {
+
+			postprocessing.bokeh_uniforms[ "focus" ].value = .5;
+			postprocessing.bokeh_uniforms[ "aperture" ].value = .1;
+			postprocessing.bokeh_uniforms[ "maxblur" ].value = .1;
+
+	};
+	matChanger();
+	
 
 	//window.addEventListener( 'resize', onWindowResize, false );
 	//console.log(this.renderer, + " " + this.scene.children.length + " " + this.camera.toString());
@@ -306,7 +327,7 @@ sc1.prototype.addGeo = function(){
 	this.rotator = new THREE.Object3D(0,0,0);
 	var mesh = new THREE.Mesh(geometry);
 	var dir = new THREE.Vector3(.1,.5,-.4);
-	console.log(your_object);
+	//console.log(your_object);
 	for ( var i = 0 ; i < 1 ; i++){
 	
 		var cuber = new peep(your_object);
@@ -369,10 +390,50 @@ sc1.prototype.addGeo = function(){
 		}
 		
 	}
-
+	
+	this.renderer.initMaterial( things[0].mat, this.scene.__lights, this.scene.fog );
+//console.log(this.scene.__lights);
 //	console.log(things);
 	
 	
+}
+
+function initPostprocessing() {
+
+	postprocessing.scene = new THREE.Scene();
+
+	postprocessing.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2,  window.innerHeight / 2, window.innerHeight / - 2, -10000, 10000 );
+	postprocessing.camera.position.z = 100;
+
+	postprocessing.scene.add( postprocessing.camera );
+
+	var pars = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat };
+	postprocessing.rtTextureDepth = new THREE.WebGLRenderTarget( window.innerWidth, height, pars );
+	postprocessing.rtTextureColor = new THREE.WebGLRenderTarget( window.innerWidth, height, pars );
+
+	var bokeh_shader = THREE.BokehShader;
+	
+	console.log(bokeh_shader);
+
+	postprocessing.bokeh_uniforms = THREE.UniformsUtils.clone( bokeh_shader.uniforms );
+
+	postprocessing.bokeh_uniforms[ "tColor" ].value = postprocessing.rtTextureColor;
+	postprocessing.bokeh_uniforms[ "tDepth" ].value = postprocessing.rtTextureDepth;
+	postprocessing.bokeh_uniforms[ "focus" ].value = 1.1;
+	postprocessing.bokeh_uniforms[ "aspect" ].value = window.innerWidth / height;
+
+	postprocessing.materialBokeh = new THREE.ShaderMaterial( {
+
+		uniforms: postprocessing.bokeh_uniforms,
+		vertexShader: bokeh_shader.vertexShader,
+		fragmentShader: bokeh_shader.fragmentShader
+
+	} );
+
+	postprocessing.quad = new THREE.Mesh( new THREE.PlaneGeometry( window.innerWidth, window.innerHeight ), postprocessing.materialBokeh );
+	postprocessing.quad.position.z = - 500;
+	postprocessing.scene.add( postprocessing.quad );
+
 }
 
 sc1.prototype.moveThings = function(){
@@ -457,13 +518,55 @@ sc1.prototype.animate = function(){
 		rebuild = false;
 	}
 	//this.render();
-	this.renderer.render( this.scene, this.camera );
+	//this.renderer.render( this.scene, this.camera );
 	if(this.text.speed*this.text.speed2 !=0){
 		this.moveThings();
 	}
 	var that = this;
 	requestAnimationFrame( function() { that.animate(); });
-	//this.controls.update();
+	this.controls.update();
+	
+	
+	
+	if ( !singleMaterial ) {
+
+		//for( i = 0; i < nobjects; i ++ ) {
+
+		//	h = ( 360 * ( i / nobjects + time ) % 360 ) / 360;
+	//		materials[ i ].color.setHSL( h, 1, 0.5 );
+
+		//}
+
+	}
+
+	if ( postprocessing.enabled ) {
+
+		this.renderer.clear();
+
+		// Render scene into texture
+
+		scene.overrideMaterial = null;
+		this.renderer.render( this.scene, this.camera, postprocessing.rtTextureColor, true );
+
+		// Render depth into texture
+
+		this.scene.overrideMaterial = this.material_depth;
+		this.renderer.render( this.scene, this.camera, postprocessing.rtTextureDepth, true );
+
+		// Render bokeh composite
+
+		this.renderer.render( postprocessing.scene, postprocessing.camera );
+
+
+	} else {
+
+		this.renderer.clear();
+		this.renderer.render( this.scene, this.camera );
+
+	}
+	
+				
+				
 	
 }
 
@@ -579,7 +682,7 @@ function saver2() {
 			zed+=1.27;
 			up=0;
 		}
-		console.log(up);
+		//console.log(up);
 		output += "G1 X";
 		output += (paint[i]/1.5);
 		output += " Y";
@@ -601,7 +704,7 @@ rebuilder = function(){
 	var that = this;
 	//console.log(user.value);
 	//console.log(anim.value);
-	console.log(JSON.stringify(things[0].p));
+	//console.log(JSON.stringify(things[0].p));
 	//console.log(things[0].p);
 	//console.log($.extend(things[0].p,this.animObject));	
 	rebuild = true;
@@ -610,17 +713,19 @@ rebuilder = function(){
 }
 
 
+
+
 $( document ).on( 'keydown', function ( e ) {
-	console.log(e.keyCode);
+	//console.log(e.keyCode);
     if ( e.keyCode === 27 ) { // ESC
-console.log(e.keyCode);
+//console.log(e.keyCode);
         $(".everything").hide();
     }
 });
 $( document ).on( 'keydown', function ( e ) {
-	console.log(e.keyCode);
+	//console.log(e.keyCode);
     if ( e.keyCode === 65 ) { // ESC
-console.log(e.keyCode);
+//console.log(e.keyCode);
         $(".everything").show();
     }
 });
