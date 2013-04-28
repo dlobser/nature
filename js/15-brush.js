@@ -19,12 +19,35 @@ var objRotate = false;
 var sizeCounter=0;
 var helpGeo = false;
 var paint = [];
+var zValue;
+var sOff;
+var tempZ;
+var scaleValue;
+var toScale;
+var pause = false;
+
 
 var up = 0;
+		var refresh = false;
+var saveImage = false;	
+	refresher = function(){
+	up=0;
+			refresh = true;
+		}
+		
+		saveImager = function(){
+			saveImage = true;
+		
+		}
 
 helperGeo = function(){
-
+	up=0;
 	helpGeo = !helpGeo;
+
+}
+
+pauser = function(){
+	pause = !pause;
 
 }
 
@@ -35,10 +58,11 @@ writePaint = function(){
 
 slidersToParams = function(){
 	var div = document.getElementById('user');
-	var options = document.getElementById('select').options;
+	//var options = document.getElementById('select').options;
 	//var divAnim = document.getElementById('anim');
 	
 	div.value = JSON.stringify(things[0].p);
+	sizeCounter = 0;
 	//divAnim.value = "{}";	
 }
 
@@ -121,7 +145,7 @@ sc1 = function(){
 		this.y = 0.0001;
 		this.z = 0.0001;
 		this.x2 = 0.000;
-		this.y2 = 0.000;
+		this.y2 = 50;
 		this.z2 = 0.000;
 		this.xw = 0.000;
 		this.yw = 0.000;
@@ -129,7 +153,7 @@ sc1 = function(){
 		this.x1 = 0.000;
 		this.y1 = 0.000;
 		this.z1 = 0.000;
-		this.fruitSize = 4.6;
+		this.fruitSize = 15;
 		
 		this.num=20;
 		//this.scale:new THREE.Vector3(5,10,5);
@@ -161,7 +185,7 @@ sc1 = function(){
 		//this.angle2:.1;
 		//this.fruit:true;
 		//this.fruitScale:new THREE.Vector3(5,5,5)
-		
+		/*
 		for( var i = 0 ; i < 6 ; i++){
 		
 			this["x1-"+i] = 0;
@@ -184,6 +208,7 @@ sc1 = function(){
 			
 			this["sc-"+i] = 1;
 		}
+		*/
 	};
 	
     this.text = new starfield();
@@ -191,16 +216,17 @@ sc1 = function(){
 	//gui.remember(this.text);
 	// gui.add(text, 'message');
 	var f0 = gui.addFolder('constructdor');
-		//f0.add(this.text, 'num',1,100);
+		f0.add(this.text, 'num',1,200);
 	//	f0.add(this.text, 'ss',.8,1.2);
 		//f0.add(this.text, 'leaves',0,6);
 		//f0.add(this.text, 'divs',1,30);
 		//f0.add(this.text, 'rads',1,20);
 		//f0.add(this.text, 'rebuilder');
+		f0.add(this.text, 'y2',1,100);
 		//f0.add(this.text, 'rotatorx',-3,3);
 		//f0.add(this.text, 'rotatory',-3,3);
 		//f0.add(this.text, 'rotatorz',-3,3);
-		f0.add(this.text, 'fruitSize',0.01,10);
+		f0.add(this.text, 'fruitSize',0.01,25);
 	
 	var f1 = gui.addFolder('motion');
 		f1.add(this.text, 'speed', 0, .1);
@@ -209,7 +235,7 @@ sc1 = function(){
 		f1.add(this.text, 'x', 0,.01);
 		f1.add(this.text, 'y', 0,.01);
 		f1.add(this.text, 'z', 0,.01);
-	
+	/*
 	for( var i = 0 ; i < 6 ; i++){
 		//console.log("pre: " + rAm);
 		if(i<1){
@@ -240,26 +266,33 @@ sc1 = function(){
 		
 		this['fol'+i].add(this.text, 'sc-'+i, .8,1.5).listen();
 		
-	}
+	}*/
 //console.log(this.text);
 //	gui.add(this.text, 'sizerx', 0,10);
 //	gui.add(this.text, 'sizery', 0,10);
 //	gui.add(this.text, 'sizerz', 0,10);
+f0.open();
 f1.open();
 }
 
 //sets up the three scene and calls addGeo
 sc1.prototype.init = function() {
 
-	this.camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 1, 10000 );
-	this.camera.position.z = 0;
-	this.camera.position.y = 0;
-	this.camera.position.x = 600;
+	//this.camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 1, 10000 );
+	this.camera = new THREE.OrthographicCamera( -512,512,512,-512,-1000,10000);
+
+//actual position doesn't matter - just the resulting vector
+	this.camera.position.set( 0, 0,0 );
+	
+	//this.camera.position.z = 0;
+	//this.camera.position.y = 0;
+	//this.camera.position.x = 600;
 
 	//this.controls = new THREE.OrbitControls( this.camera );
 	//this.controls.addEventListener( 'change', this.render );
 
 	this.scene = new THREE.Scene();
+	this.camera.lookAt( this.scene.position );
 	this.scene.fog = new THREE.FogExp2( 0x000000, 0.00052 );
 	this.camera.lookAt(new THREE.Vector3(0,0,0));
 	//this.scene.add(this.camera);
@@ -278,9 +311,10 @@ sc1.prototype.init = function() {
 
 	this.renderer = new THREE.WebGLRenderer( { antialias: true } );
 	//this.renderer.setClearColor( scene.fog.color, 1 );
-	this.renderer.setSize( window.innerWidth, window.innerHeight -100);	
+	//this.renderer.setSize( window.innerWidth, window.innerHeight -100);	
+	this.renderer.setSize( 1024, 1024 );	
 
-	this.container = document.getElementById( 'container' );
+	this.container = document.getElementById( 'container2' );
 	this.container.appendChild( this.renderer.domElement );
 
 	//window.addEventListener( 'resize', onWindowResize, false );
@@ -297,16 +331,32 @@ sc1.prototype.addGeo = function(){
 	var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
 
 	var div = document.getElementById('user');
+	
+	sOff = document.getElementById('sOffer');
+	sOff.defaultValue = '0.001';
+	
+	var myZ = document.getElementById('zval');
+	myZ.defaultValue = '0.35';
+	
+	toScale = document.getElementById('scaleVal');
+	toScale.defaultValue = 0.125;
+	
+	tempZ = JSON.parse(myZ.value);
+	
 	//var divAnim = document.getElementById('anim');
-	user.defaultValue ='{"num":25,"scale":[5,8,5],"ss":0.96,"leaves":1,"divs":5,"rads":2,"leafss":[0.95,0.8,0.2],"leafDivs":[2,4,2],"fruit":true,"term":[0,1],"leafJoints":[10,10,10],"jScale2":[3,3,3],"anim":{"x1":[0,0.1,0.2,0.3,0],"x2":[0,0,0],"y1":[0.1,0.2],"y2":[-0.8],"x3":[1,1,1]}}';
+	user.defaultValue ='{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":43.584678959158914,"speed":0.014337411683611925,"speed2":1.478993651197657,"num":-352.6514378402901,"x":0.009073237980354989,"y":0,"z":0,"x1":[0,0,0.2,0.3,0],"y1":[0,0],"z1":[0],"x2":[0,0,0],"y2":[-0.8],"z2":[0],"x3":[1,1,1],"y3":[1],"z3":[1],"x4":[0],"y4":[0],"z4":[0],"off":[0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":15,"y":15,"z":15},"num":25,"scale":[10,50,10],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":0,"divs":5,"rads":2,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10],"leafDivs":[2],"leafss":[0.95],"angles":[0.6283185307179586],"term":[0],"jScale":[{"x":-1,"y":-1,"z":-1}],"leafRads":[2]}';
 	
 	
 	var your_object = JSON.parse(user.value);
 	var parms={color1:0x225577,color2:0xbbffdd,color3:0x0099ff};
 	this.rotator = new THREE.Object3D(0,0,0);
 	var mesh = new THREE.Mesh(geometry);
-	var dir = new THREE.Vector3(.1,.5,-.4);
-	console.log(your_object);
+	var dir = new THREE.Vector3(0,0,0);
+	//your_object.num = Math.floor(this.text.num);
+	//your_object.divs = Math.floor(this.text.num);
+	//your_object.scale[1] = this.text.y2;
+	
+	//console.log(your_object);
 	for ( var i = 0 ; i < 1 ; i++){
 	
 		var cuber = new peep(your_object);
@@ -315,7 +365,7 @@ sc1.prototype.addGeo = function(){
 		//console.log(JSON.stringify(cuber.p));
 		//console.log(cuber.joints);
 		cuber.branchSquares();
-		cuber.big.position.y = -100;
+		cuber.big.position.y = -300;
 		
 		this.rotator.add(cuber.big);
 
@@ -329,6 +379,8 @@ sc1.prototype.addGeo = function(){
 			
 		
 		}
+		//console.log(things[0]);
+		/*
 		for (var q = 0 ; q <= things[0].p.leaves ; q++){
 		
 			this.text["x1-"+q]=things[0].p.anim.x1[q];
@@ -346,13 +398,16 @@ sc1.prototype.addGeo = function(){
 			this.text["sc-"+q]=things[0].p.anim.sc[q];
 			
 		}
-		
+		*/
+	//	console.log(things[0]);
 		this.text.speed = things[0].p.anim.speed;
 		this.text.speed2 = things[0].p.anim.speed2;
 		this.text.x = things[0].p.anim.x;
 		this.text.y = things[0].p.anim.y;
 		this.text.z = things[0].p.anim.z;
 		this.text.size = things[0].p.anim.size;
+		this.text.num = things[0].p.num;
+		this.text.y2 = things[0].p.scale[1];
 		
 		//this.text
 		for(key in this.animObject){
@@ -377,71 +432,72 @@ sc1.prototype.addGeo = function(){
 
 sc1.prototype.moveThings = function(){
 	
-	for ( var j = 0 ; j <   things.length  ; j++){
 	
-		var thing = things[j];
+		for ( var j = 0 ; j <   things.length  ; j++){
 		
-		for (var q = 0 ; q <= thing.p.leaves ; q++){
-		
-			thing.p.anim.x1[q] = this.text["x1-"+q];
-			thing.p.anim.y1[q] = this.text["y1-"+q];
+			var thing = things[j];
 			
-			thing.p.anim.z1[q] = this.text["z1-"+q];
-			thing.p.anim.x2[q] = this.text["x2-"+q];
-			thing.p.anim.y2[q] = this.text["y2-"+q];
-			thing.p.anim.z2[q] = this.text["z2-"+q];
-			thing.p.anim.x3[q] = this.text["x3-"+q];
-			thing.p.anim.y3[q] = this.text["y3-"+q];
-			thing.p.anim.z3[q] = this.text["z3-"+q];
-			thing.p.anim.x4[q] = this.text["x4-"+q];
-			thing.p.anim.y4[q] = this.text["y4-"+q];
-			thing.p.anim.z4[q] = this.text["z4-"+q];
-			thing.p.anim.off[q] = this.text["off-"+q];
-			thing.p.anim.sc[q] = this.text["sc-"+q];// + mysc;
+			for (var q = 0 ; q < thing.fruit.length ; q++){
+				thing.fruit[q].scale = new THREE.Vector3(this.text.fruitSize,this.text.fruitSize,this.text.fruitSize);
 			
+			}
 			
-			//thing.p.anim.off[q] = this.text["off-"+q] + myOff;
-			//thing.p.anim.sc[q] = this.text["sc-"+q];// + mysc;
-		}
+			//console.log(thing.p.scale);
+			thing.p.anim.size = this.text.size + sizeCounter;
+			thing.p.anim.x = this.text.x;
+			thing.p.anim.y = this.text.y;
+			thing.p.anim.z = this.text.z;
+			thing.p.anim.speed = this.text.speed;
+			thing.p.anim.speed2 = this.text.speed2;
+			thing.p.num = Math.floor(this.text.num);
+			thing.p.scale[1] = this.text.y2;
 
-		
-		for (var q = 0 ; q < thing.fruit.length ; q++){
-			thing.fruit[q].scale = new THREE.Vector3(this.text.fruitSize,this.text.fruitSize,this.text.fruitSize);
-		
-		}
-		
-		thing.p.anim.size = this.text.size+ sizeCounter;
-		thing.p.anim.x = this.text.x;
-		thing.p.anim.y = this.text.y;
-		thing.p.anim.z = this.text.z;
-		thing.p.anim.speed = this.text.speed;
-		thing.p.anim.speed2 = this.text.speed2;
-		
-		sizeCounter+=.001;
-		
-		thing.animate();
-		thing.p.anim.num-=this.text.speed*this.text.speed2;
-		if(helpGeo)up += map_range(this.text.speed*this.text.speed2,0,Math.PI*2,0,1.27);
-	}	
+			
+			var offer = JSON.parse(sOff.value);
+			
+			for ( var i = 0 ; i <  1 ; i++){
+				sizeCounter+=offer;
+				//console.log(up);
+				thing.animate();
+				if(!pause)thing.p.anim.num-=this.text.speed*this.text.speed2;
+				if(helpGeo)up += this.text.speed*this.text.speed2;//map_range(this.text.speed*this.text.speed2,0,Math.PI*2,0,1.27);
+				
+				//for(var i = 0; i<thing.fruit.length ; i++){
+				if(helpGeo)
+				saveArray(thing.fruit[thing.fruit.length-1],j);
+			
+			}	
+	}
 	
 	var rot = new THREE.Vector3(this.text.rotatorx,this.text.rotatory,this.text.rotatorz);
 
 	this.rotator.rotation = vector;
 }
 
+saveArray = function(thingy,j){
+	//var thingy = thing.fruit[0];
+
+	thingy.updateMatrixWorld();
+	var vector = thingy.geometry.vertices[0].clone();
+	thingy.matrixWorld.multiplyVector3( vector );
+	
+	//if(helpGeo && j==0)
+	//console.log(vector.z);
+	
+	paint.push(-vector.z);
+	paint.push(-(vector.y));
+	paint.push(up);
+
+}
+
 sc1.prototype.animate = function(){
 
-	//console.log("HIHIHI");
-	//console.log(this.text);
-	
-
-	
 	if(rebuild){
 		//make a fake tree
 		if(helpGeo){
 			var tree = new THREE.Object3D();
 			for (var i in things){
-				tree.add(makeLimbGeo(things[i],.5));
+				//tree.add(makeLimbGeo(things[i],.5));
 			}
 		}
 		
@@ -450,8 +506,8 @@ sc1.prototype.animate = function(){
 		this.addGeo();
 		
 		if (helpGeo){
-			this.scene.add(tree);
-			things[0].msh.push(tree.children[0].children[0]);
+			//this.scene.add(tree);
+			//things[0].msh.push(tree.children[0].children[0]);
 		}
 		
 		rebuild = false;
@@ -462,7 +518,9 @@ sc1.prototype.animate = function(){
 		this.moveThings();
 	}
 	var that = this;
-	requestAnimationFrame( function() { that.animate(); });
+	//for(var i = 0 ; i < 2 ; i++){
+	//	requestAnimationFrame( function() { that.animate(); });
+	//}
 	//this.controls.update();
 	
 }
@@ -539,8 +597,11 @@ function saver() {
 
 function saver2() {
 
+
+	scaleValue = JSON.parse(toScale.value);
 	alert("saving!");
 	var j = 0;
+	var output2 = "";
 	var output = "";
 	
 	output +=
@@ -570,29 +631,34 @@ function saver2() {
 	"M101 (Start Extruder)" + "\n" + 
 	"G4 P1500 (Create Anchor)" + "\n";
 	
-	var zed = 0;
-	
+	var myZ = document.getElementById('zval');
+	tempZ = JSON.parse(myZ.value);
 	
 	for (var i = 0 ; i < paint.length ; i+=3){
 		
-		if(up > Math.PI*2){
-			zed+=0.65;
-			up=0;
-		}
-		console.log(up);
+	
+		//console.log(up);
 		output += "G1 X";
-		output += (paint[i]/1.5);
+		output += (paint[i]*scaleValue);
+		output2 +=  (paint[i]);
+		output2 += ",";
 		output += " Y";
-		output += (paint[i+1]/1.5);
+		output += (paint[i+1]*scaleValue);
+		output2 += (paint[i+1]);
+		output2 += ",";
 		output += " Z";
-		output += (paint[i+2])+1.27;
+		console.log(tempZ);
+		output += 1.27+(map_range(paint[i+2],0,Math.PI*2,0,tempZ));
 		output +=  " F1556.0";
 		output += "\n";
 	}
 	
 	alert("saved!");
 	var blob = new Blob([output], {type: "text/plain;charset=ANSI"});
-	saveAs(blob, "drawing.txt");
+	saveAs(blob, "drawing.gcode");
+	alert("saved!");
+	var blob = new Blob([output2], {type: "text/plain;charset=ANSI"});
+	saveAs(blob, "drawing.csv");
 	
 }
 

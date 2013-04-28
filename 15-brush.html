@@ -11,22 +11,33 @@
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
     <style>
       body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        padding-top: 0px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
 	  .dg.main {
-		top: 50px !important;
+			top: 0px !important;
+	}
+		#container2{
+			position:absolute;
+			top:50%;
+			left:50%;
+			width:1024px;
+			height:1024px;
+			vertical-align:middle;
+			margin-top: -512px; /*set to a negative number 1/2 of your height*/
+			margin-left: -512px; /*set to a negative number 1/2 of your width*/
+  
 		}
 		#processing-canvas {
-    position:fixed;
-    top: 50%;
-    left: 50%;
-    width:1024px;
-    height:1280px;
-    margin-top: -35em; /*set to a negative number 1/2 of your height*/
-    margin-left: -35em; /*set to a negative number 1/2 of your width*/
-    border: 1px solid #ccc;
-    background-color: #f3f3f3;
-	z-index:-1;
+			position:absolute;
+			top: 50%;
+			left: 50%;
+			width:1024px;
+			height:1024px;
+			margin-top: -512px; /*set to a negative number 1/2 of your height*/
+			margin-left: -512px; /*set to a negative number 1/2 of your width*/
+			border: 1px solid #ccc;
+			background-color: #f3f3f3;
+			z-index:-1;
 }
     </style>
     <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">
@@ -90,21 +101,24 @@
 
 		<script src="js/three/js/Detector.js"></script>
 		<script src="js/three/js/libs/stats.min.js"></script>
-		<script src="js/12-turbine.js"></script>
+		<script src="js/15-brush.js"></script>
 
 		<script src="js/libs/rig.js"></script>
 		
 		
 		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
-		<div class="everything" style="margin-top:-50px">
-			<img src="images/ylem.png" padding="10px" alt="Ylem" height="500" width="250">
+		<div class="everything" style="margin-top:-50px;margin-left:10px">
+		<script>
+
+		</script>
+			<!--<img src="images/ylem.png" padding="10px" alt="Ylem" height="500" width="250">
 			<p style="padding-left:10px">branching animation and modeling</p>
 			<div class="menu" style="position:absolute;line-height:.3em;padding-left:10px">
 			<select id="select">
 				<option value="1">Anemone my Enemy</option>
 				<option value="2">Tentacle Paintbrush</option>
 				<option value="3">Egg Beater</option>
-				<option vanlue="4">The Aristocrat</option>
+				<option value="4">The Aristocrat</option>
 				<option value="5">I Believe I Can Fly</option>
 				<option value="6">Cages</option>
 				<option value="7">For Amusement Only</option>
@@ -120,28 +134,66 @@
 			<p>term# = # of leaves minus this number determines if fruit goes here</p><br>
 			<p>fruit = boolean - adds balls to the end of branches based on 'term' settings</br></br></br>
 			-->
-			<p>parameters</p><br>
+			<br><br><br>
+			
+			<h1>GCode Painter</h1><br>
+			<h2><a href="15-brush-instructions.html">Instructions</a></h2>
+		
+			
+			<textarea id="user"  name="user" defaultValue='{"num":25,"scale":[5,12,5],"ss":0.96,"leaves":2,"divs":5,"rads":2,"leaf1ss":0.9,"jScale1":[2,3,2],"leaf0ss":0.9}'}' cols="10" rows="1"></textarea><br>
+			z-value<br>
+			<textarea id="zval"  name="user" defaultValue='1' cols="10" rows="1"></textarea><br>
+			sin offset<br>
+			<textarea id="sOffer"  name="user" defaultValue='1' cols="10" rows="1"></textarea><br>
+			loop<br>
+			<textarea id="loopVal"  name="user" defaultValue='1' cols="10" rows="1"></textarea><br>
+			scale<br>
+			<textarea id="scaleVal"  name="user" defaultValue='1' cols="10" rows="1"></textarea><br>
+			<br>
+			<input type="button" id="buttonid" value="rebuild" onclick="rebuilder()"><br><br>
+			<input type="button" id="buttonid" value="Save Settings" onclick="slidersToParams()"><br><br>
+			<input type="button" id="buttonid" value="Draw Line" onclick="helperGeo()"><br><br>
+			<input type="button" id="buttonid" value="save GCode" onclick="writePaint()"><br><br>
+			<input type="button" id="buttonid" value="Clear" onclick="refresher()"><br><br>
+			<input type="button" id="buttonid" value="Save Image" onclick="saveImager()"><br><br>
+			<input type="button" id="buttonid" value="Pause" onclick="pauser()"><br>
 			
 			
-			<textarea id="user"  name="user" defaultValue='{"num":25,"scale":[5,12,5],"ss":0.96,"leaves":2,"divs":5,"rads":2,"leaf1ss":0.9,"jScale1":[2,3,2],"leaf0ss":0.9}'}' cols="100" rows="10"></textarea><br>
-			
-			<input type="button" id="buttonid" value="rebuild" onclick="rebuilder()">
-			<input type="button" id="buttonid" value="save.obj" onclick="saver()">
-			<input type="button" id="buttonid" value="helperGeo" onclick="helperGeo()"><br>
-			<input type="button" id="buttonid" value="slidersToParams" onclick="slidersToParams()">
-			<input type="button" id="buttonid" value="writePaint" onclick="writePaint()">
 				
 			</div>
 		</div>
-		</body>
-		</html>
+		
 		<div id="container2">
 		<script>
 		
+		var loopValue = 1;
+		
 		var scene = new sc1();
 		scene.init();
-		scene.animate();
+		
+		
+		
+		animator = function(){
+		var loopVal = document.getElementById('loopVal');
+		loopVal.defaultValue = 1;
+		loopValue = JSON.parse(loopVal.value);
+		
+		
+		
+	//	if(!pause){
+		for (var i = 0 ; i < loopValue ; i ++){
+				scene.animate();
+				
+			}
+			requestAnimationFrame(animator);
+		//}
+		}
+		animator();
+		</script>
+		<script>
+		
 	
+		
 		</script>
 	</div>
 	
@@ -156,20 +208,26 @@ var ballz = [];
 
 void setup() {
 
-  size(1024, 1280);
+  size(1024, 1024);
   background(255);
-  noStroke();
-
+ // noStroke();
+console.log(saveImage);
 }
 
 void draw(){
+
+	if(refresh){
+		background(255);
+		paint = [];
+		refresh = false;
+	}
 
 	if(helpGeo){
 	
 		fill(255,0);
 		rect(0,0,width,height);
 		fill(255);
-		
+		/*
 		for(var i = 0; i<things[0].fruit.length ; i++){
 		
 			fill(i,i*10,i*20);
@@ -178,17 +236,33 @@ void draw(){
 			var vector = thing.geometry.vertices[0].clone();
 			thing.matrixWorld.multiplyVector3( vector );
 			
-			ellipse((-vector.z*7+width/2),-(vector.y*7-height/4),5,5);
+			ellipse((-vector.z+width/2),-(vector.y-height/2)+180,5,5);
 			paint.push(-vector.z);
 			paint.push(-(vector.y));
 			paint.push(up);
 			
+		}
+		*/
+		
+		for(var i = paint.length-loopValue*3 ; i < paint.length ; i+=3){
+			fill(0,255);
+			ellipse(paint[i]+width/2,(paint[i+1]+height/2),1,1);
+			//stroke(1);
+			if(i<paint.length-3)
+			line(paint[i]+width/2,(paint[i+1]+height/2),paint[i+3]+width/2,(paint[i+4]+height/2));
+			//text(paint.length,paint[i]+width/2,paint[i+1]+height/2);
+		
 		}
 	}
 	
 	if(rebuild){
 		fill(255,0);
 		rect(0,0,width,height);
+	}
+	
+	if(saveImage){
+		save("painted.jpg");
+		saveImage = false;
 	}
 	
 }
