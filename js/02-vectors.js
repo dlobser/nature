@@ -39,6 +39,9 @@
 
 			var cross;
 			
+			var yes = true;
+			var count = 0;
+			
 			var mover;
 			
 			var myNoise = new ImprovedNoise();
@@ -48,7 +51,8 @@
 			var heart = [];
 
 			init();
-			animate();
+			window.addEventListener('load', function() { animate();}, false)
+			
 
 			function init() {
 			
@@ -170,7 +174,7 @@
 				loader.load( 'models/arrow.obj' );
 				
 				
-				
+			
 				
 					/*
 					var mesh = new THREE.Mesh( geometry, material );
@@ -253,6 +257,17 @@
 			}
 
 			function animate() {
+			
+				if(yes){
+					console.log(things);
+						console.log(yes + count);
+				}	
+					
+				if(things.length>1)
+					yes = false;
+					
+				
+				count++;
 				render();
 				moveThings();
 				//console.log(things.length);

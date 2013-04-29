@@ -11,23 +11,22 @@
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
     <style>
       body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+       
+		 background-color: black;
       }
-	  .dg.main {
-		top: 50px !important;
-		}
-		#processing-canvas {
-    position:fixed;
-    top: 50%;
-    left: 50%;
-    width:1024px;
-    height:1280px;
-    margin-top: -35em; /*set to a negative number 1/2 of your height*/
-    margin-left: -35em; /*set to a negative number 1/2 of your width*/
-    border: 1px solid #ccc;
-    background-color: #f3f3f3;
-	z-index:-1;
-}
+	.dg.main {
+		
+	}
+	#processing-canvas {
+		position:absolute;
+		
+		width:1920px;
+		height:1080px;
+		
+	   
+		background-color: black;
+		z-index:-1;
+	}
     </style>
     <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -87,13 +86,12 @@
 		<script src="js/libs/three/build/three.min.js"></script>
 		
 		<script src="js/three/js/controls/OrbitControls.js"></script>
-		<script src="js/three/js/loaders/OBJLoader.js"></script>
 
 		<script src="js/three/js/Detector.js"></script>
 		<script src="js/three/js/libs/stats.min.js"></script>
-		<script src="js/12-turbine.js"></script>
+		<script src="js/16-spine.js"></script>
 
-		<script src="js/libs/rig.js"></script>
+		<script src="js/libs/rigForSpine.js"></script>
 		
 		
 		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
@@ -136,84 +134,17 @@
 		</div>
 		</body>
 		</html>
-					<script>/*
-			var things = [];
-			
-			var heart = [];
-
-			init();
-			//animate();
-
-			function init() {
-			
-		
-
-
-				//mover = new Mover();
-		
-				//scene.add(mover.mesh);
-				
-				//make objects!-----------------------------------------------
-				
-				var texture2 = new THREE.Texture();
-
-				var loader2 = new THREE.ImageLoader();
-				loader2.addEventListener( 'load', function ( event ) {
-
-					texture2.image = event.content;
-					texture2.needsUpdate = true;
-
-				} );
-				loader2.load( 'textures/red.jpg' );
-
-				
-				var loader2 = new THREE.OBJLoader();
-				
-				loader2.addEventListener( 'load', function ( event ) {
-
-					var object = event.content;
-
-					object.traverse( function ( child ) {
-
-						if ( child instanceof THREE.Mesh ) {
-
-							child.material.map = texture2;
-
-						}
-
-					} );
-					
-						object.position = new THREE.Vector3(  0,-25,0  );
-		
-					object.scale.x = 100;
-					object.scale.y = 100;
-					object.scale.z = 100;
-					
-					
-					heart.push(object);
-					console.log(heart);
-				});
-				loader2.load( 'models/heart_xhi.obj' );
-					
-		}
-		console.log(heart);
-
-*/
-			</script>
 		<div id="container2">
-
-			<script>
-				//loader2.object = "steak";
-				window.onload=function(){
-					//console.log(loader2);
-					var scene = new sc1();
-					var vertebrae = [];
-
-					scene.init();
-					window.addEventListener('load', function() { scene.animate();}, false)
-				};
-			</script>
-		</div>
+		<script>
+		
+			
+		
+		var scene = new sc1();
+		
+		window.addEventListener('load', function() { scene.init();scene.animate();}, false)
+	
+		</script>
+	</div>
 	
 	
 		</form>
@@ -223,44 +154,77 @@
 <script type="text/processing" data-processing-target="processing-canvas">
 
 var ballz = [];
+var counter = 0;
 
 void setup() {
 
-  size(1024, 1280);
-  background(255);
-  noStroke();
+  size(1920, 1080);
+ // background(255);
+ // noStroke();
 
 }
 
 void draw(){
 
 	if(helpGeo){
-	
+	if(counter>32){
+			fill(255);
+			rect(0,0,width,height);
+		}
+		killEverything(scene);
 		fill(255,0);
 		rect(0,0,width,height);
-		fill(255);
-		
-		for(var i = 0; i<things[0].fruit.length ; i++){
-		
-			fill(i,i*10,i*20);
-			var thing = things[0].fruit[i];
-			thing.updateMatrixWorld();
-			var vector = thing.geometry.vertices[0].clone();
-			thing.matrixWorld.multiplyVector3( vector );
+		fill(0,0);
+	//	fill(counter*60);
+		rect(0,0,width,height);
+		for(var j = 0 ; j < 1 ; j++){
+			for(var i = 0; i<things[0].msh.length ; i++){
+				
+				if(i<100){
+					float randX = noise(i/100)*10;
+					float randY = noise((i/100)+1000)*10;
+					fill(0,0);
+					//stroke(random(255),random(255),random(255));
+					stroke(counter*10);
+					//strokeWeight(counter);
+					var thing = things[0].msh[randInt(1,things[0].msh.length-1)];
+					thing.updateMatrixWorld();
+					var vector = thing.geometry.vertices[0].clone();
+					thing.matrixWorld.multiplyVector3( vector );
+					var ch = random(i);
+					ellipse((-vector.z*7+width/2)+rand(1,10),-(vector.y*7-height/4)+randY,thing.scale.x*counter,thing.scale.y*counter);//counter*(i*.1),counter*(i*.1));
+					console.log(randX);
+					paint.push(-vector.z);
+					paint.push(-(vector.y));
+					paint.push(up);
+				
+				}
+				else j=1;
+			}
 			
-			ellipse((-vector.z*7+width/2),-(vector.y*7-height/4),5,5);
-			paint.push(-vector.z);
-			paint.push(-(vector.y));
-			paint.push(up);
-			
+			//rect(0,0,width,height);
 		}
+		counter++;
+		
+		
+		if(counter>32){
+			fill(255);
+			rect(0,0,width,height);
+			helpGeo = false;
+			counter = 0;
+			rebuild = true;
+			fill(0);
+			rect(0,0,width,height);
+		}
+			//rebuild = true;
 	}
 	
 	if(rebuild){
 		fill(255,0);
+		noStroke();
 		rect(0,0,width,height);
 	}
-	
+
 }
 
 </script>

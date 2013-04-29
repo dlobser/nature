@@ -5,6 +5,7 @@
 THREE.OBJLoader = function () {
 
 	THREE.EventDispatcher.call( this );
+	
 
 };
 

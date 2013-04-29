@@ -13,7 +13,7 @@ function peep(params){
 	//attempting to use geoDivs to set the divs on my geo does NOT work - fix later
 	this.defaults = {
 		geo:new THREE.CylinderGeometry( 1,1,1,12,1),
-		geo2:new THREE.SphereGeometry(1,12,6)
+		geo2:new THREE.SphereGeometry(0.58,12,6)
 	}
 
 	
@@ -95,9 +95,9 @@ peep.prototype = {
 		var scl = new THREE.Vector3(sx,sy,sz);
 		var pos2 = new THREE.Vector3(p2x,p2y,p2z);
 		
-		console.log(geom);
+//		console.log(geom);
 		var thisGeo = geom || this.geometry;
-			console.log(thisGeo);
+//			console.log(thisGeo);
 		
 		this.mesh = new THREE.Mesh( thisGeo, this.mat );
 		this.mesh2 = new THREE.Mesh( this.geometry2, this.mat );
@@ -230,7 +230,7 @@ peep.prototype = {
 		
 		this.p.anim.sc = Array.apply(null, new Array(10)).map(Number.prototype.valueOf,1);
 		this.p.anim = $.extend(this.p.anim,params.anim);
-		this.p.fruitSize = new THREE.Vector3(5,5,5);
+		this.p.fruitSize = new THREE.Vector3(0,0,0);
 		
 		//number of joints on each branch
 		
@@ -342,7 +342,7 @@ peep.prototype = {
 			
 				id++;
 				
-				console.log(that.altGeo);
+//				console.log(that.altGeo);
 				var myGeo;
 				
 				if(that.altGeo != undefined){
@@ -351,7 +351,7 @@ peep.prototype = {
 					}
 				}
 				
-				console.log(myGeo);
+				//console.log(myGeo);
 				this.big = that.part(0,.5,0,	sx,sy,sz,	0,sy,0,   "big"+id, that.color1,myGeo);
 
 				//add items to the last array in the branches array
@@ -441,7 +441,7 @@ peep.prototype = {
 							mesh.updateMatrix();	
 		
 							var scalar = that.p.fruitScale;
-							mesh.scale = scalar;
+							mesh.scale = new THREE.Vector3(0,0,0);
 							
 							that.fruit.push(mesh);
 							that.msh.push(mesh);

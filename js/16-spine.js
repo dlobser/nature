@@ -19,9 +19,9 @@ var objRotate = false;
 var sizeCounter=0;
 var helpGeo = false;
 var paint = [];
-	
-				
 
+var counter = 0;
+var spine = [];
 
 var up = 0;
 
@@ -132,7 +132,7 @@ sc1 = function(){
 		this.x1 = 0.000;
 		this.y1 = 0.000;
 		this.z1 = 0.000;
-		this.fruitSize = 4.6;
+		this.fruitSize = 0;
 		
 		this.num=20;
 		//this.scale:new THREE.Vector3(5,10,5);
@@ -205,7 +205,7 @@ sc1 = function(){
 		//f0.add(this.text, 'rotatorz',-3,3);
 		f0.add(this.text, 'fruitSize',0.01,10);
 	
-		var f1 = gui.addFolder('motion');
+	var f1 = gui.addFolder('motion');
 		f1.add(this.text, 'speed', 0, .1);
 		f1.add(this.text, 'speed2', 0.0000001,10);
 		f1.add(this.text, 'size', 1, 100);
@@ -257,7 +257,7 @@ sc1.prototype.init = function() {
 	this.camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 1, 10000 );
 	this.camera.position.z = 0;
 	this.camera.position.y = 0;
-	this.camera.position.x = 600;
+	this.camera.position.x = 450;
 
 	//this.controls = new THREE.OrbitControls( this.camera );
 	//this.controls.addEventListener( 'change', this.render );
@@ -266,7 +266,24 @@ sc1.prototype.init = function() {
 	this.scene.fog = new THREE.FogExp2( 0x000000, 0.00052 );
 	this.camera.lookAt(new THREE.Vector3(0,0,0));
 	//this.scene.add(this.camera);
+	var loader2 = new THREE.OBJLoader();
+				
+	loader2.addEventListener( 'load', function ( event ) {
 
+		var object = event.content;
+
+		object.position = new THREE.Vector3(  0,-25,0  );
+		object.scale.x = 10000;
+		spine.push(object);
+		loader2.object = object;
+		
+	});
+	loader2.load( 'models/vertebrae_lorez.obj' );
+	loader2.load( 'models/bone.obj' );
+	
+	
+	
+			
 	this.addGeo();
 
 	var light = new THREE.DirectionalLight( 0xffffff );
@@ -293,8 +310,6 @@ sc1.prototype.init = function() {
 	
 }
 
-
-
 sc1.prototype.addGeo = function(){
 
 	var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
@@ -304,30 +319,61 @@ sc1.prototype.addGeo = function(){
 
 	var div = document.getElementById('user');
 	//var divAnim = document.getElementById('anim');
-	user.defaultValue ='{"num":25,"scale":[5,8,5],"ss":0.96,"leaves":1,"divs":5,"rads":2,"leafss":[0.95,0.8,0.2],"leafDivs":[2,4,2],"fruit":true,"term":[0,1],"leafJoints":[10,10,10],"jScale2":[3,3,3],"anim":{"x1":[0,0.1,0.2,0.3,0],"x2":[0,0,0],"y1":[0.1,0.2],"y2":[-0.8],"x3":[1,1,1]}}';
+	user.defaultValue ='{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":58.714930232559325,"speed":0.004510218463706836,"speed2":3.833685755813953,"num":-250.29102036424322,"x":0.004397463002114165,"y":0.01,"z":0,"x1":[0,0.19624803324595885,0.2,0.3,0],"y1":[0.1990838618745595,0.2],"z1":[0,null],"x2":[0,0.36948767638721924,0],"y2":[0.42459478505990134,-0.21952711029306582],"z2":[-0.16173361522198731,null],"x3":[0.26673713883016203,1,1],"y3":[0,1.5707963267948966],"z3":[0,null],"x4":[0,1.5707963267948966],"y4":[0,null],"z4":[0,null],"off":[0,0],"sc":[0.97,0.8540410132689988,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":55,"scale":[12,12,12],"sx":12,"sy":12,"sz":12,"ss":1,"leaves":1,"divs":2,"rads":3,"animFunc":2,"fruit":true,"fruitScale":{"x":1,"y":1,"z":1},"leafJoints":[10,5],"leafDivs":[2,4],"leafss":[1,0.9],"angles":[0.6283185307179586,0.6283185307179586],"term":[0,1],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":1,"y":24,"z":1}],"leafRads":[2,2]}';
+	
+	
 	
 	
 	var your_object = JSON.parse(user.value);
-	var parms={color1:0x225577,color2:0xbbffdd,color3:0x0099ff};
+	var parms={color1:0x225577,color2:0xbbffdd,color3:0x0099ff,geo2:new THREE.SphereGeometry(0.1,12,6)};
 	this.rotator = new THREE.Object3D(0,0,0);
 	var mesh = new THREE.Mesh(geometry);
 	var dir = new THREE.Vector3(.1,.5,-.4);
 	
-		
-	// loading loader loaded OBJ
-
-	//
+	var numJoints = 1000;
+	
+	while(numJoints > 350 || numJoints < 100){
+		your_object.anim.size = randly(1,100);
+		your_object.num = randInt(10,100);
+		your_object.anim.x3[0] = randly(0.1,1);
+		your_object.anim.y3[0] = randly(0.001,0.1);
+		your_object.anim.z3[0] = randly(0.1,1);
+		your_object.anim.x3[1] = randly(0.1,3);
+		your_object.anim.y3[1] = randly(0.001,1);
+		your_object.anim.z3[1] = randly(0.1,3);
+		your_object.anim.speed = randly(0.001,0.003);
+		your_object.divs = randInt(2,5);
+		your_object.anim.num = rand(1,100);
+		your_object.leafRads[0] = randInt(2,5);
+		your_object.anim.x2[1] = rand(-0.5,1.2);
+		your_object.jScale[1].y = rand(2,70);
+		your_object.jScale[1].x = rand(1,8);
+		your_object.jScale[1].z = your_object.jScale[1].x;
+		your_object.leafJoints[1] = randInt(3,25);
+		numJoints = your_object.num + ( (your_object.num/your_object.divs) * your_object.leafJoints[1] * your_object.rads);
+	}
+	
+	console.log ("numb joints: " + numJoints);
+	
+	if(spine.length>0){
+		your_object.altGeo = [];
+		your_object.altGeo[0] = spine[0].children[0].geometry;
+		your_object.altGeo[1] = spine[1].children[0].geometry;
+	}
+	console.log(your_object.altGeo || "boof");
+	
+	your_object.fruitScale = new THREE.Vector3(0,0,0);
+	your_object.geo2 = new THREE.SphereGeometry(0.1,12,6);
 	
 	for ( var i = 0 ; i < 1 ; i++){
 	
 		var cuber = new peep(your_object);
 		
 		cuber.makeParams(your_object);
-		cuber.altGeo =  new Array(new THREE.CylinderGeometry( 1,1,1,4,1));
 		//console.log(JSON.stringify(cuber.p));
 		//console.log(cuber.joints);
 		cuber.branchSquares();
-		cuber.big.position.y = -100;
+		cuber.big.position.y = -120;
 		
 		this.rotator.add(cuber.big);
 
@@ -423,7 +469,7 @@ sc1.prototype.moveThings = function(){
 		}
 		
 		thing.p.anim.size = this.text.size+ sizeCounter;
-		thing.p.anim.x = this.text.x;
+		thing.p.anim.x = this.text.x;// + rand(0,.00001);
 		thing.p.anim.y = this.text.y;
 		thing.p.anim.z = this.text.z;
 		thing.p.anim.speed = this.text.speed;
@@ -446,8 +492,12 @@ sc1.prototype.animate = function(){
 	//console.log("HIHIHI");
 	//console.log(this.text);
 	
-
-	if(rebuild){
+	if(counter<50){
+		counter++;
+		//console.log(counter);
+	}
+	
+	if(rebuild || counter==3){
 		//make a fake tree
 		if(helpGeo){
 			var tree = new THREE.Object3D();
@@ -647,5 +697,9 @@ function onKeyUp(evt) {
 	if(evt.keyCode == 65){
 		console.log(evt.keyCode);
 		$("#.enu").css("position","relative");
+	}
+	
+	if(evt.keyCode == 66){
+		helpGeo = true;
 	}
 }

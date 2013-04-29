@@ -107,6 +107,16 @@ function align(target, dir, rot) {
     target.matrix = revolve;
 }
 
+function rand(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+// Returns a random integer between min and max
+// Using Math.round() will give you a non-uniform distribution!
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 function randly(off,mult){
 
 	var offs = off || -.5;
