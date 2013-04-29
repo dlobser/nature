@@ -2,21 +2,21 @@
 version 6.3 v4
 define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 <layout version="1.0">
-    <window x="0" y="22" w="1680" h="1024" screen="0">
+    <window x="-8" y="-8" w="1936" h="1186" screen="0">
         <splitter orientation="1">
-            <split size="1052"/>
+            <split size="1214"/>
             <splitter orientation="1">
-                <split size="40"/>
+                <split size="46"/>
                 <dock id="" hideTitles="1" activePageId="Toolbar.1">
                     <page id="Toolbar.1"/>
                 </dock>
-                <split size="1008"/>
+                <split size="1164"/>
                 <splitter orientation="2">
-                    <split size="480"/>
+                    <split size="561"/>
                     <dock id="" activePageId="Viewer.1">
                         <page id="Viewer.1"/>
                     </dock>
-                    <split size="479"/>
+                    <split size="560"/>
                     <dock id="" activePageId="DAG.1">
                         <page id="DAG.1"/>
                         <page id="Curve Editor.1"/>
@@ -24,7 +24,7 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
                     </dock>
                 </splitter>
             </splitter>
-            <split size="608"/>
+            <split size="702"/>
             <dock id="" activePageId="Properties.1">
                 <page id="Properties.1"/>
             </dock>
@@ -44,40 +44,41 @@ Noise {
  inputs 0
  center {1024 778}
  name Noise1
- xpos 260
- ypos 249
+ xpos -290
+ ypos 101
 }
 ColorWheel {
  inputs 0
  gamma 0.45
  name ColorWheel1
- xpos 122
- ypos 64
+ xpos -236
+ ypos 346
 }
 Transform {
  scale 1.873
  center {1024 778}
  name Transform1
- xpos 122
- ypos 136
+ xpos -236
+ ypos 418
 }
 Radial {
  inputs 0
- area {-770 -590 2840 2145}
+ area {-680 -640 2750 2195}
  name Radial1
- xpos -27
- ypos 107
+ xpos -354
+ ypos 371
 }
 Tile {
+ mirrorRows true
  columns 2
  name Tile1
- xpos -27
- ypos 131
+ xpos -291
+ ypos 272
 }
 Invert {
  name Invert1
- xpos -27
- ypos 155
+ xpos -274
+ ypos 207
  disable true
 }
 ColorCorrect {
@@ -85,140 +86,111 @@ ColorCorrect {
  gain 0.45
  offset 0.0015
  name ColorCorrect2
- xpos -27
- ypos 191
+ xpos -220
+ ypos 159
 }
 Merge2 {
  inputs 2
  operation multiply
  mix 0.645
  name Merge1
- xpos 122
- ypos 191
+ xpos -73
+ ypos 345
 }
 HueShift {
- saturation 0.2
+ saturation 0.6
  hue_rotation 27
  name HueShift1
- xpos 122
- ypos 235
+ xpos -73
+ ypos 369
 }
+set N85a3de0 [stack 0]
 ColorCorrect {
  inputs 1+1
  gain 0
  name ColorCorrect3
- xpos 122
- ypos 278
-}
-ColorCorrect {
- gamma 3.2
- gain 1.3
- offset 0.09
- name ColorCorrect4
- xpos 122
- ypos 302
+ xpos -214
+ ypos 75
 }
 Crop {
  box {0 0 2048 1556}
  name Crop1
- xpos 122
- ypos 336
-}
-Reformat {
- type "to box"
- box_width 1024
- box_height 512
- box_fixed true
- scale 0.2
- resize distort
- name Reformat2
- xpos 109
- ypos 365
-}
-EnvConvolve {
- name EnvConvolve2
- xpos 120
- ypos 404
-}
-Reformat {
- resize distort
- name Reformat3
- xpos 164
- ypos 384
+ xpos -201
+ ypos -23
 }
 Blur {
  size 520
  name Blur1
- xpos 240
- ypos 330
+ xpos -187
+ ypos -97
  disable true
 }
-set N97cdea0 [stack 0]
+set N9dddd90 [stack 0]
 SphericalTransform {
  input "Lat Long map"
  output Cube
  out_rx 90
  fix true
  name SphericalTransform5
- xpos 633
- ypos -163
+ xpos -128
+ ypos -266
 }
-push $N97cdea0
+push $N9dddd90
 SphericalTransform {
  input "Lat Long map"
  output Cube
  out_rx -90
  fix true
  name SphericalTransform6
- xpos 819
- ypos -40
+ xpos 58
+ ypos -143
 }
-push $N97cdea0
+push $N9dddd90
 SphericalTransform {
  input "Lat Long map"
  output Cube
  out_ry 90
  fix true
  name SphericalTransform2
- xpos 736
- ypos 113
+ xpos -25
+ ypos 10
 }
-push $N97cdea0
+push $N9dddd90
 SphericalTransform {
  input "Lat Long map"
  output Cube
  out_ry -90
  fix true
  name SphericalTransform4
- xpos 498
- ypos 116
+ xpos -263
+ ypos 13
 }
-push $N97cdea0
+push $N9dddd90
 SphericalTransform {
  input "Lat Long map"
  output Cube
  fix true
  name SphericalTransform1
- xpos 633
- ypos 112
+ xpos -128
+ ypos 9
 }
-push $N97cdea0
+push $N9dddd90
 SphericalTransform {
  input "Lat Long map"
  output Cube
  out_ry 180
  fix true
  name SphericalTransform3
- xpos 868
- ypos 115
+ xpos 107
+ ypos 12
 }
 SphericalTransform {
  inputs 6
  input Cube
  fix true
  name SphericalTransform7
- xpos 1096
- ypos 253
+ xpos 335
+ ypos 150
 }
 CheckerBoard2 {
  inputs 0
@@ -361,30 +333,29 @@ Ramp {
  p0 {100 15}
  p1 {70 1585}
  name Ramp1
- xpos 12
- ypos -67
+ xpos 32
+ ypos 325
 }
-push $N97cdea0
-SphericalTransform {
- input "Lat Long map"
- ry 90
- output Cube
- out_rx {{curve x1 0 0 x4 0 x5 90 -90}}
- out_ry {{curve x1 0 90 -180 -90 0}}
- out_rz {{curve x1 0}}
- fix true
- name SphericalTransform9
- xpos 240
- ypos 366
-}
-set N9e30800 [stack 0]
+push $N85a3de0
 Viewer {
+ frame 4
  input_process false
  name Viewer1
  xpos -157
  ypos 235
 }
-push $N9e30800
+push $N9dddd90
+SphericalTransform {
+ input "Lat Long map"
+ output Cube
+ out_rx {{curve i x1 0 0 x4 0 x5 90 -90}}
+ out_ry {{curve i x1 0 90 -180 -90 0}}
+ out_rz {{curve i x1 0}}
+ fix true
+ name SphericalTransform9
+ xpos -145
+ ypos 102
+}
 Reformat {
  type "to box"
  box_width 256
@@ -392,16 +363,16 @@ Reformat {
  box_fixed true
  resize distort
  name Reformat1
- xpos 240
- ypos 402
+ xpos -75
+ ypos 167
 }
 Write {
  file C:/Users/David/Documents/GitHub/nature/textures/cmap.##.jpg
  file_type jpeg
  checkHashOnRead false
- version 29
+ version 23
  name Write1
  selected true
- xpos 240
- ypos 426
+ xpos -49
+ ypos 207
 }
