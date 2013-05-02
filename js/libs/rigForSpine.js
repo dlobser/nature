@@ -12,7 +12,7 @@ function peep(params){
 	
 	//attempting to use geoDivs to set the divs on my geo does NOT work - fix later
 	this.defaults = {
-		geo:new THREE.CylinderGeometry( 1,1,1,12,1),
+		geo:new THREE.CylinderGeometry( 0.01,0.01,1,2,1),
 		geo2:new THREE.SphereGeometry(0.58,12,6)
 	}
 
@@ -35,7 +35,7 @@ function peep(params){
 	
 	this.material =  new THREE.MeshLambertMaterial( { color:this.color1, shading: THREE.SmoothShading } );
 	
-	this.path = "textures/cmap.";
+	this.path = "textures/bmap.";
 	this.format = '.jpg';
 	this.urls = [
 		this.path + '04' + this.format, this.path + '02' + this.format,

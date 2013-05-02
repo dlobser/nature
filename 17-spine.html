@@ -1,0 +1,373 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+	<title>three.js tutorial</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<style>
+		body 
+		{
+			font-family: Monospace;
+			font-weight: bold;
+			background-color: #ccccff;
+			margin: 5px;
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body>
+
+<p id="errorMessage"></p>
+
+<video id="monitor" autoplay width="160" height="120" style="visibility: hidden; float:left;"></video>
+<canvas id="videoImage" width="160" height="120" style="visibility: hidden; float:left;"></canvas>
+
+<script>
+navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.getUserMedia;
+window.URL = window.URL || window.webkitURL;
+
+var camvideo = document.getElementById('monitor');
+
+	if (!navigator.getUserMedia) 
+	{
+		document.getElementById('errorMessage').innerHTML = 
+			'Sorry. <code>navigator.getUserMedia()</code> is not available.';
+		return;
+	}
+	navigator.getUserMedia({video: true}, gotStream, noStream);
+
+function gotStream(stream) 
+{
+	if (window.URL) 
+	{   camvideo.src = window.URL.createObjectURL(stream);   } 
+	else // Opera
+	{   camvideo.src = stream;   }
+
+	camvideo.onerror = function(e) 
+	{   stream.stop();   };
+
+	stream.onended = noStream;
+}
+
+function noStream(e) 
+{
+	var msg = 'No camera available.';
+	if (e.code == 1) 
+	{   msg = 'User denied access to use camera.';   }
+	document.getElementById('errorMessage').textContent = msg;
+}
+</script>
+
+<script src="js/Three.js"></script>
+<script src="js/Detector.js"></script>
+<script src="js/Stats.js"></script>
+<script src="js/TrackballControls.js"></script>
+<script src="https://raw.github.com/jeromeetienne/threex/master/THREEx.KeyboardState.js"></script>
+<script src="https://raw.github.com/jeromeetienne/threex/master/THREEx.FullScreen.js"></script>
+<script src="https://raw.github.com/jeromeetienne/threex/master/THREEx.WindowResize.js"></script>
+
+
+	<div id="container" style="position:absolute"></div>
+		
+		<script src="js/three/build/three.min.js"></script>
+		<script src="js/libs/LobserCollection.js"></script>
+		<script src="js/libs/jquery.js"></script>
+		<script src="js/libs/ImprovedNoise.js"></script>
+
+		<script src="js/three/js/controls/OrbitControls.js"></script>
+		<script src="js/libs/processing.js"></script>
+
+		<script src="js/three/js/Detector.js"></script>
+		<script src="js/three/js/libs/stats.min.js"></script>
+		
+		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
+		
+		<script src="js/libs/filesaver.js"></script>
+
+		<script src="js/libs/three/build/three.min.js"></script>
+		
+		<script src="js/three/js/controls/OrbitControls.js"></script>
+
+		<script src="js/three/js/Detector.js"></script>
+		<script src="js/three/js/libs/stats.min.js"></script>
+		<script src="js/16-spine.js"></script>
+
+		<script src="js/libs/rigForSpine.js"></script>
+		
+
+<script>
+/*
+	Three.js "tutorials by example"
+	Author: Lee Stemkoski
+	Date: March 2013 (three.js v56)
+ */
+	
+// MAIN
+
+// standard global variables
+var container, scene, camera, renderer, controls, stats;
+var keyboard = new THREEx.KeyboardState();
+
+// custom global variables
+var video, videoImage, videoImageContext, videoTexture;
+
+var num = 0;
+var rebuild = false;
+var things = [];
+var boxes = [];
+var vector = new THREE.Vector3(0,0,0);
+var objRotate = false;
+var sizeCounter=0;
+var helpGeo = false;
+var paint = [];
+
+var counter = 0;
+var spine = [];
+
+var up = 0;
+
+init();
+animate();
+
+// FUNCTIONS 		
+function init() 
+{
+	// SCENE
+	scene = new THREE.Scene();
+	// CAMERA
+	var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+	var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+	scene.add(camera);
+	camera.position.set(0,150,400);
+	camera.lookAt(scene.position);	
+	// RENDERER
+	if ( Detector.webgl )
+		renderer = new THREE.WebGLRenderer( {antialias:true} );
+	else
+		renderer = new THREE.CanvasRenderer(); 
+	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	container = document.createElement( 'div' );
+	// CSS added so the hidden HTML elements do not reposition this one
+	container.style.cssText = "position:absolute;top:0px;left:0px;";
+	document.body.appendChild( container );
+	container.appendChild( renderer.domElement );
+	// CONTROLS
+	//controls = new THREE.TrackballControls( camera );
+	// EVENTS
+	THREEx.WindowResize(renderer, camera);
+	THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
+	// STATS
+	stats = new Stats();
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.bottom = '0px';
+	stats.domElement.style.zIndex = 100;
+	container.appendChild( stats.domElement );
+	// LIGHT
+	var light = new THREE.PointLight(0xffffff);
+	light.position.set(0,250,0);
+	scene.add(light);
+	// FLOOR
+	var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
+	floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
+	floorTexture.repeat.set( 10, 10 );
+	var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );
+	var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
+	var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+	floor.position.y = -0.5;
+	floor.rotation.x = Math.PI / 2;
+	scene.add(floor);
+	// SKYBOX/FOG
+	scene.fog = new THREE.FogExp2( 0x9999ff, 0.00025 );
+	
+	
+	
+	
+	var loader2 = new THREE.OBJLoader();
+				
+	loader2.addEventListener( 'load', function ( event ) {
+
+		var object = event.content;
+
+		object.position = new THREE.Vector3(  0,-25,0  );
+		object.scale.x = 10000;
+		spine.push(object);
+		loader2.object = object;
+		
+	});
+	loader2.load( 'models/vertebrae_lorez.obj' );
+	loader2.load( 'models/bone.obj' );
+	
+	
+	
+			
+	addGeo();
+	
+	
+	///////////
+	// VIDEO //
+	///////////
+
+	video = document.getElementById( 'monitor' );
+	
+	videoImage = document.getElementById( 'videoImage' );
+	videoImageContext = videoImage.getContext( '2d' );
+	// background color if no video present
+	videoImageContext.fillStyle = '#000000';
+	videoImageContext.fillRect( 0, 0, videoImage.width, videoImage.height );
+
+	videoTexture = new THREE.Texture( videoImage );
+	videoTexture.minFilter = THREE.LinearFilter;
+	videoTexture.magFilter = THREE.LinearFilter;
+	
+	var movieMaterial = new THREE.MeshBasicMaterial( { map: videoTexture, overdraw: true, side:THREE.DoubleSide } );
+	// the geometry on which the movie will be displayed;
+	// 		movie image will be scaled to fit these dimensions.
+	var movieGeometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
+	var movieScreen = new THREE.Mesh( movieGeometry, movieMaterial );
+	movieScreen.position.set(0,50,0);
+	scene.add(movieScreen);
+	
+	camera.position.set(0,150,300);
+	camera.lookAt(movieScreen.position);
+				
+	
+}
+
+function addGeo(){
+
+	var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
+	var g2 = new THREE.CubeGeometry( 1,1,1 );
+	var g1 = new THREE.Geometry();
+	var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
+
+	//var div = document.getElementById('user');
+	//var divAnim = document.getElementById('anim');
+	var defaultValue ='{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":58.714930232559325,"speed":0.004510218463706836,"speed2":3.833685755813953,"num":-250.29102036424322,"x":0.004397463002114165,"y":0.01,"z":0,"x1":[0,0.19624803324595885,0.2,0.3,0],"y1":[0.1990838618745595,0.2],"z1":[0,null],"x2":[0,0.36948767638721924,0],"y2":[0.42459478505990134,-0.21952711029306582],"z2":[-0.16173361522198731,null],"x3":[0.26673713883016203,1,1],"y3":[0,1.5707963267948966],"z3":[0,null],"x4":[0,1.5707963267948966],"y4":[0,null],"z4":[0,null],"off":[0,0],"sc":[0.97,0.8540410132689988,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":55,"scale":[12,12,12],"sx":12,"sy":12,"sz":12,"ss":1,"leaves":1,"divs":2,"rads":3,"animFunc":2,"fruit":true,"fruitScale":{"x":1,"y":1,"z":1},"leafJoints":[10,5],"leafDivs":[2,4],"leafss":[1,0.9],"angles":[0.6283185307179586,0.6283185307179586],"term":[0,1],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":1,"y":24,"z":1}],"leafRads":[2,2]}';
+	
+	
+	
+	
+	var your_object = JSON.parse(defaultValue);
+	var parms={color1:0x225577,color2:0xbbffdd,color3:0x0099ff,geo2:new THREE.SphereGeometry(0.1,12,6)};
+	this.rotator = new THREE.Object3D(0,0,0);
+	var mesh = new THREE.Mesh(geometry);
+	var dir = new THREE.Vector3(.1,.5,-.4);
+	
+	var numJoints = 1000;
+	
+	while(numJoints > 350 || numJoints < 100){
+		your_object.anim.size = randly(1,100);
+		your_object.num = randInt(10,100);
+		your_object.anim.x3[0] = randly(0.1,1);
+		your_object.anim.y3[0] = randly(0.001,0.1);
+		your_object.anim.z3[0] = randly(0.1,1);
+		your_object.anim.x3[1] = randly(0.1,3);
+		your_object.anim.y3[1] = randly(0.001,1);
+		your_object.anim.z3[1] = randly(0.1,3);
+		your_object.anim.speed = randly(0.001,0.003);
+		your_object.divs = randInt(2,5);
+		your_object.anim.num = rand(1,100);
+		your_object.leafRads[0] = randInt(2,5);
+		your_object.anim.x2[1] = rand(-0.5,1.2);
+		your_object.jScale[1].y = rand(2,70);
+		your_object.jScale[1].x = rand(1,8);
+		your_object.jScale[1].z = your_object.jScale[1].x;
+		your_object.leafJoints[1] = randInt(3,25);
+		numJoints = your_object.num + ( (your_object.num/your_object.divs) * your_object.leafJoints[1] * your_object.rads);
+	}
+	
+	console.log ("numb joints: " + numJoints);
+	
+	if(spine.length>0){
+		your_object.altGeo = [];
+		your_object.altGeo[0] = spine[0].children[0].geometry;
+		your_object.altGeo[1] = spine[1].children[0].geometry;
+	}
+	console.log(your_object.altGeo || "boof");
+	
+	your_object.fruitScale = new THREE.Vector3(0,0,0);
+	your_object.geo2 = new THREE.SphereGeometry(0.1,12,6);
+	
+	for ( var i = 0 ; i < 1 ; i++){
+	
+		var cuber = new peep(your_object);
+		
+		cuber.makeParams(your_object);
+		//console.log(JSON.stringify(cuber.p));
+		//console.log(cuber.joints);
+		cuber.branchSquares();
+		cuber.big.position.y = -120;
+		
+		this.rotator.add(cuber.big);
+
+		scene.add(this.rotator);
+		things.push(cuber);
+		things[i].animVals = cuber.p.anim;
+		
+		for(var i = 0 ; i < cuber.branches.length ; i++){
+			
+				//console.log(cuber.branches[i][0].parent.parent.rotation.y);
+			
+		
+		}
+		
+		
+	}
+
+//	console.log(things);
+	
+	
+}
+
+function moveThings(){
+	
+	
+		sizeCounter+=.001;
+		
+		things[0].animate();
+		things[0].p.anim.num-=this.text.speed*this.text.speed2;
+		
+		
+	
+	var rot = new THREE.Vector3(this.text.rotatorx,this.text.rotatory,this.text.rotatorz);
+
+	this.rotator.rotation = vector;
+}
+
+
+function animate() 
+{
+    requestAnimationFrame( animate );
+	render();	
+moveThings();	
+	update();
+}
+
+function update()
+{		
+	if ( keyboard.pressed("p") ) // pause
+		video.pause();
+	if ( keyboard.pressed("r") ) // resume
+		video.play();
+	controls.update();
+	stats.update();
+}
+
+function render() 
+{	
+	if ( video.readyState === video.HAVE_ENOUGH_DATA ) 
+	{
+		videoImageContext.drawImage( video, 0, 0, videoImage.width, videoImage.height );
+		if ( videoTexture ) 
+			videoTexture.needsUpdate = true;
+	}
+
+	renderer.render( scene, camera );
+}
+
+</script>
+
+</body>
+</html>

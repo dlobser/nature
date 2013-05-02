@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Nature</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+       
+		 background-color: black;
+      }
+	.dg.main {
+		
+	}
+	#processing-canvas {
+		position:absolute;
+		
+		width:1920px;
+		height:1080px;
+		
+	   
+		background-color: black;
+		z-index:-1;
+	}
+    </style>
+    <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="../assets/ico/favicon.png">
+								   
+  </head>
+
+	<body>
+	<!--
+		<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="http://natureofcode.com/">Nature of Code</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="sketches.html">Sketches</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="http://www.DLobser.com">Dlobser.com</a></li>
+            </ul>
+			<script src="js/libs/orbit2.js"></script>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+		<div id="container" style="position:absolute"></div>
+		
+		<script src="js/three/build/three.min.js"></script>
+		<script src="js/libs/LobserCollection.js"></script>
+		<script src="js/libs/jquery.js"></script>
+		<script src="js/libs/ImprovedNoise.js"></script>
+
+		<script src="js/three/js/controls/OrbitControls.js"></script>
+		<script src="js/libs/processing.js"></script>
+
+		<script src="js/three/js/Detector.js"></script>
+		<script src="js/three/js/libs/stats.min.js"></script>
+		
+		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
+		
+		<script src="js/libs/filesaver.js"></script>
+
+		<script src="js/libs/three/build/three.min.js"></script>
+		
+		<script src="js/three/js/controls/OrbitControls.js"></script>
+
+		<script src="js/three/js/Detector.js"></script>
+		<script src="js/three/js/libs/stats.min.js"></script>
+		<script src="js/18-jelly.js"></script>
+
+		<script src="js/libs/rigForSpine.js"></script>
+		
+		
+		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
+		<div class="everything" style="margin-top:-50px">
+			<img src="images/ylem.png" padding="10px" alt="Ylem" height="500" width="250">
+			<p style="padding-left:10px">branching animation and modeling</p>
+			<div class="menu" style="position:absolute;line-height:.3em;padding-left:10px">
+			<select id="select">
+				<option value="1">Anemone my Enemy</option>
+				<option value="2">Tentacle Paintbrush</option>
+				<option value="3">Egg Beater</option>
+				<option vanlue="4">The Aristocrat</option>
+				<option value="5">I Believe I Can Fly</option>
+				<option value="6">Cages</option>
+				<option value="7">For Amusement Only</option>
+				<option value="8">Something Wicked This Way Comes</option>
+			</select>
+			<br><br></br>
+			<input type="button" id="buttonid" value="applyPreset" onclick="applyPreset()" style="padding:10"><br><br><br></br>
+<!--
+			<p>leaf#ss = scale factor - between .9 and 1.1 is suggested</p><br>
+			<p>leafJoint# = amount of joints on branch, not too many or crash!</p><br>
+			<p>jScale# = scale for branch,requires array with 3 values - [1,2,3]</p><br>
+			<p>leafDiv# = number of divisions on the branch</p><br><br>
+			<p>term# = # of leaves minus this number determines if fruit goes here</p><br>
+			<p>fruit = boolean - adds balls to the end of branches based on 'term' settings</br></br></br>
+			-->
+			<p>parameters</p><br>
+			
+			
+			<textarea id="user"  name="user" defaultValue='{"num":25,"scale":[5,12,5],"ss":0.96,"leaves":2,"divs":5,"rads":2,"leaf1ss":0.9,"jScale1":[2,3,2],"leaf0ss":0.9}'}' cols="100" rows="10"></textarea><br>
+			
+			<input type="button" id="buttonid" value="rebuild" onclick="rebuilder()">
+			<input type="button" id="buttonid" value="save.obj" onclick="saver()">
+			<input type="button" id="buttonid" value="helperGeo" onclick="helperGeo()"><br>
+			<input type="button" id="buttonid" value="slidersToParams" onclick="slidersToParams()">
+			<input type="button" id="buttonid" value="writePaint" onclick="writePaint()">
+				
+			</div>
+		</div>
+		</body>
+		</html>
+		<div id="container2">
+		<script>
+		
+			
+		
+		var scene = new sc1();
+		
+		window.addEventListener('load', function() { scene.init();scene.animate();}, false)
+	
+		</script>
+	</div>
+	
+	
+		</form>
+		
+
+<canvas id="processing-canvas" style="align:center"> </canvas>
+<script type="text/processing" data-processing-target="processing-canvas">
+
+var ballz = [];
+var counter = 0;
+
+void setup() {
+
+  size(1920, 1080);
+ // background(255);
+ // noStroke();
+
+}
+
+void draw(){
+
+	if(helpGeo){
+	if(counter>32){
+			fill(255);
+			rect(0,0,width,height);
+		}
+		killEverything(scene);
+		fill(255,0);
+		rect(0,0,width,height);
+		fill(0,0);
+	//	fill(counter*60);
+		rect(0,0,width,height);
+		for(var j = 0 ; j < 1 ; j++){
+			for(var i = 0; i<things[0].msh.length ; i++){
+				
+				if(i<100){
+					float randX = noise(i/100)*10;
+					float randY = noise((i/100)+1000)*10;
+					fill(0,0);
+					//stroke(random(255),random(255),random(255));
+					stroke(counter*10);
+					//strokeWeight(counter);
+					var thing = things[0].msh[randInt(1,things[0].msh.length-1)];
+					thing.updateMatrixWorld();
+					var vector = thing.geometry.vertices[0].clone();
+					thing.matrixWorld.multiplyVector3( vector );
+					var ch = random(i);
+					ellipse((-vector.z*7+width/2)+rand(1,10),-(vector.y*7-height/4)+randY,thing.scale.x*counter,thing.scale.y*counter);//counter*(i*.1),counter*(i*.1));
+					console.log(randX);
+					paint.push(-vector.z);
+					paint.push(-(vector.y));
+					paint.push(up);
+				
+				}
+				else j=1;
+			}
+			
+			//rect(0,0,width,height);
+		}
+		counter++;
+		
+		
+		if(counter>32){
+			fill(255);
+			rect(0,0,width,height);
+			helpGeo = false;
+			counter = 0;
+			rebuild = true;
+			fill(0);
+			rect(0,0,width,height);
+		}
+			//rebuild = true;
+	}
+	
+	if(rebuild){
+		fill(255,0);
+		noStroke();
+		rect(0,0,width,height);
+	}
+
+}
+
+</script>
+
+	</body>
+</html>
