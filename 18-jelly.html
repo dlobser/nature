@@ -21,7 +21,7 @@
 		position:absolute;
 		
 		width:1920px;
-		height:1080px;
+		height:1200px;
 		
 	   
 		background-color: black;
@@ -45,24 +45,7 @@
   </head>
 
 	<body>
-	<!--
-		<div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="http://natureofcode.com/">Nature of Code</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li><a href="sketches.html">Sketches</a></li>
-              <li><a href="about.html">About</a></li>
-              <li><a href="http://www.DLobser.com">Dlobser.com</a></li>
-            </ul>
-			<script src="js/libs/orbit2.js"></script>
-          </div><!--/.nav-collapse -->
+	
         </div>
       </div>
     </div>
@@ -95,7 +78,7 @@
 		
 		
 		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
-		<div class="everything" style="margin-top:-50px">
+		<div class="everything" style="margin-top:0px">
 			<img src="images/ylem.png" padding="10px" alt="Ylem" height="500" width="250">
 			<p style="padding-left:10px">branching animation and modeling</p>
 			<div class="menu" style="position:absolute;line-height:.3em;padding-left:10px">
@@ -136,98 +119,12 @@
 		</html>
 		<div id="container2">
 		<script>
-		
-			
-		
+
 		var scene = new sc1();
-		
 		window.addEventListener('load', function() { scene.init();scene.animate();}, false)
 	
 		</script>
 	</div>
-	
-	
-		</form>
-		
-
-<canvas id="processing-canvas" style="align:center"> </canvas>
-<script type="text/processing" data-processing-target="processing-canvas">
-
-var ballz = [];
-var counter = 0;
-
-void setup() {
-
-  size(1920, 1080);
- // background(255);
- // noStroke();
-
-}
-
-void draw(){
-
-	if(helpGeo){
-	if(counter>32){
-			fill(255);
-			rect(0,0,width,height);
-		}
-		killEverything(scene);
-		fill(255,0);
-		rect(0,0,width,height);
-		fill(0,0);
-	//	fill(counter*60);
-		rect(0,0,width,height);
-		for(var j = 0 ; j < 1 ; j++){
-			for(var i = 0; i<things[0].msh.length ; i++){
-				
-				if(i<100){
-					float randX = noise(i/100)*10;
-					float randY = noise((i/100)+1000)*10;
-					fill(0,0);
-					//stroke(random(255),random(255),random(255));
-					stroke(counter*10);
-					//strokeWeight(counter);
-					var thing = things[0].msh[randInt(1,things[0].msh.length-1)];
-					thing.updateMatrixWorld();
-					var vector = thing.geometry.vertices[0].clone();
-					thing.matrixWorld.multiplyVector3( vector );
-					var ch = random(i);
-					ellipse((-vector.z*7+width/2)+rand(1,10),-(vector.y*7-height/4)+randY,thing.scale.x*counter,thing.scale.y*counter);//counter*(i*.1),counter*(i*.1));
-					console.log(randX);
-					paint.push(-vector.z);
-					paint.push(-(vector.y));
-					paint.push(up);
-				
-				}
-				else j=1;
-			}
-			
-			//rect(0,0,width,height);
-		}
-		counter++;
-		
-		
-		if(counter>32){
-			fill(255);
-			rect(0,0,width,height);
-			helpGeo = false;
-			counter = 0;
-			rebuild = true;
-			fill(0);
-			rect(0,0,width,height);
-		}
-			//rebuild = true;
-	}
-	
-	if(rebuild){
-		fill(255,0);
-		noStroke();
-		rect(0,0,width,height);
-	}
-
-}
-
-</script>
 
 	</body>
 </html>

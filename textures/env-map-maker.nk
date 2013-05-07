@@ -2,21 +2,21 @@
 version 6.3 v4
 define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 <layout version="1.0">
-    <window x="0" y="22" w="1680" h="1024" screen="0">
+    <window x="-8" y="-8" w="1936" h="1186" screen="0">
         <splitter orientation="1">
-            <split size="1052"/>
+            <split size="1214"/>
             <splitter orientation="1">
-                <split size="40"/>
+                <split size="46"/>
                 <dock id="" hideTitles="1" activePageId="Toolbar.1">
                     <page id="Toolbar.1"/>
                 </dock>
-                <split size="1008"/>
+                <split size="1164"/>
                 <splitter orientation="2">
-                    <split size="480"/>
+                    <split size="561"/>
                     <dock id="" activePageId="Viewer.1">
                         <page id="Viewer.1"/>
                     </dock>
-                    <split size="479"/>
+                    <split size="560"/>
                     <dock id="" activePageId="DAG.1">
                         <page id="DAG.1"/>
                         <page id="Curve Editor.1"/>
@@ -24,7 +24,7 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
                     </dock>
                 </splitter>
             </splitter>
-            <split size="608"/>
+            <split size="702"/>
             <dock id="" activePageId="Properties.1">
                 <page id="Properties.1"/>
             </dock>
@@ -35,13 +35,51 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 Root {
  inputs 0
  name C:/Users/David/Documents/GitHub/nature/textures/env-map-maker.nk
- frame 4
+ frame 2
  format "2048 1556 0 0 2048 1556 1 2K_Super_35(full-ap)"
  proxy_type scale
  proxy_format "1024 778 0 0 1024 778 1 1K_Super_35(full-ap)"
 }
 Noise {
  inputs 0
+ invert true
+ type turbulence
+ size 180
+ lacunarity 1.94
+ gain 0.485
+ gamma 1
+ center {1024 778}
+ name Noise2
+ xpos -130
+ ypos 433
+}
+ColorCorrect {
+ gamma 0.245
+ gain {0.150000006 0.6000000238 1 1}
+ offset {0 0.1000000015 0.1700000018 0}
+ name ColorCorrect8
+ xpos -130
+ ypos 457
+}
+ColorCorrect {
+ saturation 0.11
+ gamma 0.32
+ gain 2.38
+ name ColorCorrect9
+ xpos -130
+ ypos 481
+}
+Blur {
+ size 52
+ mix 0.61
+ name Blur3
+ xpos -130
+ ypos 572
+}
+Noise {
+ inputs 0
+ size 50
+ zoffset 0.56
  center {1024 778}
  name Noise1
  xpos 260
@@ -50,6 +88,7 @@ Noise {
 ColorWheel {
  inputs 0
  gamma 0.45
+ rotate -2
  name ColorWheel1
  xpos 122
  ypos 64
@@ -64,6 +103,42 @@ Transform {
 Radial {
  inputs 0
  area {-770 -590 2840 2145}
+ name Radial2
+ xpos -122
+ ypos 74
+}
+Tile {
+ columns 2
+ name Tile2
+ xpos -122
+ ypos 98
+ disable true
+}
+Invert {
+ name Invert2
+ xpos -122
+ ypos 122
+ disable true
+}
+ColorCorrect {
+ gamma 0.08
+ gain 0.34
+ offset 0.0015
+ name ColorCorrect12
+ xpos -122
+ ypos 158
+}
+Transform {
+ translate {-632 34}
+ scale {0.4 0.34}
+ center {1024 778}
+ name Transform4
+ xpos -122
+ ypos 182
+}
+Radial {
+ inputs 0
+ area {-770 -590 2840 2145}
  name Radial1
  xpos -27
  ypos 107
@@ -73,6 +148,7 @@ Tile {
  name Tile1
  xpos -27
  ypos 131
+ disable true
 }
 Invert {
  name Invert1
@@ -81,12 +157,26 @@ Invert {
  disable true
 }
 ColorCorrect {
- gamma 0.2
- gain 0.45
+ gamma 0.08
+ gain 0.29
  offset 0.0015
  name ColorCorrect2
  xpos -27
  ypos 191
+}
+Transform {
+ translate {788 24.5}
+ scale {0.4 1}
+ center {1024 778}
+ name Transform3
+ xpos -27
+ ypos 215
+}
+Merge2 {
+ inputs 2
+ name Merge4
+ xpos 4
+ ypos 273
 }
 Merge2 {
  inputs 2
@@ -95,6 +185,7 @@ Merge2 {
  name Merge1
  xpos 122
  ypos 191
+ disable true
 }
 HueShift {
  saturation 0.2
@@ -104,19 +195,13 @@ HueShift {
  ypos 235
 }
 ColorCorrect {
- inputs 1+1
- gain 0
- name ColorCorrect3
- xpos 122
- ypos 278
-}
-ColorCorrect {
  gamma 3.2
  gain 1.3
  offset 0.09
  name ColorCorrect4
  xpos 122
  ypos 302
+ disable true
 }
 Crop {
  box {0 0 2048 1556}
@@ -137,14 +222,161 @@ Reformat {
 }
 EnvConvolve {
  name EnvConvolve2
- xpos 120
+ xpos 91
  ypos 404
+ disable true
+}
+ColorCorrect {
+ inputs 1+1
+ gamma 0.42
+ gain 30.2
+ name ColorCorrect3
+ xpos 91
+ ypos 466
+}
+ColorCorrect {
+ gamma 0.82
+ gain 4
+ name ColorCorrect5
+ xpos 91
+ ypos 490
+}
+ColorCorrect {
+ gamma 0.99
+ gain 0.19
+ name ColorCorrect6
+ xpos 91
+ ypos 514
+}
+ColorCorrect {
+ saturation 1.96
+ contrast 8
+ gamma 1.84
+ name ColorCorrect7
+ xpos 91
+ ypos 538
+}
+Transform {
+ scale {1 10.637}
+ skew 0.007408017758
+ center {512 256}
+ name Transform2
+ xpos 69
+ ypos 571
+}
+ColorCorrect {
+ saturation 0.045
+ gain {0.009999999776 0.03999999911 0.0549999997 0.0549999997}
+ name ColorCorrect10
+ xpos 69
+ ypos 595
+}
+ColorCorrect {
+ saturation 0.4
+ name ColorCorrect13
+ xpos 69
+ ypos 619
+}
+set N9cbf710 [stack 0]
+Blur {
+ size 300
+ name Blur4
+ xpos -28
+ ypos 635
+}
+ColorCorrect {
+ saturation 0
+ gain 29.7
+ name ColorCorrect11
+ xpos -28
+ ypos 680
+}
+Merge2 {
+ inputs 2
+ operation multiply
+ name Merge3
+ xpos -130
+ ypos 730
+}
+push $N9cbf710
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge2
+ xpos 55
+ ypos 700
+}
+Reformat {
+ format "1024 512 0 0 1024 512 1 faffafaff"
+ name Reformat4
+ xpos 55
+ ypos 724
+}
+set N9d9f660 [stack 0]
+SphericalTransform {
+ input "Lat Long map"
+ ry 6
+ format "1024 512 0 0 1024 512 1 faffafaff"
+ fix true
+ name SphericalTransform10
+ xpos 43
+ ypos 773
+}
+set N9d9f990 [stack 0]
+ColorCorrect {
+ gain {0 0 1 1}
+ name ColorCorrect14
+ xpos -1
+ ypos 894
+}
+push 0
+push $N9d9f660
+ColorCorrect {
+ gain {0 0.9800000191 0 1}
+ name ColorCorrect16
+ xpos 66
+ ypos 884
+}
+push $N9d9f660
+SphericalTransform {
+ input "Lat Long map"
+ ry -4
+ format "1024 512 0 0 1024 512 1 faffafaff"
+ fix true
+ name SphericalTransform11
+ xpos 141
+ ypos 773
+}
+ColorCorrect {
+ gain {1 0 0 1}
+ name ColorCorrect15
+ xpos 141
+ ypos 881
+}
+Merge2 {
+ inputs 3+1
+ operation plus
+ name Merge5
+ xpos 130
+ ypos 935
+}
+EnvConvolve {
+ name EnvConvolve3
+ xpos 225
+ ypos 855
+ phexp 130
 }
 Reformat {
  resize distort
  name Reformat3
- xpos 164
- ypos 384
+ xpos 198
+ ypos 707
+}
+Blur {
+ size 8.6
+ name Blur2
+ xpos 211
+ ypos 558
 }
 Blur {
  size 520
@@ -153,7 +385,7 @@ Blur {
  ypos 330
  disable true
 }
-set N97cdea0 [stack 0]
+set Na094da0 [stack 0]
 SphericalTransform {
  input "Lat Long map"
  output Cube
@@ -163,7 +395,7 @@ SphericalTransform {
  xpos 633
  ypos -163
 }
-push $N97cdea0
+push $Na094da0
 SphericalTransform {
  input "Lat Long map"
  output Cube
@@ -173,7 +405,7 @@ SphericalTransform {
  xpos 819
  ypos -40
 }
-push $N97cdea0
+push $Na094da0
 SphericalTransform {
  input "Lat Long map"
  output Cube
@@ -183,7 +415,7 @@ SphericalTransform {
  xpos 736
  ypos 113
 }
-push $N97cdea0
+push $Na094da0
 SphericalTransform {
  input "Lat Long map"
  output Cube
@@ -193,7 +425,7 @@ SphericalTransform {
  xpos 498
  ypos 116
 }
-push $N97cdea0
+push $Na094da0
 SphericalTransform {
  input "Lat Long map"
  output Cube
@@ -202,7 +434,7 @@ SphericalTransform {
  xpos 633
  ypos 112
 }
-push $N97cdea0
+push $Na094da0
 SphericalTransform {
  input "Lat Long map"
  output Cube
@@ -364,7 +596,97 @@ Ramp {
  xpos 12
  ypos -67
 }
-push $N97cdea0
+Read {
+ inputs 0
+ file C:/Users/David/Documents/GitHub/nature/textures/dmap.01.jpg
+ format "256 256 0 0 256 256 1 square_256"
+ origset true
+ name Read13
+ xpos 357
+ ypos 417
+}
+Read {
+ inputs 0
+ file C:/Users/David/Documents/GitHub/nature/textures/dmap.01.jpg
+ format "256 256 0 0 256 256 1 square_256"
+ origset true
+ name Read14
+ xpos 458
+ ypos 359
+}
+Read {
+ inputs 0
+ file C:/Users/David/Documents/GitHub/nature/textures/dmap.01.jpg
+ format "256 256 0 0 256 256 1 square_256"
+ origset true
+ name Read15
+ xpos 625
+ ypos 469
+}
+Read {
+ inputs 0
+ file C:/Users/David/Documents/GitHub/nature/textures/dmap.02.jpg
+ format "256 256 0 0 256 256 1 square_256"
+ origset true
+ name Read16
+ xpos 657
+ ypos 485
+}
+Read {
+ inputs 0
+ file C:/Users/David/Documents/GitHub/nature/textures/dmap.03.jpg
+ format "256 256 0 0 256 256 1 square_256"
+ origset true
+ name Read17
+ xpos 689
+ ypos 501
+}
+Read {
+ inputs 0
+ file C:/Users/David/Documents/GitHub/nature/textures/dmap.04.jpg
+ format "256 256 0 0 256 256 1 square_256"
+ origset true
+ name Read18
+ xpos 711
+ ypos 517
+}
+Read {
+ inputs 0
+ file C:/Users/David/Documents/GitHub/nature/textures/dmap.05.jpg
+ format "256 256 0 0 256 256 1 square_256"
+ origset true
+ name Read19
+ xpos 711
+ ypos 533
+}
+Read {
+ inputs 0
+ file C:/Users/David/Documents/GitHub/nature/textures/dmap.06.jpg
+ format "256 256 0 0 256 256 1 square_256"
+ origset true
+ name Read20
+ xpos 711
+ ypos 549
+}
+push $N9d9f990
+GodRays {
+ rotate 39
+ name GodRays1
+ xpos -51
+ ypos 833
+}
+Noise {
+ inputs 0
+ size 21.5
+ lacunarity 1.29
+ center {1024 778}
+ name Noise3
+ xpos 418
+ ypos 590
+}
+set N1e2e4a90 [stack 0]
+push $N1e2e4a90
+push $Na094da0
 SphericalTransform {
  input "Lat Long map"
  ry 90
@@ -377,14 +699,6 @@ SphericalTransform {
  xpos 240
  ypos 366
 }
-set N9e30800 [stack 0]
-Viewer {
- input_process false
- name Viewer1
- xpos -157
- ypos 235
-}
-push $N9e30800
 Reformat {
  type "to box"
  box_width 256
@@ -395,13 +709,51 @@ Reformat {
  xpos 240
  ypos 402
 }
-Write {
- file C:/Users/David/Documents/GitHub/nature/textures/cmap.##.jpg
- file_type jpeg
- checkHashOnRead false
- version 29
- name Write1
- selected true
+Clamp {
+ name Clamp1
  xpos 240
  ypos 426
+}
+ColorCorrect {
+ inputs 1+1
+ gamma 0.2
+ gain 4
+ offset -0.055
+ name ColorCorrect17
+ xpos 306
+ ypos 616
+}
+ColorCorrect {
+ gain 1.3
+ name ColorCorrect18
+ xpos 306
+ ypos 640
+}
+ColorCorrect {
+ inputs 1+1
+ gain 0
+ offset -0.095
+ name ColorCorrect19
+ xpos 306
+ ypos 664
+ disable true
+}
+set N1e2e8720 [stack 0]
+Viewer {
+ frame 2
+ input_process false
+ name Viewer1
+ xpos -157
+ ypos 235
+}
+push $N1e2e8720
+Write {
+ file C:/Users/David/Documents/GitHub/nature/textures/dmap.##.jpg
+ file_type jpeg
+ checkHashOnRead false
+ version 48
+ name Write1
+ selected true
+ xpos 330
+ ypos 734
 }

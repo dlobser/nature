@@ -1,10 +1,5 @@
 function peep(params){
 	
-	if(params.altGeo !=undefined)
-	this.altGeo = params.altGeo;
-		
-
-	console.log(this.altGeo);
 	this.params = this.makeParams(params);
 	//console.log(this.params);
 	this.CTRL = new THREE.Object3D();
@@ -15,7 +10,7 @@ function peep(params){
 		geo:new THREE.CylinderGeometry( 1,1,1,12,1),
 		geo2:new THREE.SphereGeometry(1,12,6)
 	}
-
+	
 	
 	this.geometry = (this.params.geo !== undefined) ? this.params.geo : this.defaults.geo;
 	this.geometry2 = (this.params.geo2 !== undefined) ? this.params.geo2 : this.defaults.geo2;
@@ -35,14 +30,13 @@ function peep(params){
 	
 	this.material =  new THREE.MeshLambertMaterial( { color:this.color1, shading: THREE.SmoothShading } );
 	
-	this.path = "textures/cmap.";
+	this.path = "textures/bmap.";
 	this.format = '.jpg';
 	this.urls = [
 		this.path + '04' + this.format, this.path + '02' + this.format,
 		this.path + '05' + this.format, this.path + '06' + this.format,
 		this.path + '01' + this.format, this.path + '03' + this.format
 	];
-	
 	
 	this.material_depth = new THREE.MeshDepthMaterial();
 
@@ -67,7 +61,7 @@ peep.prototype = {
 	speed:0,
 	q:0,
 	
-	part:function(px,py,pz,	sx,sy,sz,	p2x,p2y,p2z,	namer,color,geom){
+	part:function(px,py,pz,	sx,sy,sz,	p2x,p2y,p2z,	namer,color){
 	
 		/*construction of the heirarchy and best practice for parenting
 		  the 'pos' of one link should be parented to the 'rt' of its parent - becoming children[1]
@@ -87,7 +81,7 @@ peep.prototype = {
 									  -mesh
 	
 		*/
-	
+		
 		
 		//this.material.color.setHex(color);
 		
@@ -95,11 +89,8 @@ peep.prototype = {
 		var scl = new THREE.Vector3(sx,sy,sz);
 		var pos2 = new THREE.Vector3(p2x,p2y,p2z);
 		
-		console.log(geom);
-		var thisGeo = geom || this.geometry;
-			console.log(thisGeo);
 		
-		this.mesh = new THREE.Mesh( thisGeo, this.mat );
+		this.mesh = new THREE.Mesh( this.geometry, this.mat );
 		this.mesh2 = new THREE.Mesh( this.geometry2, this.mat );
 		this.mesh3 = new THREE.Mesh( this.geometry2, this.mat );
 							
@@ -180,7 +171,6 @@ peep.prototype = {
 	
 	makeParams:function(params){
 		//console.log(params);
-		this.params = params;
 		this.p = {
 			
 			geoDivs:3,
@@ -229,6 +219,7 @@ peep.prototype = {
 		
 		
 		this.p.anim.sc = Array.apply(null, new Array(10)).map(Number.prototype.valueOf,1);
+		this.p.anim.sc = new Array(1,1,1,1,1,1,1,1,1,1,1,1);
 		this.p.anim = $.extend(this.p.anim,params.anim);
 		this.p.fruitSize = new THREE.Vector3(5,5,5);
 		
@@ -297,6 +288,8 @@ peep.prototype = {
 			this.p.leafRads[i] = (params.leafRads !== undefined && params.leafRads[i]!==undefined) ? params.leafRads[i] : this.p.rads;
 			//	if(this.p.leafRads[i] == this.p.leafJoints[i]) this.p.leafRads[i]
 		}
+		
+		this.p.term = [0,1,2,3,4,5,6,7];
 
 		//console.log(this.p);
 		//console.log(params);
@@ -342,35 +335,30 @@ peep.prototype = {
 			
 				id++;
 				
-				console.log(that.altGeo);
-				var myGeo;
-				
-				if(that.altGeo != undefined){
-					if(that.altGeo.length>0){
-						myGeo = that.altGeo[leaf];
-					}
-				}
-				
-				console.log(myGeo);
-				this.big = that.part(0,.5,0,	sx,sy,sz,	0,sy,0,   "big"+id, that.color1,myGeo);
+				this.big = that.part(0,.5,0,	sx,sy,sz,	0,sy,0,   "big"+id, that.color1);
 
 				//add items to the last array in the branches array
 				that.branches[that.branches.length-1].push(this.big);
 				
 				this.big.idq = idq;
 				
-			
+				//var joint = new THREE.Object3D();
+				//			joint.matrixAutoUpdate = true;	
+				//			joint.updateMatrix();						
+				//			joint.name = "joint";
+							
 				
 				obj.children[0].add(stringer(this.big,num,id,num,leaf,len,sx*ss,sy*ss,sz*ss,ss,divs));
 				obj.children[0].num=num;
 				
-				//if we're terminal - this is all messed up
+				//if we're terminal
 			
 				for ( var i = 0 ; i < that.p.term.length ; i++){
 					if(end && leaf == that.p.leaves-that.p.term[i]){
 					
 						if (that.p.fruit){
-						
+						//	console.log("making fruit");
+							//console.log(that.p.term);
 							makeFruit();
 							}
 						else{
@@ -379,7 +367,18 @@ peep.prototype = {
 						
 					}
 				}
-			
+					/*
+				console.log("end: " + end);
+				console.log(that.p.term[leaf]);
+				if(end && that.p.term[leaf]==1){
+					console.log("whatsit");
+					if (that.p.fruit)
+						makeFruit();
+					else{
+						console.log("fruit ain't true, and true ain't fruit");
+				}
+				}
+				*/
 				var sub;
 				if(divs==1)
 					sub=0;
@@ -410,14 +409,15 @@ peep.prototype = {
 							var scalar = (that.p.jScale[leaf+1].x != -1 && that.p.jScale[leaf+1].x <= szr.x) ? that.p.jScale[leaf+1] : szr;
 							var joint = new THREE.Object3D();
 							var divisions = that.p.leafDivs[leaf+1];
-							
-							//joint is an extra piece made for parenting the new branches to
+						
 							joint.matrixAutoUpdate = true;	
 							joint.updateMatrix();						
 							joint.name = leaf;
 							that.joints.push(joint);
-						
+							//console.log("branchBase");
+					//console.log(obj.children[0]);
 							obj.children[0].add(joint);
+							//console.log(obj.children[0]);
 							obj.children[0].children[i+child].rotation.y = i*((Math.PI*2)/rads);
 							obj.children[0].children[i+child].add(stringer(this.big,	theseDivs,0,	num,leaf+1,Math.floor(len/lenDiv), 	scalar.x,scalar.y,scalar.z,newSS,	divisions));
 							obj.children[0].children[i+child].children[0].rotation.x = angle;

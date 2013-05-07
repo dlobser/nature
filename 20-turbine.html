@@ -91,7 +91,7 @@
 
 		<script src="js/three/js/Detector.js"></script>
 		<script src="js/three/js/libs/stats.min.js"></script>
-		<script src="js/12-turbine.js"></script>
+		<script src="js/20-turbine.js"></script>
 
 		<script src="js/libs/rig.js"></script>
 		
@@ -99,8 +99,10 @@
 		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
 		<div class="everything" style="margin-top:-50px">
 			<img src="images/ylem.png" padding="10px" alt="Ylem">
-			<p style="padding-left:10px">branching animation and modeling</p>
+
 			<div class="menu" style="position:absolute;line-height:.3em;padding-left:10px">
+						<p style="padding-left:10px">Produced By <a href="http://idlehands.tv">Idle Hands</a></p><br>
+			<p style="padding-left:10px">Read The<a href="docs/turbine.html">&nbsp;Documentation</a></p>
 			<select id="select">
 				<option value="1">Anemone my Enemy</option>
 				<option value="2">Tentacle Paintbrush</option>
@@ -112,7 +114,9 @@
 				<option value="8">Something Wicked This Way Comes</option>
 			</select>
 			<br><br></br>
-			<input type="button" id="buttonid" value="applyPreset" onclick="applyPreset()" style="padding:10"><br><br><br></br>
+			<input type="button" id="buttonid" value="applyPreset" style="width:220px"onclick="applyPreset()" style="padding:10"><br>
+					<input type="button" id="buttonid" value="slidersToParams" style="width:220px"onclick="slidersToParams()"><br>
+			<input type="button" id="buttonid" value="rebuild"  style="width:220px" onclick="rebuilder()"><br><br><br></br>
 <!--
 			<p>leaf#ss = scale factor - between .9 and 1.1 is suggested</p><br>
 			<p>leafJoint# = amount of joints on branch, not too many or crash!</p><br>
@@ -121,16 +125,17 @@
 			<p>term# = # of leaves minus this number determines if fruit goes here</p><br>
 			<p>fruit = boolean - adds balls to the end of branches based on 'term' settings</br></br></br>
 			-->
-			<p>parameters</p><br>
+			<p>Parameters</p><br>
 			
 			
-			<textarea id="user"  name="user" defaultValue='{"num":25,"scale":[5,12,5],"ss":0.96,"leaves":2,"divs":5,"rads":2,"leaf1ss":0.9,"jScale1":[2,3,2],"leaf0ss":0.9}'}' cols="100" rows="10"></textarea><br>
+			<textarea id="user"  name="user" defaultValue='{"num":25,"scale":[5,12,5],"ss":0.96,"leaves":2,"divs":5,"rads":2,"leaf1ss":0.9,"jScale1":[2,3,2],"leaf0ss":0.9}'}' cols="100" rows="1"></textarea><br>
 			
-			<input type="button" id="buttonid" value="rebuild" onclick="rebuilder()">
-			<input type="button" id="buttonid" value="save.obj" onclick="saver()">
-			<input type="button" id="buttonid" value="helperGeo" onclick="helperGeo()"><br>
-			<input type="button" id="buttonid" value="slidersToParams" onclick="slidersToParams()">
-			<input type="button" id="buttonid" value="writePaint" onclick="writePaint()">
+			
+			<input type="button" id="buttonid" value="save.obj" style="width:220px"onclick="saver()"><br>
+		
+			<input type="button" id="buttonid" value="helperGeo" style="width:220px"onclick="helperGeo()"><br>
+		<!--
+			<input type="button" id="buttonid" value="writePaint"style="width:220px" onclick="writePaint()"><br>-->
 				
 			</div>
 		</div>
@@ -150,51 +155,6 @@
 		</form>
 		
 
-<canvas id="processing-canvas" style="align:center"> </canvas>
-<script type="text/processing" data-processing-target="processing-canvas">
-
-var ballz = [];
-
-void setup() {
-
-  size(1024, 1280);
-  background(255);
-  noStroke();
-
-}
-
-void draw(){
-
-	if(helpGeo){
-	
-		fill(255,0);
-		rect(0,0,width,height);
-		fill(255);
-		
-		for(var i = 0; i<things[0].fruit.length ; i++){
-		
-			fill(i,i*10,i*20);
-			var thing = things[0].fruit[i];
-			thing.updateMatrixWorld();
-			var vector = thing.geometry.vertices[0].clone();
-			thing.matrixWorld.multiplyVector3( vector );
-			
-			ellipse((-vector.z*7+width/2),-(vector.y*7-height/4),5,5);
-			paint.push(-vector.z);
-			paint.push(-(vector.y));
-			paint.push(up);
-			
-		}
-	}
-	
-	if(rebuild){
-		fill(255,0);
-		rect(0,0,width,height);
-	}
-	
-}
-
-</script>
 
 	</body>
 </html>

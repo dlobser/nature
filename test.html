@@ -1,416 +1,544 @@
 
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<title></title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<style>
-			body {
-				background-color: #000000;
-				margin: 0px;
-				overflow: hidden;
-				font-family:Monospace;
-				font-size:13px;
-				text-align:center;
-				font-weight: bold;
-				text-align:center;
-			}
+<!--
+Copyright 2010, Google Inc.
+All rights reserved.
 
-			a {
-				color:#0078ff;
-			}
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
 
-			#info {
-				color:#fff;
-				position: absolute;
-				top: 0px;
-				width: 50em;
-				margin: 0 auto -2.1em;
-				padding: 5px;
-				z-index:100;
-			}
-		</style>
-	</head>
+    * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+    * Neither the name of Google Inc. nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
 
-	<body>
-		<div id="container" style="position:absolute"></div>
-		
-		<script src="js/three/build/three.min.js"></script>
-		<script src="js/libs/LobserCollection.js"></script>
-		<script src="js/libs/jquery.js"></script>
-		<script src="js/libs/ImprovedNoise.js"></script>
-		<script src="js/three/shaders/BokehShader.js"></script>
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
 
-		<script src="js/three/js/controls/OrbitControls.js"></script>
-		<script src="js/libs/processing.js"></script>
-
-		<script src="js/three/js/Detector.js"></script>
-		<script src="js/three/js/libs/stats.min.js"></script>
-		
-		<script type="text/javascript" src="js/dat/dat.gui.min.js"></script>
-		
-		<script src="js/libs/filesaver.js"></script>
-
-		<script src="js/libs/three/build/three.min.js"></script>
-		
-		<script src="js/three/js/controls/OrbitControls.js"></script>
-
-		<script src="js/three/js/Detector.js"></script>
-		<script src="js/three/js/libs/stats.min.js"></script>
-		<script src="js/13-turbine.js"></script>
-
-		<script src="js/libs/rig.js"></script>
-		
-
-		<div id="info">
-			
-		</div>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>
+</title>
 
 
-		<script>
+<!-- Slider stuff -->
+<script type="text/javascript" src="http://chromium.googlecode.com/svn/trunk/samples/audio/lib/events.js"></script>
 
-			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+<link rel="stylesheet" type="text/css" href="style/simple.css" />
 
-			var container, stats;
-			var camera, scene, renderer,
-				materials = [], objects = [],
-				singleMaterial, zmaterial = [],
-				parameters, i, j, k, h, color, x, y, z, s, n, nobjects,
-				material_depth, cubeMaterial,cuber;
+<style type="text/css">
+  #slider { margin: 10px; }
+</style>
 
-			var mouseX = 0, mouseY = 0;
-			
-			var plants = [];
+<!-- Our javascript code -->
+<script type="text/javascript">
 
-			var windowHalfX = window.innerWidth ;//*2;/// 2;
-			var windowHalfY = window.innerHeight ;//*2;/// 2;
+// init() once the page has finished loading.
+window.onload = init;
 
-			var height = window.innerHeight ;
+var context;
+var buffer;
+var convolver;
+var panner;
+var source;
+var dryGainNode;
+var wetGainNode;
 
-			var postprocessing = { enabled  : true };
+var lowFilter;
 
-			init();
-			animate();
+var gTopProjection = 0;
+var gFrontProjection = 0;
 
-			function init() {
+var x = 0;
+var y = 0;
+var z = 0;
+var hilightedElement = 0;
+var bufferList;
+var hihatShort;
 
-				container = document.createElement( 'div' );
-				document.body.appendChild( container );
+var fileCount = 8;
+var fileList = [
+    "audio/bell.mp3",
+	    "audio/lalala.mp3",
+  
+];
 
-				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / height, 1, 3000 );
-				camera.position.z = 1500;
+var kInitialReverbLevel = 0.6;
 
-				scene = new THREE.Scene();
+function setReverbImpulseResponse(url) {
+    // Load impulse response asynchronously
+    var request = new XMLHttpRequest();
+    request.open("GET", url, true);
+    request.responseType = "arraybuffer";
 
-				renderer = new THREE.WebGLRenderer( { antialias: true } );
-				renderer.setSize( window.innerWidth, height );
-				container.appendChild( renderer.domElement );
+    request.onload = function() { 
+        convolver.buffer = context.createBuffer(request.response, false);
+    }
 
-				renderer.sortObjects = false;
+    request.send();
+}
 
-				material_depth = new THREE.MeshDepthMaterial();
+function setAudioSource(i) {
+    var buffer = bufferList[i];
 
-			//	var path = "textures/cube/SwedishRoyalCastle/";
-			//	var format = '.jpg';
-			//	var urls = [
-			//			path + 'px' + format, path + 'nx' + format,
-			//			path + 'py' + format, path + 'ny' + format,
-			//			path + 'pz' + format, path + 'nz' + format
-			//		];
-					
-					var path = "textures/bmap.";
-					var format = '.jpg';
-					var urls = [
-						path + '04' + format, path + '02' + format,
-						path + '05' + format, path + '06' + format,
-						path + '01' + format, path + '03' + format
-					];
+    // See if we have cached buffer
+    if (buffer) {
+        source.buffer = buffer;
+    } else {
+        // Load asynchronously
+        var url = fileList[i];
 
-				var textureCube = THREE.ImageUtils.loadTextureCube( urls );
+        var request = new XMLHttpRequest();
+        request.open("GET", url, true);
+        request.responseType = "arraybuffer";
 
-				parameters = { color: 0xff1100, envMap: textureCube, shading: THREE.FlatShading };
-				cubeMaterial = new THREE.MeshBasicMaterial( parameters );
+        request.onload = function() { 
+            var buffer = context.createBuffer(request.response, true);
+            
+            source.buffer = buffer;
+            bufferList[i] = buffer;  // cache it
+        }
 
-				singleMaterial = false;
+        request.send();
+    }
+}
 
-				if( singleMaterial ) zmaterial = [ cubeMaterial ];
+function loadHihat(url) {
+    // Load asynchronously
 
-				var geo = new THREE.SphereGeometry( 1, 20, 10 );
+    var request = new XMLHttpRequest();
+    request.open("GET", url, true);
+    request.responseType = "arraybuffer";
 
-				var start = Date.now();
+    request.onload = function() { 
+        hihatShort = context.createBuffer(request.response, true);
+    }
 
-				renderer.initMaterial( cubeMaterial, scene.__lights, scene.fog );
+    request.send();
+}
 
-				var xgrid = 14,
-					ygrid = 9,
-					zgrid = 14;
+function highlightElement(object) {
+    if (hilightedElement) hilightedElement.style.backgroundColor = "white";
+    hilightedElement = object;
 
-				nobjects = xgrid * ygrid * zgrid;
+    object.style.backgroundColor = "green";
+}
 
-				c = 0;
+function pitchHandler(event, ui) {
+    var cents = ui.value;
+    var info = document.getElementById("pitch-value");
+    info.innerHTML = "pitch = " + cents + " cents";
 
-				//var s = 0.25;
-				var s = 60;
+    var rate = Math.pow(2.0, cents / 1200.0);
+    source.playbackRate.value = rate;
+}
 
-				for ( i = 0; i < xgrid; i ++ )
-				for ( j = 0; j < ygrid; j ++ )
-				for ( k = 0; k < zgrid; k ++ ) {
+function reverbHandler(event, ui) {
+    var value = ui.value;
+    var info = document.getElementById("ambience-value");
+    info.innerHTML = "ambience = " + value;
 
-					if ( singleMaterial ) {
+    wetGainNode.gain.value = value;
+}
 
-						mesh = new THREE.Mesh( geo, zmaterial );
+function influenceHandler(event, ui) {
+    var value = ui.value;
+    var info = document.getElementById("influence-value");
+    info.innerHTML = "reverb main gain influence = " + value;
+}
 
-					} else {
+function mainGainHandler(event, ui) {
+    var value = ui.value;
+    var info = document.getElementById("mainGain-value");
+    info.innerHTML = "main gain = " + value;
 
-						materials[ c ] = new THREE.MeshBasicMaterial( parameters );
-						mesh = new THREE.Mesh( geo, materials[ c ] );
-						renderer.initMaterial( materials[ c ], scene.__lights, scene.fog, mesh );
+    dryGainNode.gain.value = value;
+}
 
-					}
+function cutoffHandler(event, ui) {
+    var value = ui.value;
+    var noctaves = Math.log(22050.0 / 40.0) / Math.LN2;
+    var v2 = Math.pow(2.0, noctaves * (value - 1.0));
 
-					x = 200 * ( i - xgrid/2 );
-					y = 200 * ( j - ygrid/2 );
-					z = 200 * ( k - zgrid/2 );
+    var sampleRate = 44100.0;
+    var nyquist = sampleRate * 0.5;
+    var frequency = v2 * nyquist;
+    var info = document.getElementById("cutoff-value");
 
-					mesh.position.set( x, y, z );
-					mesh.scale.set( s, s, s );
+    info.innerHTML = "cutoff = " + frequency + " hz";
 
-					mesh.matrixAutoUpdate = false;
-					mesh.updateMatrix();
+    lowFilter.frequency.value = frequency;
+}
 
-					//scene.add( mesh );
-					//objects.push( mesh );
+function addSliders() {
+    addSlider("pitch");
+    addSlider("ambience");
+    addSlider("mainGain");
+    addSlider("cutoff");
+    configureSlider("pitch", 0.0, -2400.0, 2400.0, pitchHandler);
+    configureSlider("ambience", kInitialReverbLevel, 0.0, 1.0, reverbHandler);
+    configureSlider("mainGain", 1.0, 0.0, 1.0, mainGainHandler);
+    configureSlider("cutoff", 0.99, 0.0, 1.0, cutoffHandler);
+}
 
-					c ++;
+function setSourceBuffer(buffer) {
+    source.buffer = buffer;
+}
 
-				}
-				
-				
-				
-				var uservalue ='{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":83.18095348835782,"speed":0.01654316732724453,"speed2":0.1127555604651163,"num":-940.549444235234,"x":0.01,"y":0.0032699083861874563,"z":0.01,"x1":[0,0.1,0.023008390104698684,0.3,0],"y1":[0.1,0.2,null],"z1":[0,null,null],"x2":[0,1,1],"y2":[-0.8,null,null],"z2":[0,null,null],"x3":[-0.015151515151515138,-0.08302306166992057,1],"y3":[-0.003875968992248069,1.5707963267948966,null],"z3":[0,1.5707963267948966,null],"x4":[0,2,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,0,0],"sc":[0.9852834740651387,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":45,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":2,"divs":5,"rads":1,"animFunc":"this.branches[i][1].parent.parent.parent.rotation.y+=((this.branches[i][1].idq/-10000));if(i>0)this.branches[i][0].rotation.x=Math.sin(this.p.anim.num*2+ this.branches[i][0].id)/6;if(q>1)this.branches[i][1].parent.parent.parent.rotation.y+=0.03","fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,8,3],"leafDivs":[2,8,5],"leafss":[0.95,0.92,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":4,"y":24,"z":4},{"x":1,"y":24,"z":1}],"leafRads":[1,5,5]}';
-	var uservalue2 ='{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":37.980678959159704,"speed":0.014337411683611925,"speed2":7.278993651197657,"num":-404.51931636422944,"x":0.01,"y":0,"z":0,"x1":[0,0.1,0.2,0.3,0],"y1":[0.1,0.2],"z1":[0],"x2":[0,0,0],"y2":[-0.8],"z2":[0],"x3":[0.45950370498018267,1,1],"y3":[0],"z3":[0],"x4":[0],"y4":[0],"z4":[0],"off":[0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":5,"scale":[5,15,5],"sx":5,"sy":5,"sz":5,"ss":0.95,"leaves":0,"divs":5,"rads":2,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10],"leafDivs":[2],"leafss":[0.95],"angles":[0.6283185307179586],"term":[0],"jScale":[{"x":-1,"y":-1,"z":-1}],"leafRads":[2]}';
+/**
+ * Start panning demo
+ */
+ function init() {
+     addSliders();
+
+     var canvas = document.getElementById('canvasID');
+     var canvas2 = document.getElementById('canvasElevationID');
+
+     var ctx = canvas.getContext('2d');
+     var ctx2 = canvas2.getContext('2d');
+     
+     gTopProjection = new Projection('canvasID', 0);
+     gFrontProjection = new Projection('canvasElevationID', 1);
+
+     // draw center
+     var width = canvas.width;
+     var height = canvas.height;
+
+     ctx.fillStyle = "rgb(0,200,0)";
+     ctx.beginPath();
+     ctx.arc(width/2, height/2 , 10, 0,Math.PI*2,true)
+     ctx.fill();
+
+     ctx2.fillStyle = "rgb(0,200,0)";
+     ctx2.beginPath();
+     ctx2.arc(width/2, height/2 , 10, 0,Math.PI*2,true)
+     ctx2.fill();
+
+     canvas.addEventListener("mousedown", handleMouseDown, true);
+     canvas.addEventListener("mousemove", handleAzimuthMouseMove, true);
+     canvas.addEventListener("mouseup", handleMouseUp, true);
+
+     canvas2.addEventListener("mousedown", handleMouseDown, true);
+     canvas2.addEventListener("mousemove", handleElevationMouseMove, true);
+     canvas2.addEventListener("mouseup", handleMouseUp, true);
+
+     // Initialize audio
+     context = new webkitAudioContext();
+
+     source = context.createBufferSource();
+     dryGainNode = context.createGainNode();
+     wetGainNode = context.createGainNode();
+     panner = context.createPanner();
+
+     lowFilter = context.createBiquadFilter();
+     lowFilter.frequency.value = 22050.0;
+     lowFilter.Q.value = 5.0;
+
+     convolver = context.createConvolver();
+
+     // Connect audio processing graph
+     source.connect(lowFilter);
+     lowFilter.connect(panner);
+
+     // Connect dry mix
+     panner.connect(dryGainNode);
+     dryGainNode.connect(context.destination);
+     
+     // Connect wet mix
+     panner.connect(convolver);
+     convolver.connect(wetGainNode);
+     wetGainNode.connect(context.destination);
+     wetGainNode.gain.value = kInitialReverbLevel;
+     
+     bufferList = new Array(fileCount);
+     for (var i = 0; i < fileCount; ++i) {
+         bufferList[i] = 0;
+     }
+
+     loadHihat("sounds/drum-samples/hihat-short.wav");
+
+     setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/spatialized3.wav');
+
+     source.playbackRate.value = 1.0;
+
+     panner.setPosition(0, 0, -4.0);
+     source.loop = true;
+
+     // Load up initial sound
+     setAudioSource(0);
+
+     var cn = {x: 0.0, y: -0.5};
+     gTopProjection.drawDotNormalized(cn);
+     
+     cn.y = 0.0;
+     gFrontProjection.drawDotNormalized(cn);
+
+     var currentTime = context.currentTime;
+     source.noteOn(currentTime + 0.020);
+ }
+
+var gIsMouseDown = false;
+
+// type: 0: top-view  1: front-view
+function Projection(canvasID, type) {
+    this.canvasID = canvasID;
+    this.canvas = document.getElementById(canvasID);
+    this.type = type;
+    this.lastX = 0;
+    this.lastY = 0;
+}
+
+// With normalized graphics coordinate system (-1 -> 1)
+Projection.prototype.drawDotNormalized = function(cn) {
+    var c = {
+        x: 0.5 * (cn.x + 1.0) * this.canvas.width,
+        y: 0.5 * (cn.y + 1.0) * this.canvas.height
+    }
+    
+    this.drawDot(c);
+}
+
+Projection.prototype.handleMouseMove = function(event, suppressY) {
+    if (gIsMouseDown) {
+        var eventInfo = {event: event, element:this.canvas};
+        var c = getRelativeCoordinates(eventInfo);
+        if (suppressY) {
+            c.y = this.lastY;
+        }
+        this.drawDot(c);
+    }
+}
+
+Projection.prototype.eraseLastDot = function() {
+    var ctx = this.canvas.getContext('2d');
+
+    // Erase last location
+    ctx.fillStyle = "rgb(255,255,255)";
+    ctx.beginPath();
+    ctx.arc(this.lastX, this.lastY, 12, 0, Math.PI * 2, true)
+    ctx.fill();
+}
+
+Projection.prototype.drawDot = function(c) {
+    var canvas = this.canvas;
+    var type = this.type;
+    
+    var ctx = canvas.getContext('2d');
+
+    // Erase last location
+    this.eraseLastDot();
+
+    // Draw new location
+    ctx.fillStyle = "rgb(200,0,0)";
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, 10,0, Math.PI * 2, true);
+    ctx.fill();
+
+    // Draw center
+    var width = canvas.width;
+    var height = canvas.height;
+    divWidth = width;
+    divHeight = height;
+
+    ctx.fillStyle = "rgb(0,200,0)";
+    ctx.beginPath();
+    ctx.arc(width / 2, height / 2 , 10, 0, Math.PI * 2, true);
+    ctx.fill();
+
+    ctx.strokeRect(0,0, width, height);
+
+    this.lastX = c.x;
+    this.lastY = c.y;
+
+    var a = c.x / divWidth;
+    var b = c.y / divHeight;
+
+    x = 8.0 * (2.0*a - 1.0);
+
+    if (type == 0) {
+        z = 8.0 * (2.0*b - 1.0);
+    } else {
+        y = -11.0 * (2.0*b - 1.0);
+    }
+
+    panner.setPosition(x, y, z);
+
+    lastX = x;
+    lastZ = z;    
+}
+
+function handleMouseDown(event) {
+    gIsMouseDown = true;
+}
+
+function handleMouseUp(event) {
+    gIsMouseDown = false;
+}
+
+function handleAzimuthMouseMove(event) {
+    gTopProjection.handleMouseMove(event, false);
+    gFrontProjection.handleMouseMove(event, true);
+}
+
+function handleElevationMouseMove(event) {
+    gFrontProjection.handleMouseMove(event, false);
+    gTopProjection.handleMouseMove(event, true);
+}
+
+</script>
+</head>
+
+<body>
+
+
+<h1>Top View ---------------- Front View </h1>
+<canvas id="canvasID" width="400" height="400" style="border: 10px inset blue;">
+</canvas>
+
+<canvas id="canvasElevationID" width="400" height="400" style="border: 10px inset blue;">
+</canvas>
+
+<div id="info">
+</div>
+
+<br>
+
+<!-- Sliders and other controls will be added here -->
+<div id="controls"> </div>
+
+<br><br>
+<div style="position:relative; height:350px;">
 	
-				var your_object = JSON.parse(uservalue);
-				cuber = new peep(your_object);
-				console.log(your_object);
-				cuber.makeParams(your_object);
-				//console.log(JSON.stringify(cuber.p));
-				//console.log(cuber.joints);
-				cuber.branchSquares(your_object);
-				var newScale = new THREE.Vector3(10,10,10);
-				cuber.big.scale = newScale;
-				cuber.big.position.y = -900;
-				
-				var rotator = new THREE.Object3D();
-				rotator.add(cuber.big);
-
-				scene.add(rotator);
-				
-				for(var i = 0 ; i < 35 ; i++){
-					var your_object2 = JSON.parse(uservalue2);
-					var cuber2 = new peep(your_object2);
-					//console.log(your_object2);
-					cuber2.makeParams(your_object2);
-					//console.log(JSON.stringify(cuber.p));
-					//console.log(cuber.joints);
-					cuber2.branchSquares(your_object);
-					var newScale = new THREE.Vector3(10,10,10);
-					var Pos = new THREE.Vector3(randly(-.5,3000),-700,randly(-.5,3000));
-					var Rot = new THREE.Vector3(0,randly(-.5,1000),0);
-					var scRand = randly(1,3)
-					var SC = new THREE.Vector3(scRand,scRand,scRand);
-					cuber2.big.scale = newScale;
-					cuber2.big.position = Pos;
-						cuber2.big.rotation = Rot;
-						cuber2.big.scale = SC;
-					cuber2.p.anim.speed2 = randly(0,10)+4;
-					
-					var rotator2 = new THREE.Object3D();
-					rotator.add(cuber2.big);
-					plants.push(cuber2);
+<div style="position:absolute; top:0; left:0; width:250px; border: 2px inset blue;">
+<h1>Sounds</h1>
+<ul>
+<li onmousedown="setAudioSource(0);">
+White Noise</li>
 
-					scene.add(rotator2);
-				}
-				//console.log("init time: ", Date.now() - start );
+<li onmousedown="setAudioSource(1);">
+Spoken Word</li>
 
-				scene.matrixAutoUpdate = false;
+<li onmousedown="setAudioSource(2);">
+Ticking Clock</li>
 
-				initPostprocessing();
+<li onmousedown="setAudioSource(3);">
+Waves</li>
 
-				renderer.autoClear = false;
+<li onmousedown="setAudioSource(4);">
+Cauldron</li>
 
-				renderer.domElement.style.position = 'absolute';
-				renderer.domElement.style.top = "0px";
-				renderer.domElement.style.left = "0px";
+<li onmousedown="setAudioSource(5);">
+Obama Oilspill</li>
 
-				stats = new Stats();
-				stats.domElement.style.position = 'absolute';
-				stats.domElement.style.top = '0px';
-				//container.appendChild( stats.domElement );
+<li onmousedown="setAudioSource(6);">
+Penny Spinning</li>
 
-				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-				document.addEventListener( 'touchstart', onDocumentTouchStart, false );
-				document.addEventListener( 'touchmove', onDocumentTouchMove, false );
+<li onmousedown="setAudioSource(7);">
+Breakbeat</li>
 
-				var effectController  = {
+</ul>
+</div>
 
-					focus: 		0.36,
-					aperture:	0.025,
-					maxblur:	1.0
 
-				};
+<div id="acoustic-spaces" style="position:absolute; top:0; left:300px; width:50%;  border: 2px inset blue;">
+<h1>Acoustic Spaces</h1>
 
-				var matChanger = function( ) {
+<ul>
 
-					postprocessing.bokeh_uniforms[ "focus" ].value = effectController.focus;
-					postprocessing.bokeh_uniforms[ "aperture" ].value = effectController.aperture;
-					postprocessing.bokeh_uniforms[ "maxblur" ].value = effectController.maxblur;
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/bin_dfeq/s3_r4_bd.wav');">
+  Binaural</li>
 
-				};
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/tim-warehouse/cardiod-35-10/cardiod-35-10-spread.wav');">
+Warehouse Cardiod-35-10-spread</li>
 
-				var gui = new dat.GUI();
-				gui.add( effectController, "focus", 0.0, 3.0, 0.036 ).onChange( matChanger );
-				gui.add( effectController, "aperture", 0.001, 0.2, 0.001 ).onChange( matChanger );
-				gui.add( effectController, "maxblur", 0.0, 3.0, 0.025 ).onChange( matChanger );
-				gui.close();
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/tim-warehouse/cardiod-rear-35-10/cardiod-rear-35-10.wav');">
+Warehouse Cardiod-rear-35-10</li>
 
-			}
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/tim-warehouse/super-ceiling-35-10/super-ceiling-35-10.wav');">
+Warehouse Super-ceiling-35-10</li>
 
-			function onDocumentMouseMove( event ) {
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/tim-warehouse/omni-35-10/omni-35-10.wav');">
+Warehouse Omni-35-10</li>
 
-				mouseX = event.clientX - windowHalfX;
-				mouseY = event.clientY - windowHalfY;
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/tim-warehouse/cardiod-true-stereo-15-8/cardiod-true-stereo-15-8.wav');">
+Warehouse True-Stereo-15-8</li>
 
-			}
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/spatialized1.wav');">
+spatialized 1 (huge spacious)</li>
 
-			function onDocumentTouchStart( event ) {
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/spatialized2.wav');">
+spatialized 2 (outside)</li>
 
-				if ( event.touches.length == 1 ) {
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/spatialized3.wav');">
+spatialized 3 (outside)</li>
 
-					event.preventDefault();
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/spatialized4.wav');">
+spatialized 4 (huge spacious)</li>
 
-					mouseX = event.touches[ 0 ].pageX - windowHalfX;
-					mouseY = event.touches[ 0 ].pageY - windowHalfY;
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/spatialized5.wav');">
+spatialized 5 (backwards)</li>
 
-				}
-			}
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/spatialized6.wav');">
+spatialized 6 (cosmic)</li>
 
-			function onDocumentTouchMove( event ) {
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/spatialized7.wav');">
+spatialized 7 (dark cathedral)</li>
 
-				if ( event.touches.length == 1 ) {
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/spatialized8.wav');">
+spatialized 8 (medium open)</li>
 
-					event.preventDefault();
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/spatialized9.wav');">
+spatialized 9 (medium open)</li>
 
-					mouseX = event.touches[ 0 ].pageX - windowHalfX;
-					mouseY = event.touches[ 0 ].pageY - windowHalfY;
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/echo-chamber.wav');">
+Echo Chamber</li>
 
-				}
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/noise-spreader1.wav');">
+Noise Spreader</li>
 
-			}
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/peculiar-backwards.wav');">
+Fluttery</li>
 
-			function initPostprocessing() {
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/sifter.wav');">
+Sifter</li>
 
-				postprocessing.scene = new THREE.Scene();
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/wildecho.wav');">
+Wild Echo</li>
 
-				postprocessing.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2,  window.innerHeight / 2, window.innerHeight / - 2, -1000000, 1000000 );
-				postprocessing.camera.position.z = 100;
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/backslap1.wav');">
+backslap</li>
 
-				postprocessing.scene.add( postprocessing.camera );
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/tim-warehouse/tim-stretch2.wav');">
+tim-stretch2</li>
 
-				var pars = { minFilter: THREE.GaussianFilter, magFilter: THREE.GaussianFilter, format: THREE.RGBFormat };
-				postprocessing.rtTextureDepth = new THREE.WebGLRenderTarget( window.innerWidth, height, pars );
-				postprocessing.rtTextureColor = new THREE.WebGLRenderTarget( window.innerWidth, height, pars );
+<li onmousedown="setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/tim-warehouse/tim-warehouse-stretch1.wav');">
+tim-warehouse-stretch1.wav</li>
 
-				var bokeh_shader = THREE.BokehShader;
 
-				postprocessing.bokeh_uniforms = THREE.UniformsUtils.clone( bokeh_shader.uniforms );
 
-				postprocessing.bokeh_uniforms[ "tColor" ].value = postprocessing.rtTextureColor;
-				postprocessing.bokeh_uniforms[ "tDepth" ].value = postprocessing.rtTextureDepth;
-				postprocessing.bokeh_uniforms[ "focus" ].value = .36;
-				postprocessing.bokeh_uniforms[ "aspect" ].value = window.innerWidth / height;
 
-				postprocessing.materialBokeh = new THREE.ShaderMaterial( {
+</ul>
 
-					uniforms: postprocessing.bokeh_uniforms,
-					vertexShader: bokeh_shader.vertexShader,
-					fragmentShader: bokeh_shader.fragmentShader
+</div>
+</div>
 
-				} );
-
-				postprocessing.quad = new THREE.Mesh( new THREE.PlaneGeometry( window.innerWidth, window.innerHeight ), postprocessing.materialBokeh );
-				postprocessing.quad.position.z = - 500;
-				postprocessing.scene.add( postprocessing.quad );
-
-			}
-
-			function animate() {
-
-				requestAnimationFrame( animate, renderer.domElement );
-
-				render();
-				stats.update();
-				cuber.animate();
-				cuber.p.anim.num-=cuber.p.anim.speed*cuber.p.anim.speed2;
-				
-				for(var b in plants){
-					var thing = plants[b];
-					thing.animate();
-					thing.p.anim.num-=thing.p.anim.speed*thing.p.anim.speed2;
-				}
-
-			}
-
-			function render() {
-
-				var time = Date.now() * 0.00005;
-
-				camera.position.x += ( mouseX - camera.position.x ) * 0.036;
-				camera.position.y += ( - (mouseY) - camera.position.y ) * 0.036;
-
-				camera.lookAt( scene.position );
-
-				if ( !singleMaterial ) {
-
-					for( i = 0; i < nobjects; i ++ ) {
-
-						h = ( 360 * ( i / nobjects + time ) % 360 ) / 360;
-						//m aterials[ i ].color.setHSL( h, 1, 0.5 );
-
-					}
-
-				}
-
-				if ( postprocessing.enabled ) {
-
-					renderer.clear();
-
-					// Render scene into texture
-
-					scene.overrideMaterial = null;
-					renderer.render( scene, camera, postprocessing.rtTextureColor, true );
-
-					// Render depth into texture
-
-					scene.overrideMaterial = material_depth;
-					renderer.render( scene, camera, postprocessing.rtTextureDepth, true );
-
-					// Render bokeh composite
-
-					renderer.render( postprocessing.scene, postprocessing.camera );
-
-
-				} else {
-
-					renderer.clear();
-					renderer.render( scene, camera );
-
-				}
-
-			}
-
-
-		</script>
-	</body>
+</body>
 </html>

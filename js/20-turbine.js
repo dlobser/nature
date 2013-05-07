@@ -20,16 +20,14 @@ var sizeCounter=0;
 var helpGeo = false;
 var paint = [];
 var gui;
-	
-				
+var mouseMove = 0;
+var projector;
 
-
+//z setting for g-code writing
 var up = 0;
 
 helperGeo = function(){
-
 	helpGeo = !helpGeo;
-
 }
 
 writePaint = function(){
@@ -40,10 +38,8 @@ writePaint = function(){
 slidersToParams = function(){
 	var div = document.getElementById('user');
 	var options = document.getElementById('select').options;
-	//var divAnim = document.getElementById('anim');
-	
+
 	div.value = JSON.stringify(things[0].p);
-	//divAnim.value = "{}";	
 }
 
 applyPreset = function(){
@@ -103,11 +99,15 @@ case 7:
 
 }
 
-function removeGui(gui, parent) {
-  if(!parent) {
-    parent = dat.GUI.autoPlaceContainer;
-  }
-  parent.removeChild(gui.domElement);
+rebuilder = function(truth){
+
+	console.log(JSON.stringify(things[0].p));
+
+	if(truth)
+		slidersToParams();	
+		
+	rebuild = true;
+	
 }
 
 //add globals/controls
@@ -117,7 +117,6 @@ sc1 = function(){
 	camera, 
 	controls, 
 	renderer;	
-	//things = [];
 	var rAm = Math.PI/2;
 	this.scene;
 	var text;
@@ -129,7 +128,8 @@ sc1 = function(){
 }
 
 sc1.prototype.setupDat = function(leaves){
-//setup dat.gui
+	//setup dat.gui
+	
 	var numLeaves = leaves+1 || 5;
 	
 	var starfield = function()
@@ -165,14 +165,9 @@ sc1.prototype.setupDat = function(leaves){
 		this.rotatorz=0;
 		
 		this.rebuilder = function() { 
-			//console.log(scene.text);
-			//killEverything(scene);
-			//console.log(rebuild);
-			rebuild = true;
-			//console.log(rebuild);
-			//sc1.prototype.addGeo();
-
+			rebuilder(true);
 		};
+		
 		//this.term1:0;
 		//this.term2:1;
 		//this.term3:2;
@@ -209,65 +204,64 @@ sc1.prototype.setupDat = function(leaves){
     this.text = new starfield();
 	gui = new dat.GUI();
 	//gui.remember(this.text);
-	// gui.add(text, 'message');
+	//gui.add(text, 'message');
 	var f0 = gui.addFolder('constructdor');
-		//f0.add(this.text, 'num',1,100);
-	//	f0.add(this.text, 'ss',.8,1.2);
-		//f0.add(this.text, 'leaves',0,6);
-		//f0.add(this.text, 'divs',1,30);
-		//f0.add(this.text, 'rads',1,20);
-		//f0.add(this.text, 'rebuilder');
-		//f0.add(this.text, 'rotatorx',-3,3);
-		//f0.add(this.text, 'rotatory',-3,3);
-		//f0.add(this.text, 'rotatorz',-3,3);
-		f0.add(this.text, 'fruitSize',0.01,10);
-	
-		var f1 = gui.addFolder('motion');
-		f1.add(this.text, 'speed', 0, .1);
-		f1.add(this.text, 'speed2', 0.0000001,10);
-		f1.add(this.text, 'size', 1, 100);
-		f1.add(this.text, 'x', 0,.01);
-		f1.add(this.text, 'y', 0,.01);
-		f1.add(this.text, 'z', 0,.01);
+	f0.add(this.text, 'num',1,100).listen().name("TrunkDivisions");
+	f0.add(this.text, 'ss',.8,1.2).listen().name("TrunkScale");
+	f0.add(this.text, 'leaves',0,6).listen();
+	//f0.add(this.text, 'divs',1,30);
+	//f0.add(this.text, 'rads',1,20);
+	f0.add(this.text, 'rebuilder').name("Rebuild");;
+	//f0.add(this.text, 'rotatorx',-3,3);
+	//f0.add(this.text, 'rotatory',-3,3);
+	//f0.add(this.text, 'rotatorz',-3,3);
+	f0.add(this.text, 'fruitSize',0.01,10);
+
+	var f1 = gui.addFolder('motion');
+	f1.add(this.text, 'speed', 0, .1).listen();
+	f1.add(this.text, 'speed2', 0.0000001,10).listen().name("SpeedMultiply");
+	f1.add(this.text, 'size', 1, 100).listen().name("Wavelength");
+	f1.add(this.text, 'x', 0,.01).listen().name("Animate-X");
+	f1.add(this.text, 'y', 0,.01).listen().name("Animate-Y");
+	f1.add(this.text, 'z', 0,.01).listen().name("Animate-Z");
 	
 	for( var i = 0 ; i < numLeaves ; i++){
-		//console.log("pre: " + rAm);
+		
 		if(i<1){
 			rAm=.5;
 		}
 		else
 			rAm = Math.PI/2;
-	//	console.log("rArm: " + rAm);
+	
 		this['fol'+i] = gui.addFolder('level' + i);
 		
-		this['fol'+i].add(this.text, 'x1-'+i, -rAm,rAm).listen();
-		this['fol'+i].add(this.text, 'y1-'+i, -rAm,rAm);
-		this['fol'+i].add(this.text, 'z1-'+i, -rAm,rAm);
+		this['fol'+i].add(this.text, 'x1-'+i, -rAm,rAm).listen().name("Bend-X");
+		this['fol'+i].add(this.text, 'y1-'+i, -rAm,rAm).listen().name("Bend-Y");
+		this['fol'+i].add(this.text, 'z1-'+i, -rAm,rAm).listen().name("Bend-Z");
 		
-		this['fol'+i].add(this.text, 'x2-'+i, -rAm,rAm);
-		this['fol'+i].add(this.text, 'y2-'+i, -rAm,rAm);
-		this['fol'+i].add(this.text, 'z2-'+i, -rAm,rAm);
+		this['fol'+i].add(this.text, 'x2-'+i, -rAm,rAm).listen().name("Rotate-X");
+		this['fol'+i].add(this.text, 'y2-'+i, -rAm,rAm).listen().name("Rotate-Y");
+		this['fol'+i].add(this.text, 'z2-'+i, -rAm,rAm).listen().name("Rotate-Z");
 		
-		this['fol'+i].add(this.text, 'x3-'+i, -rAm,rAm);
-		this['fol'+i].add(this.text, 'y3-'+i, -rAm,rAm);
-		this['fol'+i].add(this.text, 'z3-'+i, -rAm,rAm);
+		this['fol'+i].add(this.text, 'x3-'+i, -rAm,rAm).listen().name("Animate-X");
+		this['fol'+i].add(this.text, 'y3-'+i, -rAm,rAm).listen().name("Animate-Y");
+		this['fol'+i].add(this.text, 'z3-'+i, -rAm,rAm).listen().name("Animate-Z");
 		
-		this['fol'+i].add(this.text, 'x4-'+i, -rAm,rAm);
-		this['fol'+i].add(this.text, 'y4-'+i, -rAm,rAm);
-		this['fol'+i].add(this.text, 'z4-'+i, -rAm,rAm);
+		this['fol'+i].add(this.text, 'x4-'+i, -rAm,rAm).listen().name("Offset-X");
+		this['fol'+i].add(this.text, 'y4-'+i, -rAm,rAm).listen().name("Offset-Y");
+		this['fol'+i].add(this.text, 'z4-'+i, -rAm,rAm).listen().name("Offset-Z");
 		
-		this['fol'+i].add(this.text, 'off-'+i, -10,10);
+		this['fol'+i].add(this.text, 'off-'+i, -10,10).listen().name("OffsetMultiply");
 		
-		this['fol'+i].add(this.text, 'sc-'+i, .8,1.5).listen();
+		this['fol'+i].add(this.text, 'sc-'+i, .8,1.5).name("Scale");
 		
 	}
-//console.log(this.text);
-//	gui.add(this.text, 'sizerx', 0,10);
-//	gui.add(this.text, 'sizery', 0,10);
-//	gui.add(this.text, 'sizerz', 0,10);
+
 f1.open();
+f0.open();
 
 }
+
 //sets up the three scene and calls addGeo
 sc1.prototype.init = function() {
 
@@ -310,11 +304,8 @@ sc1.prototype.init = function() {
 	
 }
 
-
-
 sc1.prototype.addGeo = function(){
 	
-
 	var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
 	var g2 = new THREE.CubeGeometry( 1,1,1 );
 	var g1 = new THREE.Geometry();
@@ -322,8 +313,8 @@ sc1.prototype.addGeo = function(){
 
 	var div = document.getElementById('user');
 	//var divAnim = document.getElementById('anim');
-	user.defaultValue ='{"num":25,"scale":[5,8,5],"ss":0.96,"leaves":1,"divs":5,"rads":2,"leafss":[0.95,0.8,0.2],"leafDivs":[2,4,2],"fruit":true,"term":[0,1],"leafJoints":[10,10,10],"jScale2":[3,3,3],"anim":{"x1":[0,0.1,0.2,0.3,0],"x2":[0,0,0],"y1":[0.1,0.2],"y2":[-0.8],"x3":[1,1,1]}}';
 	
+	user.defaultValue ='{"num":25,"scale":[5,8,5],"ss":0.96,"leaves":1,"divs":5,"rads":2,"leafss":[0.95,0.8,0.2],"leafDivs":[2,4,2],"fruit":true,"term":[0,1],"leafJoints":[10,10,10],"jScale2":[3,3,3],"anim":{"x1":[0,0.1,0.2,0.3,0],"x2":[0,0,0],"y1":[0.1,0.2],"y2":[-0.8],"x3":[1,1,1]}}';
 	
 	var your_object = JSON.parse(user.value);
 	var parms={color1:0x225577,color2:0xbbffdd,color3:0x0099ff};
@@ -331,12 +322,9 @@ sc1.prototype.addGeo = function(){
 	var mesh = new THREE.Mesh(geometry);
 	var dir = new THREE.Vector3(.1,.5,-.4);
 	
-		
-	// loading loader loaded OBJ
-
-	//
 	if(gui!=undefined)
-	gui.destroy();
+		gui.destroy();
+		
 	this.setupDat(your_object.leaves);
 	
 	for ( var i = 0 ; i < 1 ; i++){
@@ -345,8 +333,7 @@ sc1.prototype.addGeo = function(){
 		
 		cuber.makeParams(your_object);
 		cuber.altGeo =  new Array(new THREE.CylinderGeometry( 1,1,1,4,1));
-		//console.log(JSON.stringify(cuber.p));
-		//console.log(cuber.joints);
+		
 		cuber.branchSquares();
 		cuber.big.position.y = -100;
 		
@@ -356,56 +343,42 @@ sc1.prototype.addGeo = function(){
 		things.push(cuber);
 		things[i].animVals = cuber.p.anim;
 		
-		for(var i = 0 ; i < cuber.branches.length ; i++){
-			
-				//console.log(cuber.branches[i][0].parent.parent.rotation.y);
-			
-		
-		}
-		for (var q = 0 ; q <= things[0].p.leaves ; q++){
-		
-			this.text["x1-"+q]=things[0].p.anim.x1[q];
-			this.text["y1-"+q]=things[0].p.anim.y1[q];
-			this.text["z1-"+q]=things[0].p.anim.z1[q];
-			this.text["x2-"+q]=things[0].p.anim.x2[q];
-			this.text["y2-"+q]=things[0].p.anim.y2[q];
-			this.text["z2-"+q]=things[0].p.anim.z2[q];
-			this.text["x3-"+q]=things[0].p.anim.x3[q];
-			this.text["y3-"+q]=things[0].p.anim.y3[q];
-			this.text["z3-"+q]=things[0].p.anim.z3[q];
-			this.text["x4-"+q]=things[0].p.anim.x4[q];
-			this.text["y4-"+q]=things[0].p.anim.y4[q];
-			this.text["z4-"+q]=things[0].p.anim.z4[q];
-			this.text["sc-"+q]=things[0].p.anim.sc[q];
-			
-		}
-		
-		this.text.speed = things[0].p.anim.speed;
-		this.text.speed2 = things[0].p.anim.speed2;
-		this.text.x = things[0].p.anim.x;
-		this.text.y = things[0].p.anim.y;
-		this.text.z = things[0].p.anim.z;
-		this.text.size = things[0].p.anim.size;
-		
-		//this.text
-		for(key in this.animObject){
-			if(this.animObject[key] instanceof Array){
-				for( i in this.animObject[key] )
-					if (this.animObject[key][i] !== undefined){
-						
-					//	console.log(this.animObject.x1);
-						//console.log(this.animObject[key][i]);
+	}
+	
+	this.refresh();
+	
+}
 
-						
-					}
-			}
-		}
+sc1.prototype.refresh = function(){
+
+	for (var q = 0 ; q <= things[0].p.leaves ; q++){
+	
+		this.text["x1-"+q]=things[0].p.anim.x1[q];
+		this.text["y1-"+q]=things[0].p.anim.y1[q];
+		this.text["z1-"+q]=things[0].p.anim.z1[q];
+		this.text["x2-"+q]=things[0].p.anim.x2[q];
+		this.text["y2-"+q]=things[0].p.anim.y2[q];
+		this.text["z2-"+q]=things[0].p.anim.z2[q];
+		this.text["x3-"+q]=things[0].p.anim.x3[q];
+		this.text["y3-"+q]=things[0].p.anim.y3[q];
+		this.text["z3-"+q]=things[0].p.anim.z3[q];
+		this.text["x4-"+q]=things[0].p.anim.x4[q];
+		this.text["y4-"+q]=things[0].p.anim.y4[q];
+		this.text["z4-"+q]=things[0].p.anim.z4[q];
+		this.text["sc-"+q]=things[0].p.anim.sc[q] || 1;
 		
 	}
+	
+	this.text.leaves =  things[0].p.leaves;
+	this.text.ss =  things[0].p.ss;
+	this.text.num = Math.floor(things[0].p.num);
+	this.text.speed = things[0].p.anim.speed;
+	this.text.speed2 = things[0].p.anim.speed2;
+	this.text.x = things[0].p.anim.x;
+	this.text.y = things[0].p.anim.y;
+	this.text.z = things[0].p.anim.z;
+	this.text.size = things[0].p.anim.size;
 
-//	console.log(things);
-	
-	
 }
 
 sc1.prototype.moveThings = function(){
@@ -413,6 +386,7 @@ sc1.prototype.moveThings = function(){
 	for ( var j = 0 ; j <   things.length  ; j++){
 	
 		var thing = things[j];
+		thing.p.leaves =  Math.floor(this.text.leaves);
 		
 		for (var q = 0 ; q <= thing.p.leaves ; q++){
 		
@@ -432,29 +406,30 @@ sc1.prototype.moveThings = function(){
 			thing.p.anim.off[q] = this.text["off-"+q];
 			thing.p.anim.sc[q] = this.text["sc-"+q];// + mysc;
 			
-			
-			//thing.p.anim.off[q] = this.text["off-"+q] + myOff;
-			//thing.p.anim.sc[q] = this.text["sc-"+q];// + mysc;
 		}
 
 		
 		for (var q = 0 ; q < thing.fruit.length ; q++){
 			thing.fruit[q].scale = new THREE.Vector3(this.text.fruitSize,this.text.fruitSize,this.text.fruitSize);
-		
 		}
 		
-		thing.p.anim.size = this.text.size+ sizeCounter;
+		
+		thing.p.ss =  this.text.ss;
+		thing.p.num = Math.floor(this.text.num);
+		thing.p.anim.size = this.text.size;
 		thing.p.anim.x = this.text.x;
 		thing.p.anim.y = this.text.y;
 		thing.p.anim.z = this.text.z;
 		thing.p.anim.speed = this.text.speed;
 		thing.p.anim.speed2 = this.text.speed2;
-		
+
 		sizeCounter+=.001;
 		
 		thing.animate();
 		thing.p.anim.num-=this.text.speed*this.text.speed2;
-		if(helpGeo)up += map_range(this.text.speed*this.text.speed2,0,Math.PI*2,0,1.27);
+		
+		if(helpGeo)
+			up += map_range(this.text.speed*this.text.speed2,0,Math.PI*2,0,1.27);
 	}	
 	
 	var rot = new THREE.Vector3(this.text.rotatorx,this.text.rotatory,this.text.rotatorz);
@@ -463,10 +438,6 @@ sc1.prototype.moveThings = function(){
 }
 
 sc1.prototype.animate = function(){
-
-	//console.log("HIHIHI");
-	//console.log(this.text);
-	
 
 	if(rebuild){
 		//make a fake tree
@@ -480,22 +451,29 @@ sc1.prototype.animate = function(){
 		things = [];
 		killEverything(scene);
 		this.addGeo();
+		this.moveThings();
+
 		
 		if (helpGeo){
 			this.scene.add(tree);
 			things[0].msh.push(tree.children[0].children[0]);
 		}
-		
 		rebuild = false;
 	}
-	//this.render();
+	//this.refresh();
 	this.renderer.render( this.scene, this.camera );
+	
 	if(this.text.speed*this.text.speed2 !=0){
 		this.moveThings();
 	}
+	
 	var that = this;
 	requestAnimationFrame( function() { that.animate(); });
 	//this.controls.update();
+	
+	this.camera.position.x += -mouseMove/2;
+	
+	mouseMove = 0;
 	
 }
 
@@ -506,25 +484,29 @@ sc1.prototype.render = function() {
 
 }
 
-
 document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 document.addEventListener( 'mouseup', onDocumentMouseUp, false );
+document.addEventListener('mousewheel',scrollFunc,false);
 
-var projector;
 projector = new THREE.Projector();
 
 function onDocumentMouseMove( event ) {
 	if(objRotate){
 		vector = new THREE.Vector3(
 		0,
-		( event.clientX*-3 / window.innerWidth ) * 2 + 1,
-		-( event.clientY / window.innerHeight ) * 2 + 1
+		( event.clientX*-3 / window.innerWidth ) * 4 + 1,
+		-( event.clientY / window.innerHeight ) * 4 + 1
 		);
 		
 	
 	}		
 }
+
+function scrollFunc(ev){
+    mouseMove = ev.wheelDelta;
+
+};
 
 function onDocumentMouseDown( event ) {
 	if(( event.clientX / window.innerWidth ) < .7 && ( event.clientX/ window.innerWidth ) > .3)
@@ -535,10 +517,9 @@ function onDocumentMouseUp( event ) {
 	objRotate = false;
 }
 
-
 function saver() {
 
-	//if(evt.keyCode == 65){
+	
 		alert("saving!");
 		var j = 0;
 		var output = "";
@@ -564,10 +545,9 @@ function saver() {
 		alert("saved!");
 		var blob = new Blob([output], {type: "text/plain;charset=ANSI"});
 		saveAs(blob, "tree.obj");
-	//}
+
 	
 }
-
 
 function saver2() {
 
@@ -628,20 +608,6 @@ function saver2() {
 	
 }
 
-
-rebuilder = function(){
-	var that = this;
-	//console.log(user.value);
-	//console.log(anim.value);
-	console.log(JSON.stringify(things[0].p));
-	//console.log(things[0].p);
-	//console.log($.extend(things[0].p,this.animObject));	
-	rebuild = true;
-	
-
-}
-
-
 $( document ).on( 'keydown', function ( e ) {
 	console.log(e.keyCode);
     if ( e.keyCode === 27 ) { // ESC
@@ -657,11 +623,8 @@ console.log(e.keyCode);
     }
 });
 
-
 window.onkeyup = onKeyUp;
 window.onkeypress = onKeyPress;
-
-
 
 function onKeyUp(evt) {
 

@@ -4,7 +4,7 @@ function peep(params){
 	this.altGeo = params.altGeo;
 		
 
-	console.log(this.altGeo);
+//	console.log(this.altGeo);
 	this.params = this.makeParams(params);
 	//console.log(this.params);
 	this.CTRL = new THREE.Object3D();
@@ -13,7 +13,7 @@ function peep(params){
 	//attempting to use geoDivs to set the divs on my geo does NOT work - fix later
 	this.defaults = {
 		geo:new THREE.CylinderGeometry( 0.01,0.01,1,2,1),
-		geo2:new THREE.SphereGeometry(0.58,12,6)
+		geo2:new THREE.SphereGeometry(0.0058,12,6)
 	}
 
 	
@@ -35,7 +35,7 @@ function peep(params){
 	
 	this.material =  new THREE.MeshLambertMaterial( { color:this.color1, shading: THREE.SmoothShading } );
 	
-	this.path = "textures/bmap.";
+	this.path = "textures/dmap.";
 	this.format = '.jpg';
 	this.urls = [
 		this.path + '04' + this.format, this.path + '02' + this.format,
@@ -47,7 +47,7 @@ function peep(params){
 	this.material_depth = new THREE.MeshDepthMaterial();
 
 	this.textureCube = THREE.ImageUtils.loadTextureCube( this.urls );
-	this.mat = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: this.textureCube } );
+	this.mat = new THREE.MeshLambertMaterial( { color: 0xffffff, envMap: this.textureCube } );
 	
 	
 	
@@ -95,14 +95,18 @@ peep.prototype = {
 		var scl = new THREE.Vector3(sx,sy,sz);
 		var pos2 = new THREE.Vector3(p2x,p2y,p2z);
 		
-//		console.log(geom);
+
 		var thisGeo = geom || this.geometry;
-//			console.log(thisGeo);
+		
+	
 		
 		this.mesh = new THREE.Mesh( thisGeo, this.mat );
 		this.mesh2 = new THREE.Mesh( this.geometry2, this.mat );
 		this.mesh3 = new THREE.Mesh( this.geometry2, this.mat );
-							
+		this.mesh.visible = false;
+				this.mesh2.visible = false;
+						this.mesh3.visible = false;
+		
 		this.mesh.updateMatrix();
 		this.mesh.matrixAutoUpdate = true;					
 		this.mesh.position = pos;	
@@ -230,7 +234,7 @@ peep.prototype = {
 		
 		this.p.anim.sc = Array.apply(null, new Array(10)).map(Number.prototype.valueOf,1);
 		this.p.anim = $.extend(this.p.anim,params.anim);
-		this.p.fruitSize = new THREE.Vector3(0,0,0);
+		this.p.fruitSize = new THREE.Vector3(0.001,0.001,0.001);
 		
 		//number of joints on each branch
 		

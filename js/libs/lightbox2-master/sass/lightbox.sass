@@ -1,0 +1,118 @@
+@import "compass/css3"
+@import "compass/utilities/general/clearfix"
+
+@import "variables"
+
+#lightboxOverlay
+  position: absolute
+  top: 0
+  left: 0
+  z-index: 9999
+  background-color: #000
+  +opacity(0.85)
+  display: none
+
+#lightbox
+  position: absolute
+  left: 0
+  width: 100%
+  z-index: 10000
+  text-align: center
+  line-height: 0
+  font-family: 'lucida grande', tahoma, verdana, arial, sans-serif
+  font-weight: normal
+  img
+    width: auto
+    height: auto
+  a img
+    border: none
+
+.lb-outerContainer
+  position: relative
+  background-color: #fff
+  +pie-clearfix
+  width: 250px
+  height: 250px
+  margin: 0 auto
+  +border-radius($radius)
+
+.lb-container
+  padding: 10px
+
+.lb-loader
+  position: absolute
+  top: 40%
+  left: 0%
+  height: 25%
+  width: 100%
+  text-align: center
+  line-height: 0
+
+.lb-nav
+  position: absolute
+  top: 0
+  left: 0
+  height: 100%
+  width: 100%
+  z-index: 10
+
+.lb-container > .nav
+  left: 0
+
+.lb-nav a
+  outline: none
+
+.lb-prev, .lb-next
+  width: 49%
+  height: 100%
+  background-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7")
+  /* Trick IE into showing hover
+  display: block
+
+.lb-prev
+  left: 0
+  float: left
+
+.lb-next
+  right: 0 
+  float: right
+
+.lb-prev
+  &:hover
+    background: url(..js/libs/lightbox2-master/images/prev.png) left 48% no-repeat
+
+.lb-next
+  &:hover
+    background: url(..js/libs/lightbox2-master/images/next.png) right 48% no-repeat
+
+.lb-dataContainer
+  margin: 0 auto
+  padding-top: 5px
+  +pie-clearfix
+  width: 100%
+  +border-bottom-radius($radius)
+
+.lb-data
+  padding: 0 10px
+  color: #bbb
+  .lb-details
+    width: 85%
+    float: left
+    text-align: left
+    line-height: 1.1em
+  .lb-caption
+    font-size: 13px
+    font-weight: bold
+    line-height: 1em
+  .lb-number
+    display: block
+    clear: left
+    padding-bottom: 1.0em
+    font-size: 11px
+  .lb-close
+    width: 35px
+    float: right
+    padding-bottom: 0.7em
+    outline: none
+    &:hover
+      cursor: pointer
