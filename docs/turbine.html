@@ -1,1 +1,125 @@
-Docs to come
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Turbine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Turbine Documentation">
+    <meta name="author" content="David Lobser">
+	
+	<script type="text/javascript" src="../js/libs/jquery.js"></script>
+	<script src="../js/libs/lightbox2-master/js/jquery-1.7.2.min.js"></script>
+	<script src="../js/libs/lightbox2-master/js/lightbox.js"></script>
+	<link href="../js/libs/lightbox2-master/css/lightbox.css" rel="stylesheet" />
+	
+	 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Monda">
+	 <link href='http://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+
+    <!-- Le styles -->
+    <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+	
+	<!-- Le styles <link href="css/bootmod.css" rel="stylesheet">
+	<link href="../css/bootmod.css" rel="stylesheet"> -->
+<style>
+   body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+h1,h2,h3,h5{
+font-family: 'Roboto Slab', serif;
+}
+[class*="span"] {
+float: left;
+min-height: 1px;
+margin-left: 0px;
+padding-right:0px;
+}
+#center{
+	text-align:center;
+}
+
+</style>
+  </head>
+
+  <body style="background-color:black">
+  
+  
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="http://www.idlehands.tv">Idle Hands</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="../sketches.html">Home</a></li>
+              <li><a href="../about.html">About</a></li>
+              <li><a href="http://www.dlobser.com">dLobser.com</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+	
+      <div class="container">
+<div class="row" id="map">
+	<div class="span12" style="background-color:white">
+<br>
+<div id="center">
+<img src="../images/ylem.png	"/></a><br><br>
+
+		
+		<h5 style="text-align:center">Branching, Hierarchical Modeling and Animation</h5>
+		<div class="span12" style="text-alight:center">
+				<br>		<br>
+	
+		</div>
+	</div>
+	<div class="span1"></div>
+		<div class="span10" style="background-color:white;padding-left:20px;padding-right:-40px">
+<p>
+<strong>Features:</strong> Web based, real-time, obj exporter tuned for 3d printing, animating<br><br>
+
+Turbine is built with threejs, an open framework being written/curated by Mr. Doob.<br>  It also makes use of dat.gui for interface elements.<br>  The instructions a computer needs for making a tree are quite simple:<br><br>
+
+</p>
+<p>
+1.) Build a branch section, in this case it's a simple cylinder parented under null objects to create a rig that's capable of complex motion and offsets.<br><br>
+
+2.) Create a recursive function that generates and parents a long row of those limbs under each other.  The results from having just one trunk are remarkable in their variety.<br><br>
+
+3.) As the trunk is being created, for every nth item spawn a new limb with an offset orientation.<br><br>
+</p>
+<br>
+The major advantage to building a tree with joint sections is the fine control over bending, allowing for some extremely complex curves.  Some very typical fractal like geometry can be constructed, as can shapes that are more unusual.<br><br>
+
+What I find most remarkable about this setup is its simplicity.  There is absolutely nothing original here (in fact it has a lot in common with the more complete structure synth), but a few modifications in the basic structure of a typical L-system and (I think) a sensibility born of animation and design has allowed me to produce idiosyncratic geometry.  The controls allow you to think about building structures with these basic rules:<br>
+
+1.) Set the number of layers deep branches can be grown. <br>
+2.) Set the number of joints on each branch.<br>
+3.) Set the frequency of branching (for every nth joint, make a branch).<br>
+4.) Set the # of radial repetitions.  You could, for instance, make a bowl if you set the repeats high enough.<br>
+5.) Set the scale factor on successive joints, scaling up or down over the length of a branch.<br>
+6.) Bend and rotate each branch and each joint within each branch.<br>
+7.) Add fruit at the end of selected layers of leaves.<br><br>
+
+Bonus:<br>
+8.) The user can write their own custom animation functions and pass them directly through the params.<br>
+9.) Geometry can be replaced per branch.<br><br>
+
+Turbine allows for some extremely complicated shapes to arise from extremely simple inputs, the same as any branching/fractal system.  Turbine is unique in its animated approach and the fact that it's web based and extremely simple.  <br><br>
+
+For the Future:<br><br>
+
+1.) I'd like to add the ability for all the joints to bend in the same direction, this will be as simple as rotating around a specific axis.<br>
+2.) A database will be implemented so users can save their projects.<br>
+3.) A connection directly to Shapeways will be added.<br>
+4.) Users will be able to upload their own geometry to be instanced along the joints.  For instance, vertebrae for the branches and skulls for the fruit, or for something more fun, gummy bears for <br>branches and lollipops for fruit.<br>
+5.) The interface will be simplified considerably, I will likely hide the params section (or only keep it as an advanced tab) and replace all of those elements with sliders.<br><br>
+
+</body>
+</html>
+

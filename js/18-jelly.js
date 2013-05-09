@@ -24,6 +24,7 @@ var particleIn = true;
 readyToBurst = true;
 var push = 0;
 var jigCounter = 0;
+var debug = true;
 
 
 
@@ -257,11 +258,9 @@ sc1.prototype.init = function() {
 	//console.log(this.scene.fog.density);
 	this.camera.lookAt(new THREE.Vector3(0,-10,0));
 	//this.scene.add(this.camera);
-//	this.aud = new Audio('audio/bell.mp3');
-//	this.aud.init();
+	this.aud = new Audio('audio/bell.mp3');
+	this.aud.init();
 
-	
-	
 	var loader2 = new THREE.OBJLoader();
 				
 	loader2.addEventListener( 'load', function ( event ) {
@@ -273,10 +272,13 @@ sc1.prototype.init = function() {
 		spine.push(object);
 		loader2.object = object;
 		objLoaded+=1;
+
 		
 	});
+	
 	loader2.load( 'models/vertebrae_lorez.obj' );
 	loader2.load( 'models/bone.obj' );
+	
 	
 	parenter = new THREE.Object3D();
 	
@@ -527,7 +529,7 @@ sc1.prototype.addGeo = function(){
 	
 
 
-//	console.log(things);
+	console.log(things);
 
 }
 
@@ -607,7 +609,7 @@ sc1.prototype.moveThings = function(){
 		parenter.rotation.y = thing.p.anim.num/10;
 		
 		thing.animate();
-		thing.p.anim.num-=(this.text.speed*this.text.speed2) + avg*.01;// * (((thisKey-48)*2)+.21);
+		thing.p.anim.num-=(this.text.speed*this.text.speed2) + avg*.03;// * (((thisKey-48)*2)+.21);
 		//thing.p.anim.num-=(Math.sin(jigCounter*((thisKey-48)*.6)*12)*((thisKey-48)*.01));// + sizeCounter*.1;
 		//console.log((Math.sin(jigCounter*1.3)*.10));
 		if(helpGeo)up += map_range(this.text.speed*this.text.speed2,0,Math.PI*2,0,1.27);
@@ -630,8 +632,33 @@ sc1.prototype.moveThings = function(){
 	this.rotator.rotation = vector;
 }
 
-sc1.prototype.animate = function(){
+sc1.prototype.scaleBones = function(amt,array,avg){
 
+/*
+//take an array of joints, 
+//travel down to the mesh
+//use the length
+
+the first item in the array gets a scale value based on thisKey
+each successive frame that value is transferred to the next item in the Array
+
+float firstOffset = map(amt,0,1,3,spotsW.size());
+int segment = (int) floor(firstOffset);
+float offset = (firstOffset-segment);
+*/
+
+array[0].scale = new THREE.Vector3(amt,1,amt);
+
+for ( var i = array.length ; i > 0 ; i-- ){
+	array[i].scale = array[i-1].scale;
+
+}
+
+var firstOffset = map_range(amt,0,1,3,array.length);
+	
+}
+
+sc1.prototype.animate = function(){
 	//fade it in
 	//if(this.scene.fog.density>0.0001)
 	//	this.scene.fog.density -= 0.0001;
@@ -654,7 +681,7 @@ sc1.prototype.animate = function(){
 		this.makeParticle();
 		this.makeBall(300);
 			
-		//	this.aud.init();
+		this.aud.init();
 	
 		particleTimer = 0;
 		particleIn = false;
@@ -667,9 +694,12 @@ sc1.prototype.animate = function(){
 	if(rebuild || objLoaded==2){
 	
 		//this.aud.stopper();
+		if(!debug)
+			var parCount = 170;
+		else
+			var parCount = 1;
 		
-		
-		if(particleTimer > 170){
+		if(particleTimer > parCount){
 			counter = 3;
 			objLoaded = 0;
 			this.scene.fog.density = 0.005;

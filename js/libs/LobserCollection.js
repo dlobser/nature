@@ -154,12 +154,16 @@ Audio = function(file){
 	this.context;
 	this.file = file;
 	this.source1;
+	this.bool=false;
 }
 
 Audio.prototype.init = function() {
 	this.bufferLoader;
-	this.context = new webkitAudioContext();
-
+	
+	if(!this.bool){
+		this.context = new webkitAudioContext();
+		this.bool = true;
+	}
 	this.bufferLoader = new BufferLoader(this.context, [this.file], this.play);
 	this.spoon = 12;
 	this.bufferLoader.load();
@@ -172,12 +176,11 @@ Audio.prototype.play = function(bufferList) {
 	this.source1.connect(this.context.destination);
 	this.source1.noteOn(0);
 
-	sleep(5000);
-	this.source1.disconnect();
+	setTimeout(5000, this.source1.disconnect);
 }
 
 Audio.prototype.stopper  = function(){
-	console.log(this.source1);
+	this.source1.disconnect();
 }
 
 function sleep(milliseconds) {
