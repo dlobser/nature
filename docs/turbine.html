@@ -13,6 +13,10 @@
 	<script src="../js/libs/lightbox2-master/js/lightbox.js"></script>
 	<link href="../js/libs/lightbox2-master/css/lightbox.css" rel="stylesheet" />
 	
+	 <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/bootstrap-tab.js"></script>
+        <script src="http://code.jquery.com/jquery-1.7.1.js"></script>
+	
 	 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Monda">
 	 <link href='http://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
 
@@ -38,10 +42,24 @@ padding-right:0px;
 	text-align:center;
 }
 
+
 </style>
+
+<script>
+
+$('#myTab a').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+})
+
+$('#myTab a[href="#profile"]').tab('show'); 
+$('#myTab a:first').tab('show'); 
+$('#myTab a:last').tab('show'); 
+$('#myTab li:eq(2) a').tab('show'); 
+</script>
   </head>
 
-  <body style="background-color:black">
+  <body style="background-color:white">
   
   
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -63,12 +81,27 @@ padding-right:0px;
         </div>
       </div>
     </div>
+
+
+
+<script>
+	
+	     
+		  spoon
+		  </div>
 	
       <div class="container">
+
+  $(function () {
+    $('#myTab a:last').tab('show');
+  })
+</script>
+ <div class="container">
 <div class="row" id="map">
-	<div class="span12" style="background-color:white">
-<br>
-<div id="center">
+
+<a href="../20-turbine.html">
+
+<div id="center" style="background-color:white">
 <img src="../images/ylem.png	"/></a><br><br>
 
 		
@@ -76,49 +109,348 @@ padding-right:0px;
 		<div class="span12" style="text-alight:center">
 				<br>		<br>
 	
-		</div>
+		</div></a>
 	</div>
-	<div class="span1"></div>
-		<div class="span10" style="background-color:white;padding-left:20px;padding-right:-40px">
-<p>
-<strong>Features:</strong> Web based, real-time, obj exporter tuned for 3d printing, animating<br><br>
+	<div class="span12" style="background-color:white">
+	
+	
+		
+	 <div class="tabbable">
+	 
+           <ul class="nav nav-tabs">
+             <li class="active"><a href="#tab1" data-toggle="tab">Overview</a></li>
+             <li><a href="#tab2" data-toggle="tab">Features</a></li>
+			 <li><a href="#tab3" data-toggle="tab">Instructions</a></li>
+			 <li><a href="#tab4" data-toggle="tab">Gallery</a></li>
+			  <li><a href="#tab6" data-toggle="tab">Params</a></li>
+           </ul>
+		   
+           <div class="tab-content">
+               <div id="tab1" class="tab-pane active">
+				   <a href="http://tileableart.com/code/natureof/20-turbine.html"><strong>Turbine</strong></a> is a simple web based tool which is capable of generating complex and life-like 3d models and animation.<br><br>
+				   
+				   It was written at ITP (NYU's interactive telecommunications program) for Daniel Shiffman's class, "The Nature of Code"<br><br>
+				   
+				   This tool was used to produce the following projects:<br><br>
+				   
+					 <a href="../docs/jelly.html">{Medusa,Medusa,...}</a><br>
+					 <a href="../docs/g-code.html">The G-Code Painter</a><br>
+					 <a href="http://lobserprojectdev.tumblr.com">A Taxonomy of Wishes </a> &nbsp; (A Project Development Blog)<br><br><br><br>
+					 
+				   <div id="center">
+					   <a href='../20-turbine.html'>
+							<img src='../images/docs/turbine-screen-cap.jpg' width="700px"style='border:1px solid #000000' ></a>
+				   </div>
+				   
+				   
+			   </div>
+			   
+               <div id="tab2" class="tab-pane">
+		Web based, real-time, obj exporter tuned for 3d printing, animating<br><br>
 
-Turbine is built with threejs, an open framework being written/curated by Mr. Doob.<br>  It also makes use of dat.gui for interface elements.<br>  The instructions a computer needs for making a tree are quite simple:<br><br>
+		Turbine is built with threejs, an open framework being written/curated by Mr. Doob.<br>  It also makes use of dat.gui for interface elements.<br>  The instructions a computer needs for making a tree are quite simple:<br><br>
 
-</p>
-<p>
-1.) Build a branch section, in this case it's a simple cylinder parented under null objects to create a rig that's capable of complex motion and offsets.<br><br>
+		</p>
+		<p>
+		1.) Build a branch section, in this case it's a simple cylinder parented under null objects to create a rig that's capable of complex motion and offsets.<br><br>
 
-2.) Create a recursive function that generates and parents a long row of those limbs under each other.  The results from having just one trunk are remarkable in their variety.<br><br>
+		2.) Create a recursive function that generates and parents a long row of those limbs under each other.  The results from having just one trunk are remarkable in their variety.<br><br>
 
-3.) As the trunk is being created, for every nth item spawn a new limb with an offset orientation.<br><br>
-</p>
+		3.) As the trunk is being created, for every nth item spawn a new limb with an offset orientation.<br><br>
+		</p>
+		<br>
+		The major advantage to building a tree with joint sections is the fine control over bending, allowing for some extremely complex curves.  Some very typical fractal like geometry can be constructed, as can shapes that are more unusual.<br><br>
+
+		What I find most remarkable about this setup is its simplicity.  There is absolutely nothing original here (in fact it has a lot in common with the more complete structure synth), but a few modifications in the basic structure of a typical L-system and (I think) a sensibility born of animation and design has allowed me to produce idiosyncratic geometry.  The controls allow you to think about building structures with these basic rules:<br><br>
+
+		1.) Set the number of layers deep branches can be grown. <br>
+		2.) Set the number of joints on each branch.<br>
+		3.) Set the frequency of branching (for every nth joint, make a branch).<br>
+		4.) Set the # of radial repetitions.  You could, for instance, make a bowl if you set the repeats high enough.<br>
+		5.) Set the scale factor on successive joints, scaling up or down over the length of a branch.<br>
+		6.) Bend and rotate each branch and each joint within each branch.<br>
+		7.) Add fruit at the end of selected layers of leaves.<br><br>
+
+		Bonus:<br>
+		8.) The user can write their own custom animation functions and pass them directly through the params.<br>
+		9.) Geometry can be replaced per branch.<br><br>
+
+		Turbine allows for some extremely complicated shapes to arise from extremely simple inputs, the same as any branching/fractal system.  Turbine is unique in its animated approach and the fact that it's web based and extremely simple.  <br><br>
+
+		For the Future:<br><br>
+
+		1.) I'd like to add the ability for all the joints to bend in the same direction, this will be as simple as rotating around a specific axis.<br>
+		2.) A database will be implemented so users can save their projects.<br>
+		3.) A connection directly to Shapeways will be added.<br>
+		4.) Users will be able to upload their own geometry to be instanced along the joints.  For instance, vertebrae for the branches and skulls for the fruit, or for something more fun, gummy bears for <br>branches and lollipops for fruit.<br>
+		5.) The interface will be simplified considerably, I will likely hide the params section (or only keep it as an advanced tab) and replace all of those elements with sliders.<br><br>
+
+			   </div>
+			   <div id="tab3" class="tab-pane">.
+			   
+			     <div id="center">
+			   <a href='http://tileableart.com/code/natureof/20-turbine.html'>
+					<img src='../images/docs/turbine-screen-cap.jpg' width="700px"style='border:1px solid #000000' ></a>
+			   </div>
+			   <br><br>
+			   <strong>Screen Left Pane</strong><br>
+			   Presets: Choose from the dropdown, then click 'applyPreset'<br>
+			   ApplyPreset: Click here after you choose a preset<br>
+			   Rebuild: Uses the code in the params window to rebuild the tree<br>
+			   SliderToParams: Takes the settings on the sliders (to the right) and copies them to this field<br><br>
+			   Parameters: For advanced users, you can adjust all the settings here and then click 'rebuild'<br>
+				<ul>
+					<li>ss: how much each link is scaled</li>
+					<li>sc: initial ss of the root on construction</li>
+					<li>scale: x,y,z scale of the root on construction</li>
+					<li>jointScale: x,y,z scale of each leaf layer, -1 sets it to defaults, these branches will not get bigger in x than the parent</li>
+					<li>num: number of joints in a branch</li>
+					<li>divs: how often new branches sprout from a parent branch</li>
+					<li>rads: when the branches branch, how many sprout</li>
+					<li>x1,y1,z1: the bend of the branches in an array</li>
+					<li>x2,y2,z2: the rotation of the root of the branches</li>
+					<li>x3,y3,z3: animation values in an array</li>
+					<li>x4,y4,z4: offset based on position along parent</li>
+					<li>off: sin offset along parent branch</li>
+				</ul>
+				SaveOBJ: export .obj file<br>
+				HelperGeo: Places tubes inside the geo to demonstrate a safe minimum thickness for 3d printing<br><br>
+				
+				 <strong>Sliders</strong><br><br>
+				 Constructor:<br>
+				 TrunkDivisions: number of joints in a branch<br>
+				  TrunkScale: each successive joint is scaled by this amount<br>
+				  Leaves: depth of the branching<br>
+				  Rebuild: same as the rebuild in the left pane, but it copies over slider values first<br>
+				  fruitSize: scale of fruit<br><br>
+				  Motion:<br>
+				  speed/speedmultiply: two sliders are present for fine tuning<br>
+				  wavelength: of the sine wave used to rotate the joints<br>
+				  animate x,y,z: this is a multiplier for the animate-x,y,z sliders on each branch<br><br>
+				  Level: (refers to branch level)<br>
+				  Bend X,Y,Z: rotates each joint<br>
+				  Rotate X,Y,Z: rotates only the root of each jonit<br>
+				  Animate X,Y,Z: amount of animation, multiplies with sliders in the 'motion' tab<br>
+				  Offset X,Y,Z: similar to animate but it's static and uses the position along the parent to control the offset of the sine wave<br>
+				  OffsetMultiply: similar to the 'wavelength' attribute in the motion section<br>
+				  Scale: 'ss' in the params, the successive scale of each joint<br>
+				  
+				  
+				  
+
+			   
+			   
+			   </div>
+			   			<div id="tab6" class="tab-pane">
+						
+						<strong>Params Shall Be Copied And Pasted</strong><br>
+						you'll have to go with your gut here<br><br><br>
+						
+						Cages With Animation:<br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":105.99041860465046,"speed":0.04622973925299507,"speed2":0.7892883232558139,"num":-179.86029544765165,"x":0.007499569188350853,"y":0.0054122621564482035,"z":0.005750528541226215,"x1":[-0.015151515151515138,-0.08302306166992057,-0.012176715711588404,0.3,0],"y1":[0.1,-0.04759988869075449,null],"z1":[0,-0.012176715711588404,null],"x2":[-0.03770260747004933,-0.7560633482740764,-0.7045981110885947],"y2":[-0.8,null,null],"z2":[0,null,null],"x3":[0.02995066948555325,0.09409280322591007,1.5707963267948966],"y3":[0,null,null],"z3":[0,null,null],"x4":[0,null,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,0,0],"sc":[0.9815362931642002,1,1.000723763570567,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":25,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.96,"leaves":2,"divs":10,"rads":4,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10,10],"leafDivs":[2,10,2],"leafss":[0.95,1,0.2],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":1,"y":13,"z":1}],"leafRads":[3,9,2]}<br><br>
+
+cages<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":155.511418604665,"speed":0.04622973925299507,"speed2":1e-7,"num":-188.73224362643478,"x":0.007499569188350853,"y":0.0054122621564482035,"z":0.005750528541226215,"x1":[-0.015151515151515138,-0.08302306166992057,-0.7206401752949102,0.3,0],"y1":[0.1,-0.04759988869075449,null,null],"z1":[0,-0.012176715711588404,null,null],"x2":[-0.03770260747004933,-0.614370656357412,-0.7045981110885947,null],"y2":[-0.8,-0.08302306166992057,null,null],"z2":[0,null,null,null],"x3":[0.02995066948555325,0.09409280322591007,1.5707963267948966,null],"y3":[0,null,null,null],"z3":[0,null,null,null],"x4":[0,null,null,null],"y4":[0,null,null,null],"z4":[0,null,null,null],"off":[0,0,0,0],"sc":[0.9815362931642002,1,1.000723763570567,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":25,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.96,"leaves":3,"divs":10,"rads":4,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10,4,10],"leafDivs":[2,10,5,10],"leafss":[0.95,1,1,0.96],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":1,"y":9,"z":1},{"x":-1,"y":-1,"z":-1}],"leafRads":[3,9,1,4]}<br><br>
+
+flovies<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":183.70541860467648,"speed":0.04622973925299507,"speed2":1e-7,"num":-188.73224746349288,"x":0.007499569188350853,"y":0.0054122621564482035,"z":0.005750528541226215,"x1":[-0.015151515151515138,-0.08302306166992057,-0.2955620995449171,0.4483245330175709,0],"y1":[0.1,-0.04759988869075449,null,null],"z1":[0,-0.012176715711588404,null,null],"x2":[-0.03770260747004933,-0.614370656357412,-0.7045981110885947,null],"y2":[-0.8,-0.08302306166992057,null,null],"z2":[0,null,null,null],"x3":[0.02995066948555325,0.09409280322591007,1.5707963267948966,null],"y3":[0,null,null,null],"z3":[0,null,null,null],"x4":[0,null,null,null],"y4":[0,null,null,null],"z4":[0,null,null,null],"off":[0,0,0,0],"sc":[0.9815362931642002,1,1.1551797040169134,0.8552501761804088,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":25,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.96,"leaves":3,"divs":10,"rads":4,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10,4,10],"leafDivs":[2,10,5,10],"leafss":[0.95,1,1,0.96],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":1,"y":9,"z":1},{"x":1,"y":4,"z":1}],"leafRads":[3,9,2,4]}<br><br>
+
+snarkies<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":213.4864186046899,"speed":0.04622973925299507,"speed2":1e-7,"num":-188.73225032048313,"x":0.007499569188350853,"y":0.0054122621564482035,"z":0.005750528541226215,"x1":[-0.015151515151515138,-0.08302306166992057,-0.2955620995449171,0.4483245330175709,0],"y1":[0.1,-0.04759988869075449,null,null],"z1":[0,-0.012176715711588404,null,null],"x2":[-0.03770260747004933,-0.614370656357412,-0.7045981110885947,null],"y2":[-0.8,-0.08302306166992057,null,null],"z2":[0,null,null,null],"x3":[0.02995066948555325,0.09409280322591007,1.5707963267948966,null],"y3":[0,null,null,null],"z3":[0,null,null,null],"x4":[0,null,null,null],"y4":[0,null,null,null],"z4":[0,null,null,null],"off":[0,0,0,0],"sc":[0.9815362931642002,1,1.1551797040169134,0.8552501761804088,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":25,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.96,"leaves":3,"divs":10,"rads":1,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10,3,10],"leafDivs":[2,10,5,10],"leafss":[0.95,1,1,0.96],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":1,"y":12,"z":1},{"x":1,"y":4,"z":1}],"leafRads":[1,9,5,4]}<br><br>
+
+sad floowers<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":280.8464186047143,"speed":0.04622973925299507,"speed2":1e-7,"num":-188.73226639914347,"x":0.007499569188350853,"y":0.0054122621564482035,"z":0.005750528541226215,"x1":[-0.015151515151515138,-0.33098527252408316,-0.4726779644407477,-0.04759988869075449,0],"y1":[-0.22938689217758984,-0.04759988869075449,null,-0.40183161848241533],"z1":[0,-0.012176715711588404,null,0.4483245330175709],"x2":[-0.03770260747004933,-0.614370656357412,0.2357854951425742,0.16493914918424224],"y2":[-0.8,-0.08302306166992057,null,null],"z2":[0,null,null,null],"x3":[0.02995066948555325,0.09409280322591007,1.5707963267948966,null],"y3":[0,null,null,null],"z3":[0,null,null,null],"x4":[0,null,null,null],"y4":[0,-1.5707963267948966,null,null],"z4":[0,0,null,null],"off":[0,0.1,0,0],"sc":[0.9815362931642002,1,1.1551797040169134,0.8552501761804088,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":45,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.98,"leaves":3,"divs":10,"rads":1,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10,3,10],"leafDivs":[2,10,5,10],"leafss":[0.95,1,1,0.96],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":1,"y":12,"z":1},{"x":1,"y":4,"z":1}],"leafRads":[1,9,5,4]}<br><br>
+
+hokenspoken<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":318.2684186047178,"speed":0.04622973925299507,"speed2":2.3678647697674418,"num":-461.0518263250202,"x":0.007499569188350853,"y":0.0054122621564482035,"z":0.005750528541226215,"x1":[-0.015151515151515138,-0.18929258060741883,-0.4726779644407477,-0.04759988869075449,0],"y1":[-0.22938689217758984,-0.08302306166992057,null,-0.40183161848241533],"z1":[0,-0.012176715711588404,null,0.4483245330175709],"x2":[-0.03770260747004933,-0.614370656357412,0.2357854951425742,0.16493914918424224],"y2":[-0.8,-0.08302306166992057,null,null],"z2":[0,0,null,null],"x3":[0,0,-0.04759988869075449,1.5707963267948966],"y3":[0.01867512332628607,0,0.02324645726757768,null],"z3":[0,0,0.09409280322591007,null],"x4":[0,null,null,null],"y4":[0,-1.5707963267948966,null,null],"z4":[0,0,null,null],"off":[0,0.1,0,0],"sc":[0.9815362931642002,1,1.1551797040169134,0.8552501761804088,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":45,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.98,"leaves":3,"divs":10,"rads":1,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10,9,10],"leafDivs":[2,10,5,10],"leafss":[0.95,1,1,0.96],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":1,"y":12,"z":1},{"x":1,"y":4,"z":1}],"leafRads":[1,2,9,4]}<br><br>
+
+slidey spine<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":62.386867482334154,"speed":0.01654316732724453,"speed2":1.9851801594175427,"num":-424.3422462455901,"x":0.001102877821816302,"y":0.0003308633465448906,"z":0,"x1":[0,0.1,0.2,0.3,0],"y1":[0.1,0.2],"z1":[0,null],"x2":[0,0,0],"y2":[-0.8,null],"z2":[0,null],"x3":[0.45950370498018267,6,1],"y3":[0,null],"z3":[0,null],"x4":[0,null],"y4":[0,null],"z4":[0,null],"off":[0,0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":45,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":1,"divs":5,"rads":2,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10],"leafDivs":[2,5],"leafss":[0.95,1],"angles":[0.6283185307179586,0.6283185307179586],"term":[0,1],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[2,2]}<br><br>
+
+spinny splonny<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":86.10786748234017,"speed":0.01654316732724453,"speed2":1.9851801594175427,"num":-673.9351196405214,"x":0.001102877821816302,"y":0.0003308633465448906,"z":0,"x1":[0,0.1,0.2,0.3,0],"y1":[0.1,0.2],"z1":[0,null],"x2":[0,0,0],"y2":[-0.8,null],"z2":[0,null],"x3":[0.45950370498018267,6,1],"y3":[0,null],"z3":[0,null],"x4":[0,2],"y4":[0,null],"z4":[0,null],"off":[0,0],"sc":[0.9852834740651387,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":45,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":1,"divs":5,"rads":2,"animFunc":"this.branches[i][1].parent.parent.parent.rotation.y+=((this.branches[i][1].idq/-10000));if(i>0)this.branches[i][0].rotation.x=Math.sin(this.p.anim.num*5+ this.branches[i][0].id)/6;","fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10],"leafDivs":[2,5],"leafss":[0.95,0.92],"angles":[0.6283185307179586,0.6283185307179586],"term":[0,1],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":4,"y":11,"z":4}],"leafRads":[2,2]}<br><br>
+
+For Amusement Only<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":82.07095348835783,"speed":0.01654316732724453,"speed2":0.1127555604651163,"num":-939.6764678746301,"x":0.01,"y":0.0032699083861874563,"z":0.01,"x1":[0,0.1,0.023008390104698684,0.3,0],"y1":[0.1,0.2,null],"z1":[0,null,null],"x2":[0,1,1],"y2":[-0.8,null,null],"z2":[0,null,null],"x3":[-0.015151515151515138,-0.08302306166992057,1],"y3":[-0.003875968992248069,1.5707963267948966,null],"z3":[0,1.5707963267948966,null],"x4":[0,2,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,0,0],"sc":[0.9852834740651387,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":45,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":2,"divs":5,"rads":1,"animFunc":"this.branches[i][1].parent.parent.parent.rotation.y+=((this.branches[i][1].idq/-10000));if(i>0)this.branches[i][0].rotation.x=Math.sin(this.p.anim.num*2+ this.branches[i][0].id)/6;if(q>1)this.branches[i][1].parent.parent.parent.rotation.y+=0.03","fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,8,3],"leafDivs":[2,8,5],"leafss":[0.95,0.92,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":4,"y":24,"z":4},{"x":1,"y":24,"z":1}],"leafRads":[1,5,5]}<br><br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":172.34895348842485,"speed":0.01654316732724453,"speed2":0.1127555604651163,"num":-944.8080019943335,"x":0.01,"y":0.0032699083861874563,"z":0.01,"x1":[0,0.1,-0.08302306166992057,0.3,0],"y1":[0.1,0.2,0.058669630246743765],"z1":[0,null,null],"x2":[0,1,0.12695217598945496],"y2":[-0.8,null,null],"z2":[0,null,null],"x3":[-0.015151515151515138,-0.08302306166992057,1],"y3":[-0.003875968992248069,1.5707963267948966,null],"z3":[0,1.5707963267948966,null],"x4":[0,2,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,0,0],"sc":[0.9852834740651387,1,1.5,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":45,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":2,"divs":5,"rads":1,"animFunc":"this.branches[i][1].parent.parent.parent.rotation.y+=((this.branches[i][1].idq/-10000));if(i>0)this.branches[i][0].rotation.x=Math.sin(this.p.anim.num*2+ this.branches[i][0].id)/6;if(q>1)this.branches[i][1].parent.parent.parent.rotation.y+=0.03","fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,18,3],"leafDivs":[45,2,2],"leafss":[0.95,0.92,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":4,"y":11,"z":4},{"x":1,"y":24,"z":1}],"leafRads":[1,1,5]}<br><br>
+
+I believe I can fly<br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":148.16086046534298,"speed":0.015785764622973927,"speed2":2.593375690697674,"num":-1585.9986616096119,"x":0.0028188865398167725,"y":0.002029598308668076,"z":0.002029598308668076,"x1":[-0.003875968992248069,-0.08302306166992057,-0.08302306166992057,0.3,0],"y1":[0,-0.04759988869075449,0.058669630246743765],"z1":[0,-0.012176715711588404,null],"x2":[-0.015151515151515138,0.09409280322591007,0.12695217598945496],"y2":[0.5,0.12951597620507616,null],"z2":[0,-1.5707963267948966,null],"x3":[0.07505285412262153,-0.08302306166992057,1],"y3":[0.02995066948555325,-0.08302306166992057,null],"z3":[0.02995066948555325,-0.6852170023157442,null],"x4":[0,-0.18929258060741883,0.02324645726757768],"y4":[0,-0.11844623464908666,null],"z4":[0,null,null],"off":[0,0.003735024665257214,0.1],"sc":[0.9736434108527132,1.052572233967583,1.5,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":45,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":2,"divs":45,"rads":2,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,18,3],"leafDivs":[45,1,2],"leafss":[0.95,0.99,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":4,"y":11,"z":4},{"x":1,"y":24,"z":1}],"leafRads":[2,1,5]}<br><br>
+
+hoop trick<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":173.26686046533993,"speed":0.015785764622973927,"speed2":2.593375690697674,"num":-1749.4248271932408,"x":0,"y":0,"z":0,"x1":[-0.003875968992248069,0,0,0.3,0],"y1":[0,0,0],"z1":[0,0,0],"x2":[-0.015151515151515138,0.09409280322591007,0.9585024630675045],"y2":[0.5,0.12951597620507616,null],"z2":[0,-1.5707963267948966,null],"x3":[0.07505285412262153,-0.08302306166992057,1],"y3":[0.02995066948555325,-0.08302306166992057,null],"z3":[0.02995066948555325,-0.6852170023157442,null],"x4":[0,-0.18929258060741883,0.02324645726757768],"y4":[0,-0.11844623464908666,null],"z4":[0,null,null],"off":[0,0,0],"sc":[0.9736434108527132,1.052572233967583,1.5,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":45,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":3,"divs":45,"rads":1,"animFunc":"if(i==2)this.branches[i][1].parent.parent.parent.rotation.y+=((this.p.anim.num/50000));if(i==1)this.branches[i][1].parent.parent.parent.rotation.y+=((this.p.anim.num/1000000));if(i==2)this.branches[i][1].parent.parent.parent.rotation.z+=((this.p.anim.num/100000));","fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,18,3],"leafDivs":[45,18,18],"leafss":[0.95,0.99,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":4,"y":14,"z":4},{"x":1,"y":14,"z":1}],"leafRads":[1,1,1]}<br><br>
+
+spider sense<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":87.47837209301686,"speed":0.004411511287265207,"speed2":1e-7,"num":-291.5951172512987,"x":0.0020954678614509737,"y":0.0014658210007047218,"z":0,"x1":[0,-0.011639538523553483,0.2,0.3,0],"y1":[0.1,0,null],"z1":[0,null,null],"x2":[0,0.6120231767849837,0],"y2":[-0.8,null,null],"z2":[0,null,null],"x3":[0.07505285412262153,1.5464428953717198,1],"y3":[0.2441860465116279,1.0277983203240084,null],"z3":[0,null,null],"x4":[0,null,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,0,0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":3,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":1,"leaves":2,"divs":20,"rads":25,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,30,4],"leafDivs":[2,4,20],"leafss":[0.96,0.95,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":3,"y":12,"z":3},{"x":-1,"y":-1,"z":-1}],"leafRads":[25,2,25]}<br><br>
+
+an onion for your eye<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":126.56237209301575,"speed":0.004411511287265207,"speed2":1e-7,"num":-291.59511850728626,"x":0,"y":0,"z":0,"x1":[0,-0.11558332440830954,0.4734314622719755,-0.808541896973351,0],"y1":[0.1,0.058669630246743765,null,null],"z1":[0,null,null,null],"x2":[0,0.6120231767849837,0,0.4387835336437238],"y2":[-0.8,null,null,null],"z2":[0,null,null,null],"x3":[0.07505285412262153,1.5464428953717198,1,null],"y3":[0.2441860465116279,1.0277983203240084,null,null],"z3":[0,null,null,null],"x4":[0,null,null,null],"y4":[0,null,1.5707963267948966,null],"z4":[0,null,null,null],"off":[0,0,0.1,0,12],"sc":[1,1,1,0.9621230398069964,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":3,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":1,"leaves":3,"divs":20,"rads":13,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,30,8,5],"leafDivs":[2,4,5,20],"leafss":[0.96,0.95,1,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":3,"y":12,"z":3},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[13,1,2,13]}<br><br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":2.305999999999967,"speed":0.001,"speed2":0.001,"num":-0.0005600000000000071,"x":0,"y":0,"z":0,"x1":[0,0,0.2,0.3,0],"y1":[0,0.2],"z1":[0,null],"x2":[0,0,0],"y2":[-0.8,null],"z2":[0,null],"x3":[1,1,1],"y3":[0,null],"z3":[0,null],"x4":[0,null],"y4":[0,null],"z4":[0,null],"off":[0,0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":15,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":1,"leaves":1,"divs":5,"rads":2,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10],"leafDivs":[2,4],"leafss":[0.95,0.8],"angles":[0.6283185307179586,0.6283185307179586],"term":[0,1],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[2,2]}<br><br>
+
+Indian Bread<br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":148.00751162788893,"speed":0.001127554615926709,"speed2":1e-7,"num":-169.31403625297412,"x":0.0018040873854827345,"y":0.004284707540521494,"z":0,"x1":[0,0,0.2,0.3,0],"y1":[-0.2970401691331924,-0.012176715711588404],"z1":[0,0],"x2":[0,-0.33098527252408316,0],"y2":[-0.8,null],"z2":[0,null],"x3":[0.2892882311486963,0.3066318411009066,1],"y3":[0,0],"z3":[0,0],"x4":[0,0.09409280322591007],"y4":[0,null],"z4":[0,null],"off":[0,2.953488372093023],"sc":[0.9657505285412262,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":30,"scale":[9,9,9],"sx":9,"sy":9,"sz":9,"ss":1,"leaves":1,"divs":5,"rads":4,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,70],"leafDivs":[2,4],"leafss":[0.98,0.99],"angles":[0.6283185307179586,0.6283185307179586],"term":[0,1],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[3,3]}<br><br>
+
+undid bracelet<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":61.11900000000211,"speed":0.001,"speed2":0.001,"num":-0.005393000000000391,"x":0,"y":0,"z":0,"x1":[-0.026427061310782263,0.23089596187421102,0.23089596187421102,0.3,0],"y1":[-0.21811134601832277,0.04,-0.04628746715180543],"z1":[0.04122621564482032,0.12695217598945496,null],"x2":[0,-0.18487918166481365,-1.5707963267948966],"y2":[-0.8,0.16160010461770713,-0.4967105393190825],"z2":[0,null,-0.8778377542298551],"x3":[1,1,1],"y3":[0,null,null],"z3":[0,null,null],"x4":[0,null,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,0,0],"sc":[0.9894291754756872,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":75,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":1,"leaves":2,"divs":5,"rads":2,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,50,45],"leafDivs":[2,50,5],"leafss":[0.98,1,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[2,1,2]}<br><br>
+
+a nice seashell<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":53.781000000000496,"speed":0.001,"speed2":0.001,"num":-0.0046780000000002965,"x":0,"y":0,"z":0,"x1":[0,-0.012176715711588404,-0.4967105393190825,0.3,0],"y1":[0,-0.012176715711588404,-0.0809353957800576],"z1":[-0.10535588442565186,-0.2955620995449171,-0.3234708961778221],"x2":[0,1.0150953006842283,-0.6353022538320907],"y2":[-0.8,-0.08302306166992057,-0.1502312530365617],"z2":[0,-0.012176715711588404,0.6466711054132359],"x3":[1,1,1],"y3":[0,null,null],"z3":[0,null,null],"x4":[0,null,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,0,-5.809064277098052],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":175,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.99,"leaves":2,"divs":5,"rads":1,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,15,15],"leafDivs":[15,13,15],"leafss":[0.95,0.96,0.96],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[1,1,1]}<br><br>
+
+Rathe Sluggy<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":94.24999931069807,"speed":0.061761158021712906,"speed2":1e-7,"num":-6.488624499440017,"x":0.0026469067723591247,"y":0,"z":0,"x1":[0,-0.21952711029306582,-0.1502312530365617,0.3,0],"y1":[0.36024470101671546,null,null],"z1":[0,null,null],"x2":[0,0.750614891297992,0],"y2":[-0.8,null,null],"z2":[0,null,null],"x3":[0.23892814061692225,1.5707963267948966,0.8892066058110006],"y3":[0,null,null],"z3":[0,null,null],"x4":[0,1.5707963267948966,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,-0.15,0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":65,"scale":[9,4,9],"sx":9,"sy":4,"sz":9,"ss":1,"leaves":2,"divs":2,"rads":1,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,20,30],"leafDivs":[2,20,2],"leafss":[0.95,0.96,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":1,"y":24,"z":3},{"x":6,"y":6,"z":6},{"x":-1,"y":-1,"z":-1}],"leafRads":[1,3,1]}<br><br>
+
+rather sluggy<br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":112.81199931069777,"speed":0.061761158021712906,"speed2":1e-7,"num":-6.4886389824311435,"x":0.0026469067723591247,"y":0,"z":0,"x1":[0,-0.21952711029306582,-0.11558332440830954,0.3,0],"y1":[0.36024470101671546,null,-0.11558332440830954],"z1":[0,null,null],"x2":[0,0.750614891297992,0],"y2":[-0.8,null,null],"z2":[0,null,null],"x3":[0.23892814061692225,1.5707963267948966,-0.4967105393190825],"y3":[0,null,0.09230424736120257],"z3":[0,null,null],"x4":[0,0.8379794357883976,null],"y4":[0,-0.649793829336578,null],"z4":[0,-0.33098527252408316,null],"off":[0,-0.30303030303030276,0],"sc":[0.9973220577871741,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":45,"scale":[9,4,9],"sx":9,"sy":4,"sz":9,"ss":1,"leaves":2,"divs":2,"rads":1,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,20,30],"leafDivs":[2,20,2],"leafss":[0.95,0.98,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":1,"y":24,"z":3},{"x":6,"y":6,"z":6},{"x":2,"y":6,"z":2}],"leafRads":[1,3,1]}<br><br>
+
+mad swirlies<br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":118.66367895916946,"speed":0.004411511287265207,"speed2":0.44115122431500947,"num":-742.4255256164073,"x":0.00011028778218163019,"y":0.00011028778218163019,"z":0.01,"x1":[0.08452524556263996,0,0,0],"y1":[0,0.2],"z1":[0],"x2":[0,0,0],"y2":[0],"z2":[0],"x3":[0.0201,0,0],"y3":[-0.001],"z3":[0.0031],"x4":[0],"y4":[0],"z4":[0],"off":[0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":3075,"scale":[1.5,5,1.5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":0,"divs":5,"rads":2,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10],"leafDivs":[2],"leafss":[0.95],"angles":[0.6283185307179586],"term":[0],"jScale":[{"x":-1,"y":-1,"z":-1}],"leafRads":[2]}<br><br>
+
+DNA band<br>
+
+{"num":125,"divs":1,"scale":[5,8,5],"ss":1,"leaves":1,"h":2,"rads":1,"leafss":[0.95,0.8,0.2],"leafDivs":[1,4,2],"fruit":true,"term":[0,1],"leafJoints":[10,10,10],"jScale2":[3,3,3],"anim":{"speed2":7.4,"x1":[0,0.1,0.2,0.3,0],"x2":[0,0,0],"y1":[0.0,0.2],"y2":[-0.8],"x3":[1,1,1],"z1":[0.051]},"animFunc":"if(q>0)this.branches[i][1].parent.parent.parent.rotation.y = Math.sin((this.branches[i][1].id*.000001)*1)*this.p.anim.speed2*1000;"}<br><br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":5.195999999999736,"speed":0.001,"speed2":7.720144775512666,"num":-21.69832446304242,"x":0,"y":0,"z":0,"x1":[0,0.36948767638721924,0.2,0.3,0],"y1":[0,0.2],"z1":[0.051,null],"x2":[0,0,0],"y2":[-0.8,null],"z2":[0,null],"x3":[1,1,1],"y3":[0,null],"z3":[0,null],"x4":[0,null],"y4":[0,null],"z4":[0,null],"off":[0,0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":125,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":1,"leaves":1,"divs":1,"rads":1,"animFunc":"if(q>0)this.branches[i][1].parent.parent.parent.rotation.y = Math.sin((this.branches[i][1].id*.000001)*1)*this.p.anim.speed2*1000;","fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10],"leafDivs":[1,4],"leafss":[0.95,0.8],"angles":[0.6283185307179586,0.6283185307179586],"term":[0,1],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[1,1]}<br><br>
+
+
+Shroom<br>
+
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":225.82795348838204,"speed":0.025933756166314305,"speed2":0.0000001,"num":-101.04596340923255,"x":0.0048484848484848485,"y":0,"z":0,"x1":[0,-0.2955620995449171,-0.08302306166992057,0,-0.04759988869075449],"y1":[0.007399577167019,0.02324645726757768,-0.18929258060741883,0,-0.012176715711588404],"z1":[0,0,0.02324645726757768,0,0],"x2":[0,1.5707963267948966,-1.5707963267948966,-0.40183161848241533,-1.5707963267948966],"y2":[-0.8,null,0,-0.649793829336578,0.058669630246743765],"z2":[0,null,null,1,-1.0748719050865714],"x3":[0,0,0,-0.18929258060741883,1.5707963267948966],"y3":[0,null,null,null,0],"z3":[0,null,null,null,0],"x4":[0,null,null,null,null],"y4":[0,null,null,null,null],"z4":[0,null,null,null,null],"off":[0,0,0,0,0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":2,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":1,"leaves":4,"divs":4,"rads":13,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,5,20,4,18],"leafDivs":[2,10,23,4,4],"leafss":[1,1,1,1,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3,4],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[13,1,1,1,13]}<br><br>
+
+angles<br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":2.8379999999999086,"speed":0.001,"speed2":0.001,"num":-0.0009620000000000169,"x":0,"y":0,"z":0,"x1":[0,0,0],"y1":[0,0,null],"z1":[0,null,null],"x2":[0,1.0277983203240084,1.5707963267948966],"y2":[0,null,null],"z2":[0,null,null],"x3":[0,0,0],"y3":[0,null,null],"z3":[0,null,null],"x4":[0,null,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,0,0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":3,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.96,"leaves":3,"divs":5,"rads":6,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,20,20],"leafDivs":[2,20,2],"leafss":[1,1,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":3,"y":9,"z":3}],"leafRads":[6,6,6]}<br><br>
+
+
+sierpinski<br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":137.36800000003075,"speed":0.001,"speed2":0.001,"num":-0.013741999999996356,"x":0,"y":0,"z":0,"x1":[0,-0.18929258060741883,-0.08302306166992057,-0.04759988869075449,-0.04628746715180543],"y1":[0.1,0,null,null,0],"z1":[0,0,null,null,0],"x2":[0,0.9238545344392524,0.058669630246743765,-0.260138926565751,-0.254175038921318],"y2":[-0.8,null,null,null,null],"z2":[0,null,null,null,null],"x3":[1,1,1,null,null],"y3":[0,null,null,null,null],"z3":[0,null,null,null,null],"x4":[0,null,null,null,null],"y4":[0,null,null,null,null],"z4":[0,null,null,null,null],"off":[0,0,0,0,0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":3,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.99,"leaves":4,"divs":10,"rads":3,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10,10,10,10],"leafDivs":[2,10,10,10,10],"leafss":[0.99,0.96,0.99,0.99,0.99],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3,4],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[3,3,3,3,3]}<br><br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":174.26700000003547,"speed":0.001,"speed2":0.001,"num":-0.014093999999996097,"x":0,"y":0,"z":0,"x1":[0,-0.18929258060741883,-0.08302306166992057,-0.04759988869075449,-0.04628746715180543,-0.0809353957800576],"y1":[0.1,0,null,null,0,null],"z1":[0,0,null,null,0,null],"x2":[0,0.9238545344392524,0.058669630246743765,-0.260138926565751,-0.254175038921318,null],"y2":[-0.8,null,null,null,null,null],"z2":[0,null,null,null,null,null],"x3":[1,1,1,null,null,null],"y3":[0,null,null,null,null,null],"z3":[0,null,null,null,null,null],"x4":[0,null,null,null,null,null],"y4":[0,null,null,null,null,null],"z4":[0,null,null,null,null,null],"off":[0,0,0,0,0,0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":3,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.99,"leaves":5,"divs":10,"rads":3,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10,10,10,10,10],"leafDivs":[2,10,10,10,10,10],"leafss":[0.99,0.96,0.99,0.99,0.99,0.99],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3,4,5],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[3,3,3,3,3,3]}<br><br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":174.78000000003425,"speed":0.001,"speed2":0.001,"num":-0.01460699999999572,"x":0,"y":0,"z":0,"x1":[0,-0.11844623464908666,-0.08302306166992057,-0.04759988869075449,-0.04628746715180543,-0.0809353957800576],"y1":[0.1,0,null,null,0,null],"z1":[0,0,null,null,0,null],"x2":[0,0.34205501408007266,0.058669630246743765,-0.260138926565751,-0.254175038921318,null],"y2":[-0.8,null,null,null,null,null],"z2":[0,null,null,null,null,null],"x3":[1,1,1,null,null,null],"y3":[0,null,null,null,null,null],"z3":[0,null,null,null,null,null],"x4":[0,null,null,null,null,null],"y4":[0,null,null,null,null,null],"z4":[0,null,null,null,null,null],"off":[0,0,0,0,0,0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":3,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.99,"leaves":5,"divs":10,"rads":3,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10,10,10,10,10],"leafDivs":[2,10,10,10,10,10],"leafss":[0.99,0.96,0.99,0.99,0.99,0.99],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3,4,5],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[3,3,3,3,3,3]}<br><br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":175.68900000003214,"speed":0.001,"speed2":0.001,"num":-0.015515999999995053,"x":0,"y":0,"z":0,"x1":[0,-0.012176715711588404,0.3066318411009066,0.3066318411009066,0.4129013600384046,0.30019181913071513],"y1":[0.1,0,null,null,0,null],"z1":[0,0,null,null,0,null],"x2":[0,1.0150953006842283,0.058669630246743765,-0.260138926565751,-0.254175038921318,null],"y2":[-0.8,null,null,null,null,null],"z2":[0,null,null,null,null,null],"x3":[1,1,1,null,null,null],"y3":[0,null,null,null,null,null],"z3":[0,null,null,null,null,null],"x4":[0,null,null,null,null,null],"y4":[0,null,null,null,null,null],"z4":[0,null,null,null,null,null],"off":[0,0,0,0,0,0],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":3,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.99,"leaves":5,"divs":10,"rads":3,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10,10,10,10,10],"leafDivs":[2,10,10,10,10,10],"leafss":[0.99,0.96,0.99,0.99,0.99,0.99],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3,4,5],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[3,3,3,3,3,3]}<br><br>
+
+zoetrope<br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":39.13200000000185,"speed":0.001,"speed2":0.002,"num":-0.0027969999999998846,"x":0,"y":0,"z":0,"x1":[0,0.1,0.2,0.3,0],"y1":[-0.0012,null],"z1":[0.039381354471824885,-0.04628746715180543],"x2":[1.55,1.5707963267948966,0],"y2":[0,0.9796721277050624],"z2":[0,-0.649793829336578],"x3":[1,1,1],"y3":[0,null],"z3":[0,null],"x4":[0,1.3339038574967232],"y4":[0,null],"z4":[0,null],"off":[0,1.7265680056377732],"sc":[1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":1024,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":1,"leaves":1,"divs":2,"rads":1,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,10],"leafDivs":[2,4],"leafss":[0.99,0.8],"angles":[0.6283185307179586,0.6283185307179586],"term":[0,1],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[1,1]}<br><br>
+
+smaller zoetrope<br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":150.40600000001461,"speed":0.001,"speed2":0.002,"num":-0.008281000000000371,"x":0,"y":0,"z":0,"x1":[-0.03770260747004933,0.09409280322591007,0.2,0.3,0],"y1":[-0.004175968992248069,null],"z1":[0.039381354471824885,-0.04628746715180543],"x2":[1.55,0.8025562628092318,0],"y2":[0,-0.6852170023157442],"z2":[0,0.09409280322591007],"x3":[1,1,1],"y3":[0,null],"z3":[0,null],"x4":[0,0.37747818705923875],"y4":[0,0.34205501408007266],"z4":[0,-0.260138926565751],"off":[0,7.58985200845666],"sc":[1,0.9894291754756872,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":424,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":1,"leaves":1,"divs":2,"rads":1,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,15],"leafDivs":[2,4],"leafss":[0.99,0.8],"angles":[0.6283185307179586,0.6283185307179586],"term":[0,1],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[1,1]}<br><br>
+
+spine necklace<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":246.00300000004987,"speed":1e-19,"speed2":1e-7,"num":-53.137538911330054,"x":0.0001127554615926709,"y":0.0001127554615926709,"z":0,"x1":[-0.023427061310782264,-0.012176715711588404,0.2,0.3,0],"y1":[0,0],"z1":[0,0],"x2":[0,0.6608635708925674,0],"y2":[0,0.09409280322591007],"z2":[0,0.4483245330175709],"x3":[0,1,1],"y3":[0,null],"z3":[0,0.09409280322591007],"x4":[0.5,0.2357854951425742],"y4":[0.04122621564482032,0.058669630246743765],"z4":[0,-0.2247157535865849],"off":[0,8.717406624383369],"sc":[1,0.9578576462297392,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":270,"scale":[5,2,5],"sx":5,"sy":2,"sz":5,"ss":1,"leaves":1,"divs":4,"rads":1,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,20],"leafDivs":[2,4],"leafss":[0.9999,0.8],"angles":[0.6283185307179586,0.6283185307179586],"term":[0,1],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":5,"y":5,"z":5}],"leafRads":[1,1]}<br><br>
+
+simple default<br>
+{"num":25,"scale":[5,8,5],"ss":1,"leaves":1,"divs":5,"rads":2,"leafss":[0.95,0.8,0.2],"leafDivs":[2,4,2],"fruit":true,"term":[0,1,2,3],"leafJoints":[10,10,10],"jScale2":[3,3,3],"anim":{"x1":[0,0,0],"x2":[0,0,0],"y1":[0,0],"y2":[0],"x3":[0,0,0]}}<br><br>
+
+some jewelry<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":24.56955813953798,"speed":0.001127554615926709,"speed2":3.2699084534883722,"num":-12.380672673050793,"x":0.0018040873854827345,"y":0,"z":0,"x1":[0,-0.2247157535865849,-0.260138926565751],"y1":[0,0,null],"z1":[0,null,null],"x2":[0,0.8734026087675644,0.5900172249342353],"y2":[0,0.2003623221634081,0.4483245330175709],"z2":[0,null,-0.08302306166992057],"x3":[0.5,0,0],"y3":[0,null,null],"z3":[0,null,null],"x4":[0,null,0.09409280322591007],"y4":[0,null,1.5707963267948966],"z4":[0,null,-0.33098527252408316],"off":[0,0,10],"sc":[0.9657505285412262,1,0.8552501761804088,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":25,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":1,"leaves":2,"divs":5,"rads":1,"animFunc":"if(q>1)this.branches[i][1].parent.parent.parent.rotation.y = Math.sin((this.branches[i][1].id*.0000031)*1)*this.p.anim.speed2*1000;","fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,30,5],"leafDivs":[2,1,5],"leafss":[1,1,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[1,1,1]}<br><br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":52.7985581395495,"speed":0.001127554615926709,"speed2":3.2699084534883722,"num":-30.115144454616384,"x":0.0018040873854827345,"y":0,"z":0,"x1":[0.2441860465116279,-0.2247157535865849,-0.15386940762825274],"y1":[0,0,0.12951597620507616],"z1":[0,0,0.02324645726757768],"x2":[0,-0.578947483378246,-0.40183161848241533],"y2":[0,0.2003623221634081,0],"z2":[0,null,0],"x3":[0,0,0],"y3":[0,null,0],"z3":[0,null,0],"x4":[0,null,0],"y4":[0,null,0],"z4":[0,null,0],"off":[0,0,10],"sc":[1,1,0.9341789992952784,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":25,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":1,"leaves":2,"divs":15,"rads":1,"animFunc":"if(q>1)this.branches[i][1].parent.parent.parent.rotation.y = Math.sin((this.branches[i][1].id*.0000031)*1)*this.p.anim.speed2*1000;","fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,30,15],"leafDivs":[2,1,5],"leafss":[1,1,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[1,1,1]}<br><br>
+
+crappy sea shell thing<br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":170.10272093028567,"speed":0.0383368569415081,"speed2":1e-7,"num":-23.805106354320866,"x":0.006765327695560254,"y":0,"z":0,"x1":[-0.08280479210711766,0.058669630246743765,-0.36640844550324947],"y1":[0.002399577167019,-0.04302306166992057,0.058669630246743765],"z1":[0,null,0.02324645726757768],"x2":[0,-0.7914865212532425,1.5707963267948966],"y2":[0,-0.18929258060741883,-0.04759988869075449],"z2":[0,null,0.16493914918424224],"x3":[0.0001,0.4129013600384046,0.9442489547258961],"y3":[0,null,null],"z3":[0,null,null],"x4":[0,-0.04759988869075449,null],"y4":[0,-0.08302306166992057,null],"z4":[0,null,null],"off":[0,-1.20507399577167,0],"sc":[0.992,0.9420718816067654,0.9657505285412262,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":125,"scale":[8,8,8],"sx":8,"sy":8,"sz":8,"ss":1,"leaves":2,"divs":4,"rads":1,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,20,20],"leafDivs":[2,5,2],"leafss":[1,1,1],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":8,"y":13,"z":8},{"x":5,"y":6,"z":5}],"leafRads":[1,1,1]}<br><br>
+
+four swastika leaves<br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":159.85786748237928,"speed":0.015785764622973927,"speed2":1e-7,"num":-2799.558956808746,"x":0.008051008099259004,"y":0.002029598308668076,"z":0.002029598308668076,"x1":[-0.003875968992248069,-0.11558332440830954,-0.08302306166992057,0.3,0],"y1":[-0.047820093055316204,-0.1502312530365617,0.058669630246743765],"z1":[0,0.09230424736120257,null],"x2":[-0.015151515151515138,-1.1896691118841238,0.12695217598945496],"y2":[-0.2022229881095985,1.5707963267948966,null],"z2":[0,1.5707963267948966,null],"x3":[0.04041013268998794,-0.08302306166992057,0.09409280322591007],"y3":[0.02995066948555325,-0.08302306166992057,null],"z3":[0.02995066948555325,-0.6852170023157442,null],"x4":[0,-0.18929258060741883,0.02324645726757768],"y4":[0,-0.11844623464908666,null],"z4":[0,null,null],"off":[0,0,7.58985200845666],"sc":[1.0683579985905567,0.9578576462297392,1.036786469344609,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":4,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":2,"divs":45,"rads":4,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,18,20],"leafDivs":[45,1,2],"leafss":[0.99,0.99,0.95],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":4,"y":11,"z":4},{"x":2,"y":4,"z":2}],"leafRads":[4,2,5]}<br><br>
+
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":217.90586748233548,"speed":0.015785764622973927,"speed2":1e-7,"num":-2799.558965378032,"x":0.008051008099259004,"y":0.002029598308668076,"z":0.002029598308668076,"x1":[-0.003875968992248069,0.12951597620507616,-0.08302306166992057,0.3,0],"y1":[-0.047820093055316204,0.37747818705923875,0.058669630246743765],"z1":[0,0,null],"x2":[-0.015151515151515138,-0.40183161848241533,0.12695217598945496],"y2":[-0.2022229881095985,1.0505184736633946,null],"z2":[0,-0.15386940762825274,null],"x3":[0.04041013268998794,-0.260138926565751,0.09409280322591007],"y3":[0.02995066948555325,-0.08302306166992057,null],"z3":[0.02995066948555325,-0.6852170023157442,null],"x4":[0,-0.18929258060741883,0.02324645726757768],"y4":[0,-0.11844623464908666,null],"z4":[0,null,null],"off":[0,-10,0],"sc":[1.0683579985905567,0.9736434108527132,1.013107822410148,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":4,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":2,"divs":45,"rads":4,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,18,20],"leafDivs":[45,1,2],"leafss":[1,1,0.95],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":4,"y":11,"z":4},{"x":4,"y":4,"z":4}],"leafRads":[4,2,5]}<br><br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":353.28986748225384,"speed":0.015785764622973927,"speed2":1e-7,"num":-2808.800377321239,"x":0,"y":0.002029598308668076,"z":0.002029598308668076,"x1":[-0.003875968992248069,0,-0.08302306166992057,0.3,0],"y1":[-0.047820093055316204,0,0],"z1":[0,-0.15386940762825274,0.058669630246743765],"x2":[-0.015151515151515138,0.9796721277050624,0],"y2":[-0.2022229881095985,1.5707963267948966,0],"z2":[0,0,0],"x3":[0.04041013268998794,0,0],"y3":[0.02995066948555325,0,0],"z3":[0.02995066948555325,0,0],"x4":[0,0,1.0150953006842283],"y4":[0,0,null],"z4":[0,0,0],"off":[0,-10,6.687808315715294],"sc":[1.0683579985905567,0.9736434108527132,1.013107822410148,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":4,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":2,"divs":45,"rads":4,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,18,20],"leafDivs":[45,1,2],"leafss":[1,1,0.95],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":4,"y":11,"z":4},{"x":4,"y":4,"z":4}],"leafRads":[6,2,5]}<br><br>
+
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":364.4328674822537,"speed":0.015785764622973927,"speed2":1e-7,"num":-2808.8003827462962,"x":0,"y":0.002029598308668076,"z":0.002029598308668076,"x1":[-0.003875968992248069,0.02324645726757768,-0.2247157535865849,0.3,0],"y1":[-0.047820093055316204,0.02324645726757768,0],"z1":[0,-0.15386940762825274,0.058669630246743765],"x2":[-0.015151515151515138,0.9796721277050624,0],"y2":[-0.2022229881095985,1.5707963267948966,0],"z2":[0,0,0],"x3":[0.04041013268998794,0,0],"y3":[0.02995066948555325,0,0],"z3":[0.02995066948555325,0,0],"x4":[0,0,0.8892066058110006],"y4":[0,0,0.16160010461770713],"z4":[0,0,0.19624803324595885],"off":[0,0,5.440289505428225],"sc":[1.0683579985905567,0.9736434108527132,1.0393244873341376,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":4,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":2,"divs":45,"rads":4,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,18,30],"leafDivs":[45,1,2],"leafss":[1,1,0.95],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":4,"y":11,"z":4},{"x":4,"y":2.5,"z":4}],"leafRads":[6,2,5]}<br><br>
 <br>
-The major advantage to building a tree with joint sections is the fine control over bending, allowing for some extremely complex curves.  Some very typical fractal like geometry can be constructed, as can shapes that are more unusual.<br><br>
+fuzz ball<br>
 
-What I find most remarkable about this setup is its simplicity.  There is absolutely nothing original here (in fact it has a lot in common with the more complete structure synth), but a few modifications in the basic structure of a typical L-system and (I think) a sensibility born of animation and design has allowed me to produce idiosyncratic geometry.  The controls allow you to think about building structures with these basic rules:<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":203.7868674823684,"speed":0.015785764622973927,"speed2":1e-7,"num":-2799.55896681598,"x":0,"y":0,"z":0.002029598308668076,"x1":[-0.003875968992248069,-0.18929258060741883,0.02324645726757768,0.3,0],"y1":[-0.047820093055316204,0,0.12951597620507616],"z1":[0,0,-0.15386940762825274],"x2":[-0.015151515151515138,0.5191708789759031,-0.012176715711588404],"y2":[-0.2022229881095985,0,-0.6852170023157442],"z2":[0,0,0],"x3":[0.04041013268998794,0,0],"y3":[0.02995066948555325,0,0],"z3":[0.02995066948555325,0,0],"x4":[0,1.5707963267948966,1.5707963267948966],"y4":[0,-0.11844623464908666,0],"z4":[0,null,null],"off":[0,1.9520789288231164,1.7265680056377732],"sc":[1.0683579985905567,0.9420718816067654,1.013107822410148,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":4,"scale":[5,5,5],"sx":5,"sy":5,"sz":5,"ss":1,"leaves":2,"divs":45,"rads":13,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,18,20],"leafDivs":[45,1,2],"leafss":[0.99,0.99,0.95],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":4,"y":11,"z":4},{"x":2,"y":4,"z":2}],"leafRads":[13,1,5]}<br><br>
 
-1.) Set the number of layers deep branches can be grown. <br>
-2.) Set the number of joints on each branch.<br>
-3.) Set the frequency of branching (for every nth joint, make a branch).<br>
-4.) Set the # of radial repetitions.  You could, for instance, make a bowl if you set the repeats high enough.<br>
-5.) Set the scale factor on successive joints, scaling up or down over the length of a branch.<br>
-6.) Bend and rotate each branch and each joint within each branch.<br>
-7.) Add fruit at the end of selected layers of leaves.<br><br>
+five heavy leaves<br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":1,"speed":0.001,"speed2":0.001,"num":-0.009186999999999702,"x":0,"y":0,"z":0,"x1":[0.004109589041095929,-0.10460144176344444,-0.09037458318545988,0.3,0],"y1":[0.36575342465753424,0.11619589266701968,null],"z1":[0,-0.055946170543379914,null],"x2":[-0.05068493150684933,0.7014789075823784,null],"y2":[-0.8,-0.09037458318545988,null],"z2":[0,-0.02151775790129995,null],"x3":[-0.017808219178082174,-0.055946170543379914,null],"y3":[0,null,null],"z3":[0,null,null],"x4":[0,null,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,0,0],"sc":[1,1,1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":3,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.98,"leaves":2,"divs":5,"rads":7,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,30,20],"leafDivs":[2,2,5],"leafss":[0.95,0.96,0.96],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3,4,5,6,7],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[7,2,7]}<br><br>
 
-Bonus:<br>
-8.) The user can write their own custom animation functions and pass them directly through the params.<br>
-9.) Geometry can be replaced per branch.<br><br>
+variation<br>
 
-Turbine allows for some extremely complicated shapes to arise from extremely simple inputs, the same as any branching/fractal system.  Turbine is unique in its animated approach and the fact that it's web based and extremely simple.  <br><br>
+{"geoDivs":3,"color1":16777215,"color2":16777215,"color3":16777215,"color4":16777215,"color5":16777215,"anim":{"size":1,"speed":0.001,"speed2":0.001,"num":-0.010602999999998662,"x":0,"y":0,"z":0,"x1":[0.004109589041095929,-0.10460144176344444,0.1850527179511796,0.3,0],"y1":[0.36575342465753424,0.11619589266701968,null],"z1":[0,-0.055946170543379914,null],"x2":[-0.05068493150684933,0.7014789075823784,null],"y2":[-0.8,-0.09037458318545988,null],"z2":[0,-0.02151775790129995,null],"x3":[-0.017808219178082174,-0.055946170543379914,null],"y3":[0,null,null],"z3":[0,null,null],"x4":[0,null,null],"y4":[0,null,null],"z4":[0,null,null],"off":[0,0,0],"sc":[1,1,1,1,1,1,1,1,1,1,1,1],"def":[0]},"fruitSize":{"x":5,"y":5,"z":5},"num":3,"scale":[5,8,5],"sx":5,"sy":8,"sz":5,"ss":0.98,"leaves":2,"divs":5,"rads":7,"animFunc":2,"fruit":true,"fruitScale":{"x":5,"y":5,"z":5},"leafJoints":[10,30,20],"leafDivs":[2,2,5],"leafss":[0.95,0.96,0.96],"angles":[0.6283185307179586,0.6283185307179586,0.6283185307179586],"term":[0,1,2,3,4,5,6,7],"jScale":[{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1},{"x":-1,"y":-1,"z":-1}],"leafRads":[7,2,7]}<br><br>
+			   </div> 
+               <div id="tab4" class="tab-pane">
+			   
+			   <div id="center">
+			   Exported from Turbine, rendered in Maya, composited in Nuke<br><br>
+			   
+			   <div style="font-size:0px">
+				<a href="../../images/wishes/taxonomyOfWishes_02.jpg" width="400" rel="lightbox[portfolio]">
+				<img src="../../images/wishes/taxonomyOfWishes_02.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+				<a href="../../images/wishes/taxonomyOfWishes_03.jpg" width="400" rel="lightbox[portfolio]">
+				<img src="../../images/wishes/taxonomyOfWishes_03.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+				<a href="../../images/wishes/taxonomyOfWishes_04.jpg" width="400" rel="lightbox[portfolio]">
+				<img src="../../images/wishes/taxonomyOfWishes_04.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+				<a href="../../images/wishes/taxonomyOfWishes_06.jpg" width="400" rel="lightbox[portfolio]">
+				<img src="../../images/wishes/taxonomyOfWishes_06.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+				<a href="../../images/wishes/taxonomyOfWishes_07.jpg" width="400" rel="lightbox[portfolio]">
+				<img src="../../images/wishes/taxonomyOfWishes_07.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+				<a href="../../images/wishes/taxonomyOfWishes_08.jpg" width="400" rel="lightbox[portfolio]">
+				<img src="../../images/wishes/taxonomyOfWishes_08.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+				<a href="../../images/wishes/taxonomyOfWishes_09.jpg" width="400" rel="lightbox[portfolio]">
+				<img src="../../images/wishes/taxonomyOfWishes_09.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+				<a href="../../images/wishes/taxonomyOfWishes_10.jpg" width="400" rel="lightbox[portfolio]">
+				<img src="../../images/wishes/taxonomyOfWishes_10.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+				<a href="../../images/wishes/taxonomyOfWishes_11.jpg" width="400" rel="lightbox[portfolio]">
+				<img src="../../images/wishes/taxonomyOfWishes_11.jpg"  width="400" rel="lightbox[portfolio]"/></a>
 
-For the Future:<br><br>
 
-1.) I'd like to add the ability for all the joints to bend in the same direction, this will be as simple as rotating around a specific axis.<br>
-2.) A database will be implemented so users can save their projects.<br>
-3.) A connection directly to Shapeways will be added.<br>
-4.) Users will be able to upload their own geometry to be instanced along the joints.  For instance, vertebrae for the branches and skulls for the fruit, or for something more fun, gummy bears for <br>branches and lollipops for fruit.<br>
-5.) The interface will be simplified considerably, I will likely hide the params section (or only keep it as an advanced tab) and replace all of those elements with sliders.<br><br>
+				</div><br><br><br>
+						  
+			  	<p style="text-align:center">The following images are screen captures from <b>	 <a href="http://tileableart.com/code/natureof/docs/jelly.html">{Medusa,Medusa,...}</a><br></p><br>
+
+		   <div style="font-size:0px">
+			<a href="../../images/medusa_0000_01.jpg" width="400" rel="lightbox[portfolio]">
+			<img src="../../images/medusa_0000_01.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+			<a href="../../images/medusa_0001_02.jpg" width="400" rel="lightbox[portfolio]">
+			<img src="../../images/medusa_0001_02.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+			<a href="../../images/medusa_0002_03.jpg" width="400" rel="lightbox[portfolio]">
+			<img src="../../images/medusa_0002_03.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+			<a href="../../images/medusa_0003_04.jpg" width="400" rel="lightbox[portfolio]">
+			<img src="../../images/medusa_0003_04.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+			<a href="../../images/medusa_0004_05.jpg" width="400" rel="lightbox[portfolio]">
+			<img src="../../images/medusa_0004_05.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+			<a href="../../images/medusa_0005_06.jpg" width="400" rel="lightbox[portfolio]">
+			<img src="../../images/medusa_0005_06.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+			<a href="../../images/medusa_0006_07.jpg" width="400" rel="lightbox[portfolio]">
+			<img src="../../images/medusa_0006_07.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+			<a href="../../images/medusa_0007_08.jpg" width="400" rel="lightbox[portfolio]">
+			<img src="../../images/medusa_0007_08.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+			<a href="../../images/medusa_0008_09.jpg" width="400" rel="lightbox[portfolio]">
+			<img src="../../images/medusa_0008_09.jpg"  width="400" rel="lightbox[portfolio]"/></a>
+
+
+
+
+			   
+				</div>
+
+				</div>
+
+
+				</div> 
+				</div>
+
+				</div>
+				</div>
+
+<br>
+
 
 </body>
 </html>
