@@ -103,10 +103,12 @@ peep.prototype = {
 		this.mesh = new THREE.Mesh( thisGeo, this.mat );
 		this.mesh2 = new THREE.Mesh( this.geometry2, this.mat );
 		this.mesh3 = new THREE.Mesh( this.geometry2, this.mat );
-		this.mesh.visible = false;
-				this.mesh2.visible = false;
-						this.mesh3.visible = false;
 		
+		if(!debug){
+		this.mesh.visible = false;
+		this.mesh2.visible = false;
+		this.mesh3.visible = false;
+		}
 		this.mesh.updateMatrix();
 		this.mesh.matrixAutoUpdate = true;					
 		this.mesh.position = pos;	

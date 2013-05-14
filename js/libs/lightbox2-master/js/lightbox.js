@@ -204,6 +204,7 @@ lightbox = new Lightbox options
         $image.width = preloader.width;
         $image.height = preloader.height;
         return _this.sizeContainer(preloader.width, preloader.height);
+	
       };
       preloader.src = this.album[imageNumber].link;
       this.currentImageIndex = imageNumber;
@@ -214,6 +215,10 @@ lightbox = new Lightbox options
     };
 
     Lightbox.prototype.sizeContainer = function(imageWidth, imageHeight) {
+	if (imageHeight > 800) {
+	imageWidth = imageWidth / imageWidth * 800;
+	imageHeight = 800;
+	}
       var $container, $lightbox, $outerContainer, containerBottomPadding, containerLeftPadding, containerRightPadding, containerTopPadding, newHeight, newWidth, oldHeight, oldWidth,
         _this = this;
       $lightbox = $('#lightbox');

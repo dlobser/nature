@@ -54,6 +54,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // init() once the page has finished loading.
 window.onload = init;
 
+
 var context;
 var buffer;
 var convolver;
@@ -62,8 +63,11 @@ var source;
 var dryGainNode;
 var wetGainNode;
 
-var lowFilter;
 
+var siner = 0;
+
+var lowFilter;
+/*
 var gTopProjection = 0;
 var gFrontProjection = 0;
 
@@ -71,18 +75,19 @@ var x = 0;
 var y = 0;
 var z = 0;
 var hilightedElement = 0;
+*/
 var bufferList;
 var hihatShort;
 
 var fileCount = 8;
 var fileList = [
-    "audio/bell.mp3",
+   "audio/white-noise.wav",
 	    "audio/lalala.mp3",
   
 ];
 
 var kInitialReverbLevel = 0.6;
-
+/**
 function setReverbImpulseResponse(url) {
     // Load impulse response asynchronously
     var request = new XMLHttpRequest();
@@ -95,7 +100,7 @@ function setReverbImpulseResponse(url) {
 
     request.send();
 }
-
+*/
 function setAudioSource(i) {
     var buffer = bufferList[i];
 
@@ -120,7 +125,7 @@ function setAudioSource(i) {
         request.send();
     }
 }
-
+/*
 function loadHihat(url) {
     // Load asynchronously
 
@@ -170,7 +175,7 @@ function mainGainHandler(event, ui) {
     var info = document.getElementById("mainGain-value");
     info.innerHTML = "main gain = " + value;
 
-    dryGainNode.gain.value = value;
+    dryGainNode.gain.value = 0;
 }
 
 function cutoffHandler(event, ui) {
@@ -185,9 +190,9 @@ function cutoffHandler(event, ui) {
 
     info.innerHTML = "cutoff = " + frequency + " hz";
 
-    lowFilter.frequency.value = frequency;
+    lowFilter.frequency.value = 9;
 }
-
+/**
 function addSliders() {
     addSlider("pitch");
     addSlider("ambience");
@@ -202,13 +207,14 @@ function addSliders() {
 function setSourceBuffer(buffer) {
     source.buffer = buffer;
 }
-
+*/
 /**
  * Start panning demo
  */
  function init() {
-     addSliders();
-
+     //addSliders();
+	
+/*
      var canvas = document.getElementById('canvasID');
      var canvas2 = document.getElementById('canvasElevationID');
 
@@ -239,17 +245,21 @@ function setSourceBuffer(buffer) {
      canvas2.addEventListener("mousedown", handleMouseDown, true);
      canvas2.addEventListener("mousemove", handleElevationMouseMove, true);
      canvas2.addEventListener("mouseup", handleMouseUp, true);
-
+*/
      // Initialize audio
      context = new webkitAudioContext();
+	 
+	 
 
      source = context.createBufferSource();
      dryGainNode = context.createGainNode();
      wetGainNode = context.createGainNode();
      panner = context.createPanner();
+	 
 
+   
      lowFilter = context.createBiquadFilter();
-     lowFilter.frequency.value = 22050.0;
+     lowFilter.frequency.value = 44050.0;
      lowFilter.Q.value = 5.0;
 
      convolver = context.createConvolver();
@@ -273,12 +283,15 @@ function setSourceBuffer(buffer) {
          bufferList[i] = 0;
      }
 
-     loadHihat("sounds/drum-samples/hihat-short.wav");
+     //loadHihat("sounds/drum-samples/hihat-short.wav");
 
-     setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/spatialized3.wav');
+     //setReverbImpulseResponse('http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/spatialized3.wav');
 
      source.playbackRate.value = 1.0;
 
+	 
+	    dryGainNode.gain.value = 1;
+		
      panner.setPosition(0, 0, -4.0);
      source.loop = true;
 
@@ -286,15 +299,29 @@ function setSourceBuffer(buffer) {
      setAudioSource(0);
 
      var cn = {x: 0.0, y: -0.5};
-     gTopProjection.drawDotNormalized(cn);
+     //gTopProjection.drawDotNormalized(cn);
      
      cn.y = 0.0;
-     gFrontProjection.drawDotNormalized(cn);
+    // gFrontProjection.drawDotNormalized(cn);
 
      var currentTime = context.currentTime;
      source.noteOn(currentTime + 0.020);
- }
+	 
+	 function loop(){
+	  lowFilter.frequency.value = (Math.sin(siner*0.5)+1.2)*4050.0;
 
+		siner+=.055;
+		var m = Math.sin(siner)*125;
+		var y = Math.cos(siner)*125;
+		panner.setPosition(m,0,y);
+		requestAnimationFrame( loop );
+		  wetGainNode.gain.value = 125;
+		 lowFilter.Q.value = 15.0;
+
+	}
+	 loop();
+ }
+/*
 var gIsMouseDown = false;
 
 // type: 0: top-view  1: front-view
@@ -372,19 +399,27 @@ Projection.prototype.drawDot = function(c) {
     var b = c.y / divHeight;
 
     x = 8.0 * (2.0*a - 1.0);
+	
+
 
     if (type == 0) {
         z = 8.0 * (2.0*b - 1.0);
     } else {
         y = -11.0 * (2.0*b - 1.0);
     }
+	
+	siner+=.15;
+	var m = Math.sin(siner)*125;
 
-    panner.setPosition(x, y, z);
+    //panner.setPosition(x, y, z);
+	  panner.setPosition(m,0,0);
 
     lastX = x;
     lastZ = z;    
 }
+*/
 
+/*
 function handleMouseDown(event) {
     gIsMouseDown = true;
 }
@@ -402,26 +437,26 @@ function handleElevationMouseMove(event) {
     gFrontProjection.handleMouseMove(event, false);
     gTopProjection.handleMouseMove(event, true);
 }
-
+*/
 </script>
 </head>
 
 <body>
 
 
-<h1>Top View ---------------- Front View </h1>
-<canvas id="canvasID" width="400" height="400" style="border: 10px inset blue;">
+<!-- 
+<canvas id="canvasID">
 </canvas>
 
-<canvas id="canvasElevationID" width="400" height="400" style="border: 10px inset blue;">
+<canvas id="canvasElevationID" >
 </canvas>
-
+<!-- 
 <div id="info">
 </div>
 
 <br>
 
-<!-- Sliders and other controls will be added here -->
+Sliders and other controls will be added here 
 <div id="controls"> </div>
 
 <br><br>
@@ -539,6 +574,6 @@ tim-warehouse-stretch1.wav</li>
 
 </div>
 </div>
-
+-->
 </body>
 </html>

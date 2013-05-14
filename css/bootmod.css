@@ -31,12 +31,6 @@ html,body {
   height: 100%;
 }
 
-.nav-list > li > a {
-	padding-top: 1px;
-	padding-right: 15px;
-	padding-bottom: 3px;
-	padding-left: 15px;
-}
 
 #map {
     width: 100%;
@@ -44,11 +38,6 @@ html,body {
     min-height: 100%;
   
     display: block;
-}
-
-.nav-list > li > a, .nav-list .nav-header {
-
-text-shadow: 0 0px 0 rgba(255, 255, 255, 0.5);
 }
 
 .fill { 
@@ -73,7 +62,8 @@ width: 1024px;
 		
 	}
 	.container{
-		font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;background-color:#fff;
+		font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
+
 		letter-spacing:-.05em;
 		
 		
@@ -145,7 +135,7 @@ border: 1px solid RGBA(0,0,0,0.0);
 
 
 
-	.navbar-inner { height:0em; min-height:0em;}
+	
 	.span8,.span4,.span3,.nobg,.span12,.span2,.span10{
 	
 		background-color: RGBA(0,0,0,0.0);
@@ -221,15 +211,7 @@ border: 1px solid RGBA(0,0,0,0.0);
 			letter-spacing : -.1em;
 			border-radius: 10px
 	} 
-	.navbar .brand, .navbar .nav{
-		padding-top:10px;
-		background-color:transparent;
-		margin-left:10%;
-	}
-	.navbar .nav > li > a{
-		padding-top:2px;
-		padding-left:10px;
-	}
+	
 	.smalls{
 		font-size:.8em; line-height:130%;
 		padding-left:20px;

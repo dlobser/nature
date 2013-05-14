@@ -11,7 +11,7 @@
 	<script type="text/javascript" src="js/libs/jquery.js"></script>
 	
 	 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Monda">
-
+<link href='http://fonts.googleapis.com/css?family=Lato:300' rel='stylesheet' type='text/css'>
     <!-- Le styles -->
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
 	<!-- Le styles <link href="css/bootmod.css" rel="stylesheet"> -->
@@ -26,6 +26,10 @@
       .sidebar-nav {
         padding: 9px 0;
       }
+	  
+	 .lato{
+		font-family:'Lato', sans-serif;
+		}
 
       @media (max-width: 980px) {
         /* Enable use of floated navbar text */
@@ -35,6 +39,9 @@
           padding-right: 5px;
         }
       }
+	  #center{
+	text-align:center;
+}
     </style>
     <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -55,8 +62,6 @@
 	
 	
 	$(document).ready(function(){
-	
-	
 	
 		var originalColors = [];
 
@@ -100,7 +105,7 @@
 	
 	</script>
 	
-	<script src="http://twitter.github.com/bootstrap/assets/js/bootstrap.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
 	
 	
   </head>
@@ -135,13 +140,30 @@
     </div>
 	-->
 
-	<div class="container">
-		
-	</div>
-
-    <div class="container">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container" style="background-color:black">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="http://www.idlehands.tv">&nbsp;Idle Hands</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="about.html">About</a></li>
+			   <li><a href="docs/portfolio.html">Portfolio</a></li>
+              <li><a href="http://www.dlobser.com">DLobser.com</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+	
+    <div class="container" style="background-color:white">
 		
 	<div class="row">
+	<!--
 		<img src="images/bannerTrees.png"  />
 		
 				<div class="row">
@@ -155,18 +177,53 @@
 				</div>
 			</div>
 		</div>
-		
-		<div class="hero-unit">
-		<div style="text-align:center">
 		<br>
-		<br>
-		
+		<br>-->
+		<br><br><br>
+		   <a class="btn2" data-toggle="collapse" data-target="#demo5" style="vertical-align:middle;">
+				<h2 id="center" style="background-color:#cdf;padding:10px" class="lato">Featured</h2>	</a></div>
+				<div id="demo5" class="accordion-body collapse in">
 
-	
-			<!--h1>Idle Hands</h1><br class="brr"><h2 style="line-height:-20px">are the Devil's tools</h2>-->
-			</br>
+		<div class="row" >
+
+			<div class="span4">
+				<div id="center" style="background-color:white">
+				<a href="docs/turbine.html">
+				<img src="images/docs/turbine.jpg" width="300px"><br><br>
+				
+				</div>
+			</div>
 			
+			<div class="span4" style="background-color:white">
+				<div id="center" style="background-color:white">
+				<a href="docs/g-code.html">
+				<img src="images/docs/g-code.jpg" width="300px">
+				</div>
+			</div>
 			
+			<div class="span4">
+				<div id="center" >
+			
+					 <a href="docs/jelly.html">
+					<img src="images/docs/medusa.jpg"width="300px"><br><br>
+					
+				</div>
+			</div>
+		
+		</div>
+		
+		</div>
+		
+		
+		
+		<div style="text-align:center">
+		
+			
+		 <a class="btn2" data-toggle="collapse" data-target="#demo6" style="vertical-align:middle;">
+				<h2 id="center" style="background-color:#cdf;padding:10px" class="lato">Sketches</h2>	</a>
+				<div id="demo6" class="collapse out">
+				
+				
 			<div class="span6">
 			
 			<ul id="pic">
@@ -214,10 +271,7 @@
 					</li>
 			</ul>
 		
-			<br>
-			<br>
-			<br>
-			<br>
+
 			
 			</div>
 			<div class="span5">
@@ -231,7 +285,7 @@
 			
 			</div>
 	
-
+	
 	
 				<!--
 			<p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
@@ -239,16 +293,13 @@
 		</div>
 	</div>
 	
-			<br>
-					<br>
-					<br>
 		  
       <div class="row" id="map">
 	  <div class="fill">
 	  <div class="span6"  id="sizeSix">
 			  <div style="text-align:center;padding:10px">
 			   <a class="btn2" data-toggle="collapse" data-target="#demo4" style="vertical-align:middle;">
-				<h3>Projects</h3>	</a></div>
+				<h3 class="lato">Projects</h3>	</a></div>
 				<div id="demo4" class="collapse out">
         <div class="span3">
 		
@@ -292,7 +343,6 @@
 						<a href="04-makeman.html">peeple maker</a><br>
 						<a href="05-garlic.html">volumetric garlic</a><p class="smalls">culled from MRI data of vegetables <a href = "http://insideinsides.blogspot.com/">insideinside</a><br></p>
 						<a href="05-adameve.html">Adam & Eve</a><p class="smalls">possibly NSFW<br></p>
-						<a href="http://gerkles.pinklemona.de/">multi-tentacle</a><p class="smalls">multiplayer tentacles<br></p>
 						<a href="08-branch-parent_03.html">A tree</a><br>
 						<a href="10-three-processing.html">threejs + processingjs</a><br>
 						<a href="11-three-processing.html">processing to threejs</a><br>
@@ -312,7 +362,7 @@
 			  <div class="span6"  id="sizeSix">
 			  <div style="text-align:center;padding:10px">
 			   <a class="btn2" data-toggle="collapse" data-target="#demo3" style="vertical-align:middle;">
-				<h3>Links</h3>	</a></div>
+				<h3 class="lato">Links</h3>	</a></div>
 				<div id="demo3" class="collapse out">
 			
 			  
@@ -360,10 +410,10 @@
 					<h3>Art Science</h3>
 						<a href="http://www.red3d.com/cwr/steer/">Steering Behavior</a><br>	
 						<a href="http://www-history.mcs.st-and.ac.uk/Curves/Curves.html">Classic Curves</a><br>	
-						<a href="http://n-e-r-v-o-u-s.com/">Nervous System Design</a>
-						<a href="http://algorithmicbotany.org/papers/#abop">Algorithmic Beauty of Plants</a>
-						<a href="http://www.wolframscience.com/">A new kind of science</a>
-						<a href="http://www.flight404.com/blog/">Robert Hodgin</a>
+						<a href="http://n-e-r-v-o-u-s.com/">Nervous System Design</a><br>	
+						<a href="http://algorithmicbotany.org/papers/#abop">Algorithmic Beauty of Plants</a><br>	
+						<a href="http://www.wolframscience.com/">A new kind of science</a><br>	
+						<a href="http://www.flight404.com/blog/">Robert Hodgin</a><br>	
 						<a href="http://duriansoftware.com/joe/An-intro-to-modern-OpenGL.-Chapter-3:-3D-transformation-and-projection.html">opengl matrix transformations</a>
 				</div>
 				   </div>

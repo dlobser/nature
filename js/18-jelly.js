@@ -24,7 +24,12 @@ var particleIn = true;
 readyToBurst = true;
 var push = 0;
 var jigCounter = 0;
-var debug = true;
+var debug = false;
+var built = false;
+
+var mx = 0;
+var my = 0;
+var mz = 0;
 
 
 
@@ -36,6 +41,7 @@ var objLoaded = 0;
 var parenter = new THREE.Object3D();
 
 var counter = 0;
+var count = 0;
 var spine = [];
 
 var up = 0;
@@ -258,7 +264,7 @@ sc1.prototype.init = function() {
 	//console.log(this.scene.fog.density);
 	this.camera.lookAt(new THREE.Vector3(0,-10,0));
 	//this.scene.add(this.camera);
-	this.aud = new Audio('audio/bell.mp3');
+	this.aud = new Audio('audio/water-bowl.wav');
 	this.aud.init();
 
 	var loader2 = new THREE.OBJLoader();
@@ -356,7 +362,7 @@ sc1.prototype.addGeo = function(){
 				your_object.num = randInt(10,50);
 				your_object.anim.y1[0] = 0;
 				your_object.anim.x3[0] = rand(0.3,0.9);
-				your_object.anim.y3[0] = rand(-0.6,0.6);
+				your_object.anim.y3[0] = rand(-1,1);
 				your_object.anim.z3[0] = rand(0.1,0.81);
 				your_object.anim.x3[1] = rand(0.1,3);
 				your_object.anim.y3[1] = rand(0.001,1);
@@ -564,10 +570,18 @@ sc1.prototype.moveThings = function(){
 			
 				//thing.p.anim.x1[q] = this.text["x1-"+q];
 				if(q>0)
-				thing.p.anim.x1[q] = this.text["x1-"+q];//map_range(avg,0,10,0,0.5);
+				thing.p.anim.x1[q] = this.text["x1-"+q] + map_range(avg,0,10,0,0.5);
+				else
+				thing.p.anim.x1[q] = this.text["x1-"+q];
+				
+				
 				thing.p.anim.y1[q] = this.text["y1-"+q];
 				
-				thing.p.anim.z1[q] = this.text["z1-"+q];
+				if(q>0)
+				thing.p.anim.z1[q] = this.text["z1-"+q] + (Math.sin(count*.01))*.3;
+				
+				else
+					thing.p.anim.z1[q] = this.text["z1-"+q];
 				thing.p.anim.x2[q] = this.text["x2-"+q];
 				thing.p.anim.y2[q] = this.text["y2-"+q];
 				thing.p.anim.z2[q] = this.text["z2-"+q];
@@ -618,14 +632,20 @@ sc1.prototype.moveThings = function(){
 	if(thisKey-48 == 9 && particleIn && readyToBurst){
 		helpGeo = true;
 		readyToBurst = false;
+		built = true;
 		
 	}
 	
 	this.camera.position.y += rand(-.051,.0510);
 	this.camera.position.z += rand(-.051,.051);
 	this.camera.position.x += rand(-.051,.05);
-
-
+	
+	count++;
+	
+	if(count%2==0){
+	this.scaleBones((thisKey*.17)-7,things[0].branches);
+	this.scaleBones((thisKey*.17)-7,things[1].branches);
+	}
 	
 	var rot = new THREE.Vector3(this.text.rotatorx,this.text.rotatory,this.text.rotatorz);
 
@@ -634,28 +654,21 @@ sc1.prototype.moveThings = function(){
 
 sc1.prototype.scaleBones = function(amt,array,avg){
 
-/*
-//take an array of joints, 
-//travel down to the mesh
-//use the length
-
-the first item in the array gets a scale value based on thisKey
-each successive frame that value is transferred to the next item in the Array
-
-float firstOffset = map(amt,0,1,3,spotsW.size());
-int segment = (int) floor(firstOffset);
-float offset = (firstOffset-segment);
-*/
-
-array[0].scale = new THREE.Vector3(amt,1,amt);
-
-for ( var i = array.length ; i > 0 ; i-- ){
-	array[i].scale = array[i-1].scale;
-
-}
-
-var firstOffset = map_range(amt,0,1,3,array.length);
 	
+	for( var q in array ){
+	if(q>0){
+		array[q][0].children[1].children[0].children[0].children[0].scale = new THREE.Vector3(amt,1,amt);
+		array[q][1].children[0].children[1].children[0].children[0].children[0].scale = new THREE.Vector3(amt,1,amt);
+		
+		for ( var i = array[q].length-3 ; i > 1; i-- ){
+		//console.log(array[q][i].children[0]);
+		//if(q>1)
+		 array[q][i].children[0].children[1].children[0].children[0].children[0].scale = array[q][i-1].children[0].children[1].children[0].children[0].children[0].scale;
+		 
+		}
+	}
+	}
+
 }
 
 sc1.prototype.animate = function(){
@@ -663,6 +676,11 @@ sc1.prototype.animate = function(){
 	//if(this.scene.fog.density>0.0001)
 	//	this.scene.fog.density -= 0.0001;
 	this.scene.fog.density =0;
+	
+	if(built){
+		this.setAudioPos();
+	}
+	
 	for (var p in things){
 	
 		if(particleTimer<things[p].msh.length){
@@ -686,6 +704,7 @@ sc1.prototype.animate = function(){
 		particleTimer = 0;
 		particleIn = false;
 		push = 1000;
+		
 	}
 	
 
@@ -771,6 +790,26 @@ sc1.prototype.render = function() {
 
 }
 
+sc1.prototype.setAudioPos = function(){
+
+	var poser = things[0].branches[0][things[0].branches[0].length-1];
+
+
+	var thisVert = new THREE.Vector3(0,0,0);
+	this.scene.updateMatrixWorld(true);
+	poser.updateMatrixWorld();
+	poser.autoUpdateMatrix = true;
+
+	thisVert.getPositionFromMatrix(poser.matrixWorld);
+	  
+	mx = thisVert.x || 0;
+	my = thisVert.y || 0;
+	mz = thisVert.z || 0;
+	
+	//console.log(mx);
+
+}
+
 sc1.prototype.makeParticle = function(){
 	
 
@@ -839,19 +878,14 @@ sc1.prototype.makeParticle = function(){
 	this.scene.add(this.particleSystem);
 
 }
+
 sc1.prototype.moveParticle = function(){
 	
 
 
-	// animation loop
+	
 	if(this.particleCount > 0){
 	
-		//function update() {
-
-		  // add some rotation to the system
-		 // this.particleSystem.rotation.y += 0.1;
-		  
-
 		  var pCount = this.particleCount;
 		  while(pCount--) {
 
@@ -875,8 +909,7 @@ sc1.prototype.moveParticle = function(){
 				suckVec.multiplyScalar(0.011);
 				particle.acceleration.add(suckVec);
 			}
-			// and the position
-			//particle.position.addSelf(particle.velocity);
+		
 			while (push>0)
 			push-=1;
 			if(particleTimer<170){
@@ -896,25 +929,7 @@ sc1.prototype.moveParticle = function(){
 				
 
 			}
-			/*
-			if(particleTimer>150){
-				particle.x +=  noise.noise((particleTimer*0.001)+(pCount*0.01),particleTimer*0.01,particleTimer*0.01)*1;
-				particle.y +=  noise.noise((particleTimer*0.001)+(pCount*0.01)+100,(particleTimer*0.01)+(pCount*0.01),(particleTimer*0.001)+(pCount*0.01))*1;
-				particle.z +=  noise.noise((particleTimer*0.001)+(pCount*0.01)+1000,particleTimer*0.01,particleTimer*0.001)*1;
-			}
-			if(particleTimer>100){
-				particle.x *=.99;
-				particle.y *=.99;
-				particle.z*=.99;
-			}
-				*/
-			if(particleTimer>150){
-				//particle.x *=.9;
-				//particle.y *=.9;
-				//particle.z *=.9;
-				//this.particleSystem.scale.multiplyScalar(0.9999);
-				//this.particleSystem.position.y+=0.0031;
-			}
+			
 		
 				particle.x += particle.velocity.x;
 				particle.y += particle.velocity.y;
@@ -923,13 +938,10 @@ sc1.prototype.moveParticle = function(){
 			
 		  }
 
-		  // flag to the particle system
-		  // that we've changed its vertices.
+	
 		  this.particleSystem.geometry.verticesNeedUpdate = true;
 
-		//}
 	}
-
 }
 
 sc1.prototype.makeBall = function(sc, vec){
@@ -947,6 +959,7 @@ sc1.prototype.makeBall = function(sc, vec){
 
 
 }
+
 sc1.prototype.scaleBall = function(){
 
 	if(this.ball != undefined && this.ball.scale.x < 10000){
@@ -958,7 +971,6 @@ sc1.prototype.scaleBall = function(){
 		this.ball.visible = false;
 	}
 }
-
 
 sc1.prototype.makeNoise = function(sc, vec){
 	
@@ -992,6 +1004,7 @@ sc1.prototype.makeNoise = function(sc, vec){
 	this.scene.add(this.grad);
 
 }
+
 sc1.prototype.moveNoise = function(){
 
 	if(this.plane != undefined){
@@ -1048,15 +1061,17 @@ function saver() {
 		//things[0].big.scale.x = .01;
 		//things[0].big.position.y = 0;
 		
-		for (var i = 0 ; i < things[0].msh.length ; i++){
-			
+		for( var p in things ){
+			for (var i = 0 ; i < things[p].msh.length ; i++){
+				
 
-			
-			//grrr - somehow two extra objects are being added to the msh array - so I'm manually skipping them, messy
-			if(i == things[0].msh.length-2 || i == things[0].msh.length-3) i++;
-			else{
-				output += THREE.saveGeometryToObj4(things[0].msh[i],j,.0003);
-				j += things[0].msh[i].geometry.vertices.length;
+				
+				//grrr - somehow two extra objects are being added to the msh array - so I'm manually skipping them, messy
+				if(i == things[p].msh.length-2 || i == things[p].msh.length-3) i++;
+				else{
+					output += THREE.saveGeometryToObj4(things[p].msh[i],j,.0003);
+					j += things[p].msh[i].geometry.vertices.length;
+				}
 			}
 		}
 		
