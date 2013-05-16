@@ -9,9 +9,11 @@
     <meta name="author" content="David Lobser">
 	
 	<script type="text/javascript" src="js/libs/jquery.js"></script>
+	 <script src="bootstrap/js/bootstrap.js"></script>
+	 
 	
 	 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Monda">
-<link href='http://fonts.googleapis.com/css?family=Lato:300' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lato:300' rel='stylesheet' type='text/css'>
     <!-- Le styles -->
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
 	<!-- Le styles <link href="css/bootmod.css" rel="stylesheet"> -->
@@ -42,6 +44,63 @@
 	  #center{
 	text-align:center;
 }
+
+ /* CUSTOMIZE THE CAROUSEL
+    -------------------------------------------------- */
+
+    /* Carousel base class */
+    .carousel {
+      margin-top: 40px;
+    }
+
+    .carousel .container {
+      position: absolute;
+      z-index: 9;
+    }
+
+    .carousel-control {
+      height: 80px;
+      margin-top: 60;
+      font-size: 120px;
+      text-shadow: 0 1px 1px rgba(0,0,0,.4);
+      background-color: transparent;
+      border: 0;
+      z-index: 10;
+    }
+
+    .carousel .item {
+	text-align:center;
+      height: 500px;
+    }
+    .carousel img {
+      position: relative;
+	  text-align:center;
+      top: 0;
+      left: 0;
+     // min-width: 100%;
+      max-height: 500px;
+    }
+
+    .carousel-caption {
+      background-color: transparent;
+	  text-align:center;
+      position: static;
+      max-width: 550px;
+      padding: 0 20px;
+      margin-top: 200px;
+    }
+    .carousel-caption h1,
+    .carousel-caption .lead {
+      margin: 0;
+      line-height: 1.25;
+      color: #fff;
+      text-shadow: 0 1px 1px rgba(0,0,0,.4);
+    }
+    .carousel-caption .btn {
+      margin-top: 10px;
+    }
+
+
     </style>
     <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -98,15 +157,24 @@
 	$('.sizeSix').hover(function(){
 		$('#demo4').toggle();
 	});
-		
+
 	
 	});
 	
+
+	
 	
 	</script>
+
 	
-	<script src="bootstrap/js/bootstrap.js"></script>
 	
+		<script>
+$(document).ready(function(){
+	$('.carousel').carousel({
+	  interval: 3000
+	});
+	});
+	</script>
 	
   </head>
 
@@ -160,6 +228,23 @@
       </div>
     </div>
 	
+	<div id="myCarousel" class="carousel slide" style="background-color:black">
+	  
+	  <!-- Carousel items -->
+	  <div class="carousel-inner">
+		<div class="active item"><div id="center"><img src="http://tileableart.com/code/images/v-g-code_small_0005_06.jpg"></div></div>
+		<div class="item"><div id="center"><img src="../images/wishes/taxonomyOfWishes_02.jpg"></div></div>
+		<div class="item"><div id="center"><img src="http://tileableart.com/code/images/v-g-code_small_0003_04.jpg"></div></div>
+		<div class="item"><div id="center"><img src="http://payload76.cargocollective.com/1/2/88135/3836525/twistingMan_o.jpg"></div></div>
+		<div class="item"><div id="center"><img src="http://localhost:8000/nature/images/medusa_0006_07.jpg"></div></div>
+	  </div>
+	  <!-- Carousel nav -->
+	  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+	  <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+	</div>
+	
+	
+	
     <div class="container" style="background-color:white">
 		
 	<div class="row">
@@ -179,9 +264,9 @@
 		</div>
 		<br>
 		<br>-->
-		<br><br><br>
+		
 		   <a class="btn2" data-toggle="collapse" data-target="#demo5" style="vertical-align:middle;">
-				<h2 id="center" style="background-color:#cdf;padding:10px" class="lato">Featured</h2>	</a></div>
+				<h2 id="center" style="background-color:#cdf;padding:10px;margin-top:-20px" class="lato">Featured</h2>	</a></div>
 				<div id="demo5" class="accordion-body collapse in">
 
 		<div class="row" >
